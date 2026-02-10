@@ -17,9 +17,14 @@ getgenv().ModuleSetting = {
 	},
 	["Raid"] = {
 		["RaidType"] = ""
+	},
+	["Travel"] = {
+		["Destination"] = nil
 	}
 }
 
+--local Bracket = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Bracket/main/BracketV32.lua"))()
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Plr = game.Players.LocalPlayer
 local Char = Plr.Character or Plr.CharacterAdded:Wait()
 local Root = Char:WaitForChild("HumanoidRootPart")
@@ -86,7 +91,7 @@ function AutoFarmLevel()
 	end
 end
 
-function AutoFarmChest()
+function AutoFarmChests()
 	local function Anchor(Char, Toggled)
 		if getgenv().Configuration.Modules.AutoFarmChests then
 			local f = Instance.new("BodyVelocity")
@@ -136,12 +141,35 @@ function AutoFarmChest()
 		CFrame.new(1409.10498046875, 53.178001403808594, -1272.404052734375),
 	}
 	
+	local SecondSeasChests = {
+		CFrame.new(-5238.79931640625, 111.73799133300781, -6258.2392578125),
+		CFrame.new(-2387.873046875, 71.1729965209961, -2869.718994140625),
+		CFrame.new(-2630.079345703125, 70.76406860351562, -3966.360107421875),
+		CFrame.new(-2303.556884765625, 71.8030014038086, -4264.97607421875),
+		CFrame.new(-1701.342041015625, 71.1729965209961, -3088.489990234375),
+		CFrame.new(-1545.5491943359375, 174.45362854003906, -3651.255859375),
+		CFrame.new(-1477.1859130859375, 40.88534164428711, -3897.052978515625),
+		CFrame.new(-413.65069580078125, 13.964944839477539, 258.1788330078125),
+		CFrame.new(-411.2218017578125, 70.9229507446289, 371.271484375),
+		CFrame.new(-353.50390625, 70.9229507446289, 371.27154541015625),
+		CFrame.new(-894.0555419921875, 184.81260681152344, 658.243896484375),
+		CFrame.new(-134.7222900390625, 70.8125991821289, 355.7315368652344),
+		CFrame.new(-511.9065856933594, 329.7139587402344, 588.4630126953125),
+		CFrame.new(-1014.435302734375, 70.8125991821289, 850.7462768554688),
+		CFrame.new(-1070.09130859375, 120.7647476196289, 857.2682495117188)
+	}
 	
 	Anchor(Char, false)
 	while getgenv().Configuration.Modules.AutoFarmChests do
+		if not getgenv().Configuration.Modules.AutoFarmChests then break end
+		if Char.Humanoid.Health < 0 then getgenv().Configuration.Modules.AutoFarmChests = false break end
 		if getgenv().Configuration.CurrentPlace == "First-Seas" then
 			for _, chest in pairs(FirstSeasChests) do
-				if not getgenv().Configuration.Modules.AutoFarmChests then break end
+				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
+				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+			end
+		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
+			for _, chest in pairs(SecondSeasChests) do
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
 				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 			end
@@ -170,7 +198,10 @@ local function CompleteRaid()
 			f.Velocity = Vector3.new(0,.01,0)
 			f.Parent = Char.PrimaryPart
 		else
-			Char.PrimaryPart:FindFirstChild("f"):Destroy()
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
 		end
 		
 		for _,part in pairs(Char:GetChildren()) do
@@ -180,7 +211,7 @@ local function CompleteRaid()
 		end
 	end
 	
-	local function FireHitRemote(enemy, tool,character)
+	local function FireHitRemote(enemy,character)
 		-- Create the hit parts table (usually contains the humanoid root part and maybe other parts)
 		
 		-- These arguments might need adjustment based on your game
@@ -209,8 +240,8 @@ local function CompleteRaid()
 	
 	local function Attack(Character, Enemies)
 		local success,err = pcall(function()
-			for _, Enemy in pairs(Enemies:GetChildren()) do
-				if Enemy:FindFirstChild("HumanoidRootPart") and Enemy.Name == CurrentEnemy then
+			for _, Enemy in pairs(workspace.Enemies:GetChildren()) do
+				if Enemy:FindFirstChild("HumanoidRootPart") and Enemy == Enemies then
 					local EnemyHumanoid = Enemy.Humanoid
 					local EnemyRootPart = Enemy.HumanoidRootPart
 					local Humanoid = Character:WaitForChild("Humanoid")
@@ -222,7 +253,7 @@ local function CompleteRaid()
 					
 					-- Attack loop
 					while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
-						FireHitRemote(Enemy, Tool,Character)
+						FireHitRemote(Enemy,Character)
 						task.wait(.2)
 					end
 				end
@@ -264,11 +295,16 @@ local function CompleteRaid()
 					CFrame.new(71670, 9.053179740905762, -23932.7265625),
 				}
 				
-				Tween(Char.PrimaryPart, TweenInfo.new((islandPosition[1].Position - Char.PrimaryPart.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = islandPosition[1] * CFrame.new(0,15,0)})
-				for _, Inst in pairs(Enemies:GetChildren()) do
-					if Inst and Inst.Humanoid.Health > 0 and MobList[Inst.Name] then
-						Attack(Char, Inst)
-					end
+				Tween(Char.PrimaryPart, TweenInfo.new((islandPosition[1].Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = islandPosition[1] * CFrame.new(0,15,0)})
+			end
+			for _, Inst in pairs(Enemies:GetChildren()) do
+				local hum = Inst:FindFirstChild("Humanoid")
+
+				local i = table.find(MobList, Inst.Name)
+				if hum and hum.Health > 0 and i then
+					CurrentEnemy = Inst.Name
+					Attack(Char, Enemies[i])
+					break
 				end
 			end
 			task.wait()
@@ -279,9 +315,15 @@ end
 function closeThread(thread)
 	for _, v in pairs(getreg()) do
 		if v == thread then				
-			Bracket:Notification({Title = "Notice", Description = "Found thread!"})
-			Pause()
 			coroutine.close(thread)
+		end
+	end
+end
+
+function getIslandList()
+	for _, island in pairs(workspace.Map:GetChildren()) do
+		if island:IsA("Model") then
+			return {island.Name}
 		end
 	end
 end
@@ -292,21 +334,22 @@ task.spawn(function()
 	end)
 end)
 
-local Bracket = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Bracket/main/BracketV32.lua"))()
 local name,version = identifyexecutor()
-
-local Window = Bracket:Window({Name = tostring("Lapzurite - Executor: " .. name .. " " .. getgenv().Configuration.CurrentPlace),Enabled = true,Color = Color3.new(0,0,.25),Size = UDim2.new(0,496,0,496),Position = UDim2.new(0.5,-350,0.5,-248)}) do
+--[[
+local Window = Bracket:Window({Name = tostring("Lapzurite"),Enabled = true,Color = Color3.new(0,0,.25),Size = UDim2.new(0,496,0,496),Position = UDim2.new(0.5,-350,0.5,-248)}) do
 	local Tab = Window:Tab({Name = "Home"}) do
 		local AFSection = Tab:Section({Name = "SubFarm",Side = "Left"}) 
 		local AFSection1 = Tab:Section({Name = "AutoFarm",Side = "Left"})
 		local RSection = Tab:Section({Name = "Raid",Side = "Left"})
 		local STSection = Tab:Section({Name = "Settings",Side = "Right"})
+		local TVSection = Tab:Section({Name = "Travel",Side = "Right"})
 
 		local Toggle3 = RSection:Toggle({Name = "Complete Raid",Side = "Left",Value = false,Callback = function(Bool)
 			getgenv().Configuration.Modules.CompleteRaid = Bool
 			local loop_thread = task.spawn(CompleteRaid)
 			
 			if not Bool then
+				Pause()
 				closeThread(loop_thread)
 			end
 		end})		
@@ -357,6 +400,163 @@ local Window = Bracket:Window({Name = tostring("Lapzurite - Executor: " .. name 
 					getgenv().ModuleSetting.Raid.RaidType = Selected
 				end
 			},
+			{
+				Name = "Ice",
+				Mode = "Button",
+				--Value = false,
+				Callback = function(Selected)
+					getgenv().ModuleSetting.Raid.RaidType = Selected
+				end
+			},
+			{
+				Name = "Dark",
+				Mode = "Button",
+				--Value = false,
+				Callback = function(Selected)
+					getgenv().ModuleSetting.Raid.RaidType = Selected
+				end
+			},
+			{
+				Name = "Spider",
+				Mode = "Button",
+				--Value = false,
+				Callback = function(Selected)
+					getgenv().ModuleSetting.Raid.RaidType = Selected
+				end
+			},
+			{
+				Name = "Buddha",
+				Mode = "Button",
+				--Value = false,
+				Callback = function(Selected)
+					getgenv().ModuleSetting.Raid.RaidType = Selected
+				end
+			},
+			{
+				Name = "Light",
+				Mode = "Button",
+				--Value = false,
+				Callback = function(Selected)
+					getgenv().ModuleSetting.Raid.RaidType = Selected
+				end
+			},
 		}})
+		
+		local Dropdown2 = TVSection:Dropdown({Name = "Island",Side = "Left",Default = "")
+		local Button1 = TVSection:Button({Name = "Refresh list", Side = "Left", Callback = function()
+			for _, island in pairs(workspace.Map:GetChildren()) do
+				if island:IsA("Model") then
+					print(island.Name)
+				end
+			end
+		end})
+		
+		--Dropdown:Clear()
+		--Dropdown:AddOption("Option")
+		--Dropdown:RemoveOption("Option")
+		--Dropdown:SelectOption("Option")
+		--Dropdown:ChangeName("Dropdown")
+		--Dropdown:ToolTip("ToolTip")
 		end
+end
+]]--
+
+local Window = Fluent:CreateWindow({
+    Title = "Lapzurite ",
+    SubTitle = "",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+})
+
+local Tabs = {
+    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "house"}),
+	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = "house"}),
+	Raid = Window:AddTab({ Title = "Raid", Icon = "beef"}),
+	Travel = Window:AddTab({ Title = "Travel", Icon = "plane"}),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings"})
+}
+
+function createIslandDropdown()
+	local Dropdown = Tabs.Travel:AddDropdown("Island", {
+		Title = "Destination",
+		Description = "",
+		Values = getIslandList(),
+		Multi = false,
+		Default = 1,
+	})
+	
+	return Dropdown
+end
+
+local Options = Fluent.Options
+
+do
+	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
+
+    AutoChest:OnChanged(function()
+        getgenv().Configuration.Modules.AutoFarmChests = Options.AutoChest.Value
+		local loop_thread = task.spawn(AutoFarmChests())
+		
+		if not Options.CompleteRaid.Value then
+			Pause()
+			closeThread(loop_thread)
+		end
+    end)
+	
+	local CompleteRaid = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
+
+    CompleteRaid:OnChanged(function()
+        getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
+		local loop_thread = task.spawn(CompleteRaid)
+			
+		if not Options.CompleteRaid.Value then
+			Pause()
+			closeThread(loop_thread)
+		end
+    end)
+	
+	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
+        Title = "Delay between chests",
+        Description = "Changes how long your character stays after collected a chest",
+        Default = 1,
+        Min = 0,
+        Max = 15,
+        Rounding = 1,
+        Callback = function(Value)
+			getgenv().ModuleSetting.AutoFarmChests.Delay = Value
+        end
+    })
+	
+	local TweenSpeed = Tabs.Settings:AddSlider("TweenSpeed", {
+        Title = "Tween Speed",
+        Description = "Changes how fast your character is moving",
+        Default = 250,
+        Min = 0,
+        Max = 300,
+        Rounding = 1,
+        Callback = function(Value)
+            getgenv().Configuration.TweenSpeed = Value
+        end
+    })
+	
+	local Island = createIslandDropdown()
+	
+	Island:OnChanged(function(Value)
+		getgenv().ModuleSetting.Travel.Destination = Value
+	end)
+	
+ 	local Tool = Tabs.Settings:AddDropdown("Tool", {
+		Title = "Weapon type",
+		Description = "",
+		Values = {'Melee', 'Sword'},
+		Multi = false,
+		Default = 1,
+	})
+	
+	Tool:OnChanged(function(Value)
+		getgenv().Configuration.Tool = Value
+	end)
 end
