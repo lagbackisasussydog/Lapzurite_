@@ -166,8 +166,7 @@ function AutoFarmChests()
 	
 	Anchor(Char)
 	while getgenv().Configuration.Modules.AutoFarmChests do
-		if not getgenv().Configuration.Modules.AutoFarmChests then break end
-		if Char.Humanoid.Health < 0 then getgenv().Configuration.Modules.AutoFarmChests = false break end
+		if Char.Humanoid.Health < 0 then getgenv().Configuration.Modules.AutoFarmChests == false break end
 		if getgenv().Configuration.CurrentPlace == "First-Seas" then
 			for _, chest in pairs(FirstSeasChests) do
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
@@ -504,18 +503,12 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "house"}),
-	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = "house"}),
-	Raid = Window:AddTab({ Title = "Raid", Icon = "beef"}),
-	Travel = Window:AddTab({ Title = "Travel", Icon = "plane"}),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings"})
+    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = ""}),
+	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = ""}),
+	Raid = Window:AddTab({ Title = "Raid", Icon = ""}),
+	Travel = Window:AddTab({ Title = "Travel", Icon = ""}),
+    Settings = Window:AddTab({ Title = "Settings", Icon = ""})
 }
-
-function createIslandDropdown()
-	
-	
-	return Dropdown
-end
 
 local Options = Fluent.Options
 
@@ -546,7 +539,7 @@ do
 	
 	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
         Title = "Delay between chests",
-        Description = "Changes how long your character stays after collected a chest",
+        Description = "",
         Default = 1,
         Min = 0,
         Max = 15,
@@ -558,7 +551,7 @@ do
 	
 	local TweenSpeed = Tabs.Settings:AddSlider("TweenSpeed", {
         Title = "Tween Speed",
-        Description = "Changes how fast your character is moving",
+        Description = "",
         Default = 250,
         Min = 0,
         Max = 300,
