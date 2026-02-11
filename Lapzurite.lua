@@ -43,14 +43,16 @@ end
 
 local function Pause()
 	local Track = getgenv().Configuration.CurrentTweeningProcess
-	Track:Cancel()
-	getgenv().Configuration.CurrentTweeningProcess = nil
+	if Track and Track.PlaybackState == Enum.PlaybackState.Playing then
+		Track:Pause()
+		getgenv().Configuration.CurrentTweeningProcess = nil
+	end
 end
 
 local function getTool()
 	for _, v in pairs(Plr.Backpack:GetChildren()) do
 		if v.ToolTip == getgenv().Configuration.Tool then
-			if Char:FindFirstChild(v.Name) then continue end
+			--if Char:FindFirstChild(v.Name) then continue end
 			return v
 		end
 	end
@@ -92,7 +94,7 @@ function AutoFarmLevel()
 end
 
 function AutoFarmChests()
-	local function Anchor(Char, Toggled)
+	local function Anchor(Char)
 		if getgenv().Configuration.Modules.AutoFarmChests then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
@@ -101,7 +103,10 @@ function AutoFarmChests()
 			f.Velocity = Vector3.new(0,.01,0)
 			f.Parent = Char.PrimaryPart
 		else
-			Char.PrimaryPart:FindFirstChild("f"):Destroy()
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
 		end
 		
 		for _,part in pairs(Char:GetChildren()) do
@@ -159,7 +164,7 @@ function AutoFarmChests()
 		CFrame.new(-1070.09130859375, 120.7647476196289, 857.2682495117188)
 	}
 	
-	Anchor(Char, false)
+	Anchor(Char)
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		if not getgenv().Configuration.Modules.AutoFarmChests then break end
 		if Char.Humanoid.Health < 0 then getgenv().Configuration.Modules.AutoFarmChests = false break end
@@ -190,7 +195,7 @@ local function CompleteRaid()
 	}
 	
 	local function Anchor(Char)
-		if getgenv().Configuration.Modules.CompleteRaid then
+		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
 			f.P = 15000
@@ -239,6 +244,7 @@ local function CompleteRaid()
 	--<font color="rgb(102,255,102)">Island #1 cleared!</font>
 	
 	local function Attack(Character, Enemies)
+		--[[
 		local success,err = pcall(function()
 			for _, Enemy in pairs(workspace.Enemies:GetChildren()) do
 				if Enemy:FindFirstChild("HumanoidRootPart") and Enemy == Enemies then
@@ -261,6 +267,25 @@ local function CompleteRaid()
 		end)
 		
 		if err then warn("Error: " .. err) end
+		--]]
+		
+		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
+
+		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
+		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
+		local Humanoid = Character:FindFirstChild("Humanoid")
+
+		if not EnemyHumanoid or not Humanoid then return end
+
+		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
+		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / 325
+
+		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
+
+		while EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid do
+			FireHitRemote(Enemy, Character)
+			task.wait(.2)
+		end
 	end
 	
 	local function IslandCheck()
@@ -268,15 +293,15 @@ local function CompleteRaid()
 		
 		for _, v in pairs(Notifications:GetChildren()) do
 			if v:IsA("TextLabel") and v.Name == "NotificationTemplate" then
-				if v.Text == '<font color="rgb(102,255,102)">Island #1 cleared!</font>' then
+				if string.find(v.Text, "Island #1 cleared!") then
 					return 2
-				elseif v.Text == '<font color="rgb(102,255,102)">Island #2 cleared!</font>' then
+				elseif string.find(v.Text, "Island #2 cleared!") then
 					return 3
-				elseif v.Text == '<font color="rgb(102,255,102)">Island #3 cleared!</font>' then
+				elseif string.find(v.Text, "Island #3 cleared!") then
 					return 4
-				elseif v.Text == '<font color="rgb(102,255,102)">Island #4 cleared!</font>' then
+				elseif string.find(v.Text, "Island #4 cleared!") then
 					return 5
-				elseif v.Text == '<font color="rgb(102,255,102)">Island #5 cleared!</font>' then
+				elseif string.find(v.Text, "Island #5 cleared!") then
 					return 0
 				end
 			end
@@ -303,7 +328,7 @@ local function CompleteRaid()
 				local i = table.find(MobList, Inst.Name)
 				if hum and hum.Health > 0 and i then
 					CurrentEnemy = Inst.Name
-					Attack(Char, Enemies[i])
+					Attack(Char, Inst)
 					break
 				end
 			end
@@ -313,19 +338,26 @@ local function CompleteRaid()
 end
 
 function closeThread(thread)
+	--[[
 	for _, v in pairs(getreg()) do
 		if v == thread then				
 			coroutine.close(thread)
 		end
 	end
+	--]]
+	
+	task.cancel(thread)
 end
 
 function getIslandList()
+	local list = {}
 	for _, island in pairs(workspace.Map:GetChildren()) do
 		if island:IsA("Model") then
-			return {island.Name}
+			table.insert(list, island.Name)
 		end
 	end
+	
+	return list
 end
 
 task.spawn(function()
@@ -480,13 +512,7 @@ local Tabs = {
 }
 
 function createIslandDropdown()
-	local Dropdown = Tabs.Travel:AddDropdown("Island", {
-		Title = "Destination",
-		Description = "",
-		Values = getIslandList(),
-		Multi = false,
-		Default = 1,
-	})
+	
 	
 	return Dropdown
 end
@@ -498,9 +524,9 @@ do
 
     AutoChest:OnChanged(function()
         getgenv().Configuration.Modules.AutoFarmChests = Options.AutoChest.Value
-		local loop_thread = task.spawn(AutoFarmChests())
+		local loop_thread = task.spawn(AutoFarmChests)
 		
-		if not Options.CompleteRaid.Value then
+		if not Options.AutoChest.Value then
 			Pause()
 			closeThread(loop_thread)
 		end
@@ -542,7 +568,13 @@ do
         end
     })
 	
-	local Island = createIslandDropdown()
+	local Island = Tabs.Travel:AddDropdown("Island", {
+		Title = "Destination",
+		Description = "",
+		Values = getIslandList(),
+		Multi = false,
+		Default = 1,
+	})
 	
 	Island:OnChanged(function(Value)
 		getgenv().ModuleSetting.Travel.Destination = Value
