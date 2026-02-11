@@ -544,13 +544,12 @@ local function CompleteRaid()
 		if not EnemyHumanoid or not Humanoid then return end
 
 		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
-		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / 325
+		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 
-		while EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid do
+		while EnemyHumanoid and EnemyHumanoid.Health > 0 do
 			FireHitRemote(Enemy, Character)
-			task.wait(.2)
 		end
 	end
 	
@@ -576,7 +575,7 @@ local function CompleteRaid()
 	
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
-		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid do
+		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
 			local rType = getgenv().ModuleSetting.Raid.RaidType
 			
 			if rType == "Flame" then
@@ -593,7 +592,6 @@ local function CompleteRaid()
 
 				local i = table.find(MobList, Inst.Name)
 				if hum and hum.Health > 0 and i then
-					CurrentEnemy = Inst.Name
 					Attack(Char, Inst)
 					break
 				end
