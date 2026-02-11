@@ -166,14 +166,16 @@ function AutoFarmChests()
 	
 	Anchor(Char)
 	while getgenv().Configuration.Modules.AutoFarmChests do
-		if Char.Humanoid.Health < 0 then getgenv().Configuration.Modules.AutoFarmChests == false break end
+		if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 		if getgenv().Configuration.CurrentPlace == "First-Seas" then
 			for _, chest in pairs(FirstSeasChests) do
+				if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
 				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 			end
 		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
 			for _, chest in pairs(SecondSeasChests) do
+				if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
 				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 			end
@@ -503,12 +505,18 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = ""}),
-	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = ""}),
-	Raid = Window:AddTab({ Title = "Raid", Icon = ""}),
-	Travel = Window:AddTab({ Title = "Travel", Icon = ""}),
-    Settings = Window:AddTab({ Title = "Settings", Icon = ""})
+    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "house"}),
+	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = "house"}),
+	Raid = Window:AddTab({ Title = "Raid", Icon = "beef"}),
+	Travel = Window:AddTab({ Title = "Travel", Icon = "plane"}),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings"})
 }
+
+function createIslandDropdown()
+	
+	
+	return Dropdown
+end
 
 local Options = Fluent.Options
 
@@ -539,7 +547,7 @@ do
 	
 	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
         Title = "Delay between chests",
-        Description = "",
+        Description = "Changes how long your character stays after collected a chest",
         Default = 1,
         Min = 0,
         Max = 15,
@@ -551,7 +559,7 @@ do
 	
 	local TweenSpeed = Tabs.Settings:AddSlider("TweenSpeed", {
         Title = "Tween Speed",
-        Description = "",
+        Description = "Changes how fast your character is moving",
         Default = 250,
         Min = 0,
         Max = 300,
