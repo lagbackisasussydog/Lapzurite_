@@ -9,7 +9,7 @@ function Lapzurite:Init(stopFunction)
 	local Stop = Instance.new("TextButton")
 
 	Lapzurite.Name = "Lapzurite"
-	Lapzurite.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Lapzurite.Parent = game.CoreGui
 	Lapzurite.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Base.Name = "Base"
