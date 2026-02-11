@@ -33,6 +33,8 @@ local HitRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):W
 local AttackRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
 local CommF_ = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_")
 
+--game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam","Pirates")
+
 local function Tween(Inst, Info,Properties)
     local TweenSvc = game:GetService("TweenService")
     local Track = TweenSvc:Create(Inst, Info, Properties)
@@ -165,21 +167,47 @@ function AutoFarmChests()
 	}
 	
 	Anchor(Char)
+	--[[
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 		if getgenv().Configuration.CurrentPlace == "First-Seas" then
 			for _, chest in pairs(FirstSeasChests) do
-				if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
 				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 			end
 		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
 			for _, chest in pairs(SecondSeasChests) do
-				if getgenv().Configuration.Modules.AutoFarmChests == false then break end
 				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
 				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 			end
 		end
+	end
+	--]]
+	
+	while getgenv().Configuration.Modules.AutoFarmChests do
+		local root = Char.PrimaryPart
+		if not root then task.wait() continue end
+		
+		local chestList
+		if getgenv().Configuration.CurrentPlace == "First-Seas" then
+			chestList = FirstSeasChests
+		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
+			chestList = SecondSeasChests
+		end
+		
+		if chestList then
+			for _, chest in pairs(chestList) do
+				if not getgenv().Configuration.Modules.AutoFarmChests then break end
+				
+				local speed = math.max(getgenv().Configuration.TweenSpeed, 1)
+				local time = (chest.Position - root.Position).Magnitude / speed
+				
+				Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
+				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+			end
+		end
+		
+		task.wait()
 	end
 end
 
@@ -533,9 +561,9 @@ do
 		end
     end)
 	
-	local CompleteRaid = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
+	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
 
-    CompleteRaid:OnChanged(function()
+    CompleteRaid1:OnChanged(function()
         getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
 		local loop_thread = task.spawn(CompleteRaid)
 			
@@ -577,9 +605,50 @@ do
 		Default = 1,
 	})
 	
+	local StartTravel = Tabs.Travel:AddToggle("StartTravel", {Title = "Travel", Default = false})
+	local val
+
 	Island:OnChanged(function(Value)
-		getgenv().ModuleSetting.Travel.Destination = Value
+		val = Value
 	end)
+
+    StartTravel:OnChanged(function()
+		local loop_thread = task.spawn(function()
+			local function Anchor(Char)
+				if Options.StartTravel.Value then
+					local f = Instance.new("BodyVelocity")
+					f.Name = "f"
+					f.P = 15000
+					f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+					f.Velocity = Vector3.new(0,.01,0)
+					f.Parent = Char.PrimaryPart
+				else
+					local bv = Char.PrimaryPart:FindFirstChild("f")
+					if bv then
+						bv:Destroy()
+					end
+				end
+				
+				for _,part in pairs(Char:GetChildren()) do
+					if part:IsA("BasePart") then
+						part.CanCollide = Options.StartTravel.Value
+					end
+				end
+			end
+			
+			local island = workspace.Map:FindFirstChild(val)
+			
+			if Char and island then
+				Anchor(Char)
+				Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
+			end
+		end)
+		
+		if not Options.StartTravel.Value then
+			Pause()
+			closeThread(loop_thread)
+		end
+    end)
 	
  	local Tool = Tabs.Settings:AddDropdown("Tool", {
 		Title = "Weapon type",
