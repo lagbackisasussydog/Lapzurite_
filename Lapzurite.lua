@@ -75,7 +75,6 @@ task.spawn(function()
 	end
 end)
 
---[[
 function AutoFarmLevel()
 	local function Anchor(Char, Toggled)
 		if Toggled then
@@ -332,7 +331,6 @@ function AutoFarmLevel()
 		end
 	end)
 end
-]]--
 
 function AutoFarmChests()
 	local function Anchor(Char)
@@ -767,7 +765,7 @@ local Window = Fluent:CreateWindow({
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "Dark",
+    Theme = "Aqua",
     MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
 })
 
@@ -778,12 +776,6 @@ local Tabs = {
 	Travel = Window:AddTab({ Title = "Travel", Icon = "plane"}),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings"})
 }
-
-function createIslandDropdown()
-	
-	
-	return Dropdown
-end
 
 local Options = Fluent.Options
 
@@ -811,6 +803,14 @@ do
 			closeThread(loop_thread)
 		end
     end)
+	
+	local RaidType = Tabs.Raid:AddDropdown("RaidType", {
+		Title = "Fruit",
+		Description = "",
+		Values = {"Flame"},
+		Multi = false,
+		Default = 1,
+	})
 	
 	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
         Title = "Delay between chests",
@@ -901,3 +901,6 @@ do
 		getgenv().Configuration.Tool = Value
 	end)
 end
+
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+SaveManager:LoadAutoloadConfig()
