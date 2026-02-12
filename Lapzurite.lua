@@ -6,7 +6,9 @@ getgenv().Configuration = {
 	["Modules"] = {
 		["AutoFarmLevel"] = false,
 		["AutoFarmChests"] = false,
-		["CompleteRaid"] = false
+		["CompleteRaid"] = false,
+		["AutoKatakuri"] = false,
+		["AutoBone"] = false
 	},
 }
 
@@ -65,6 +67,27 @@ local function getTool()
 	end
 end
 
+local function FireHitRemote(enemy,character,tool)
+		local args = {
+			[1] = enemy:FindFirstChild("Head"),
+			[2] = {},
+			[4] = "0"
+		}
+		
+		local success, err = pcall(function()
+			if character and enemy then
+				character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
+				character.Humanoid:EquipTool(tool)
+				AttackRemote:FireServer(0)
+				HitRemote:FireServer(unpack(args))
+			end
+		end)
+		
+		if not success then
+			warn(err)
+		end
+	end
+
 task.spawn(function()
 	if game.PlaceId == 7449423635 then
 		getgenv().Configuration.CurrentPlace = "Third-Seas"
@@ -74,263 +97,6 @@ task.spawn(function()
 		getgenv().Configuration.CurrentPlace = "First-Seas"
 	end
 end)
-
-function AutoFarmLevel()
-	local function Anchor(Char, Toggled)
-		if Toggled then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			Char.PrimaryPart:FindFirstChild("f"):Destroy()
-		end
-		
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = Toggled
-			end
-		end
-	end
-		
-	local function getRoutineTable(level)
-		if level >= 1 and level < 10 then
-			return {
-				NPC = "Bandit Quest Giver",
-				Target = "Bandit",
-				TargetPosition = {
-					[1] = Vector3.new(1160.79285, 16.308918, 1396.76758),
-					[2] = Vector3.new(1192.06702, 16.7385406, 1619.22168)
-				},
-				Quest = "BanditQuest1",
-				QuestSection = 1,
-				QuestGoal = 6,
-			}
-		elseif level >= 9 and level < 30 then
-			return {
-				NPC = "Adventurer",
-				Target = "Monkey",
-				TargetPosition = {
-					[1] = Vector3.new(-1612.88428, 36.8870392, 150.707809),
-					[2] = Vector3.new(-1554.04565, 22.9448719, 323.000702)
-				},
-				Quest = "JungleQuest",
-				QuestSection = 1,
-				QuestGoal = 7,
-			}
-		elseif level >= 29 and level < 175 then
-			return {
-				NPC = "Freezeburg Quest Giver",
-				Target = "Galley Pirate",
-				TargetPosition = {
-					[1] = Vector3.new(5578.61182, 38.5360413, 3927.96045),
-					[2] = Vector3.new(5578.61182, 38.5360413, 3927.96045)
-				},
-				Quest = "FountainQuest",
-				QuestSection = 1,
-				QuestGoal = 30,
-			}
-		elseif level >= 174 and level < 250 then
-			return {
-				NPC = "Sky Adventurer",
-				Target = "Dark Master",
-				TargetPosition = {
-					[1] = Vector3.new(-4847.61865, 717.731018, -2632.14331),
-					[2] = Vector3.new(-5226.62842, 448.897278, -2396.5481)
-				},
-				Quest = "SkyQuest",
-				QuestSection = 2,
-				QuestGoal = 9,
-			}
-		elseif level >= 249 and level < 300 then
-			return {
-				NPC = "Colosseum Quest Giver",
-				Target = "Toga Warrior",
-				TargetPosition = {
-					[1] = Vector3.new(-1500.21082, 7.42455006, -2966.73486),
-					[2] = Vector3.new(-1773.02649, 52.4644165, -2688.31104)
-				},
-				Quest = "ColosseumQuest",
-				QuestSection = 1,
-				QuestGoal = 8,
-			}
-		elseif level >= 299 and level < 325 then
-			return {
-				NPC = "The Mayor",
-				Target = "Military Soldier",
-				TargetPosition = {
-					[1] = Vector3.new(-5345.09473, 9.01804161, 8527.49609),
-					[2] = Vector3.new(-5566.64648, 17.2521591, 8378.87793)
-				},
-				Quest = "MagmaQuest",
-				QuestSection = 1,
-				QuestGoal = 8,
-			}
-		elseif level >= 324 and level < 375 then
-			return {
-				NPC = "The Mayor",
-				Target = "Military Spy",
-				TargetPosition = {
-					[1] = Vector3.new(-5345.09473, 9.01804161, 8527.49609),
-					[2] = Vector3.new(-5857.83203, 77.2870331, 8847.55762)
-				},
-				Quest = "MagmaQuest",
-				QuestSection = 2,
-				QuestGoal = 9,
-			}
-		elseif level >= 374 and level < 400 then
-			return {
-				NPC = "King Neptune",
-				Target = "Fishman Warrior",
-				TargetPosition = {
-					[1] = Vector3.new(61127.3008, 18.5067692, 1577.22119),
-					[2] = Vector3.new(60930.707, 18.5179844, 1597.11829)
-				},
-				Quest = "FishmanQuest",
-				QuestSection = 1,
-				QuestGoal = 9,
-				Request = 1
-			}
-		elseif level >= 399 and level < 450 then
-			return {
-				NPC = "King Neptune",
-				Target = "Fishman Commando",
-				TargetPosition = {
-					[1] = Vector3.new(61127.3008, 18.5067692, 1577.22119),
-					[2] = Vector3.new(61917.8672, 18.5179844, 1450.17859)
-				},
-				Quest = "FishmanQuest",
-				QuestSection = 2,
-				QuestGoal = 8,
-				Request = 1
-			}
-		elseif level >= 474 and level < 525 then
-			return {
-				NPC = "Mole",
-				Target = "Shanda",
-				TargetPosition = {
-					[1] = Vector3.new(-7894.6181640625, 5547.14208984375, -380.2909851074219),
-					[2] = Vector3.new(-7681.30518, 5566.86328, -497.615448)
-				},
-				Quest = "SkyExp1Quest",
-				QuestSection = 2,
-				QuestGoal = 10,
-				Request = 3
-			}
-		elseif level >= 524 and level < 550 then
-			return {
-				NPC = "Sky Quest Giver 2",
-				Target = "Royal Squad",
-				TargetPosition = {
-					[1] = Vector3.new(-7887.36719, 5635.99902, -1410.34705),
-					[2] = Vector3.new(-7634.67285, 5637.1167, -1408.89124)
-				},
-				Quest = "SkyExp2Quest",
-				QuestSection = 1,
-				QuestGoal = 9,
-			}
-		elseif level >= 549 and level < 625 then
-			return {
-				NPC = "Sky Quest Giver 2",
-				Target = "Royal Soldier",
-				TargetPosition = {
-					[1] = Vector3.new(-7887.36719, 5635.99902, -1410.34705),
-					[2] = Vector3.new(-7837.71191, 5622.31689, -1784.57361)
-				},
-				Quest = "SkyExp2Quest",
-				QuestSection = 2,
-				QuestGoal = 9,
-			}
-		elseif level >= 624 and level < 650 then
-			return {
-				NPC = "Freezeburg Quest Giver",
-				Target = "Galley Pirate",
-				TargetPosition = {
-					[1] = Vector3.new(5578.61182, 38.5360413, 3927.96045),
-					[2] = Vector3.new(5578.61182, 38.5360413, 3927.96045)
-				},
-				Quest = "FountainQuest",
-				QuestSection = 1,
-				QuestGoal = 9,
-			}
-		elseif level >= 649 and level < 700 then
-			return {
-				NPC = "Freezeburg Quest Giver",
-				Target = "Galley Captain",
-				TargetPosition = {
-					[1] = Vector3.new(5578.61182, 38.5360413, 3927.96045),
-					[2] = Vector3.new(5443.66845703125, 42.53704833984375, 4949.4296875)
-				},
-				Quest = "FountainQuest",
-				QuestSection = 2,
-				QuestGoal = 10,
-			}
-		end
-		return nil
-	end
-	
-	function getQuest(Routine)
-		CommF_:InvokeServer("StartQuest",Routine.Quest,Routine.QuestSection)
-		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Routine.TargetPosition[1]) / getgenv().Configuration.TweenSpeed,Enum.EasingStyle.Linear), {CFrame = CFrame.new(Routine.TargetPosition[1])})
-	end
-	
-	local function FireHitRemote(enemy,character)
-		local args = {
-			[1] = enemy.Head,
-			[2] = {},
-			[4] = "0"
-		}
-		
-		local Tool = getTool()
-		local success, err = pcall(function()
-			if character then
-				character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-				character.Humanoid:EquipTool(Tool)
-				AttackRemote:FireServer(0)
-				HitRemote:FireServer(unpack(args))
-			end
-		end)
-		
-		if not success then
-			warn("Failed to fire HitRemote:", err)
-		end
-	end
-	
-	local function Attack(Character, Enemy)
-		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
-
-		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
-		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
-		local Humanoid = Character:FindFirstChild("Humanoid")
-
-		if not EnemyHumanoid or not Humanoid then return end
-
-		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
-		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / 325
-
-		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
-
-		while EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.AutoFarmLevel do
-			FireHitRemote(Enemy, Character)
-			task.wait(.2)
-		end
-	end
-	
-	local loop_thread = task.spawn(function()
-		while Char and Char.Humanoid.Health > 0 do
-			local Routine = getRoutineTable(Plr.Data.Level.Value)
-			
-			getQuest(Routine)
-			for _, Inst in pairs(workspace.Enemies:GetChildren()) do
-				if Inst and Inst.Humanoid and Inst.Humanoid.Health > 0 and Inst.Name == Routine.Target then
-					Attack(Char, Inst)
-				end
-			end
-		end
-	end)
-end
 
 function AutoFarmChests()
 	local function Anchor(Char)
@@ -482,59 +248,7 @@ local function CompleteRaid()
 		end
 	end
 	
-	local function FireHitRemote(enemy,character)
-		-- Create the hit parts table (usually contains the humanoid root part and maybe other parts)
-		
-		-- These arguments might need adjustment based on your game
-		local args = {
-			[1] = enemy.Head,
-			[2] = {},
-			[4] = "0"
-		}
-		
-		local Tool = getTool()
-		local success, err = pcall(function()
-			if character then
-				character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-				character.Humanoid:EquipTool(Tool)
-				AttackRemote:FireServer(0)
-				HitRemote:FireServer(unpack(args))
-			end
-		end)
-		
-		if not success then
-			warn("Failed to fire HitRemote:", err)
-		end
-	end
-	
-	--<font color="rgb(102,255,102)">Island #1 cleared!</font>
-	
 	local function Attack(Character, Enemy)
-		--[[
-		local success,err = pcall(function()
-			for _, Enemy in pairs(workspace.Enemies:GetChildren()) do
-				if Enemy:FindFirstChild("HumanoidRootPart") and Enemy == Enemies then
-					local EnemyHumanoid = Enemy.Humanoid
-					local EnemyRootPart = Enemy.HumanoidRootPart
-					local Humanoid = Character:WaitForChild("Humanoid")
-					
-					local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
-					local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / 325
-					
-					Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
-					
-					-- Attack loop
-					while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
-						FireHitRemote(Enemy,Character)
-						task.wait(.2)
-					end
-				end
-			end
-		end)
-		
-		if err then warn("Error: " .. err) end
-		--]]
-		
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
 		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
@@ -547,9 +261,9 @@ local function CompleteRaid()
 		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
-
-		while EnemyHumanoid and EnemyHumanoid.Health > 0 do
-			FireHitRemote(Enemy, Character)
+		
+		while Character and Enemy and EnemyHumanoid.Health > 0 do
+			task.wait()
 		end
 	end
 	
@@ -591,14 +305,95 @@ local function CompleteRaid()
 				local hum = Inst:FindFirstChild("Humanoid")
 
 				local i = table.find(MobList, Inst.Name)
-				if hum and hum.Health > 0 and i then
+				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
+					print("Attacking")
 					Attack(Char, Inst)
-					break
+					task.wait(.1)
 				end
 			end
 			task.wait()
 		end
 	end)
+end
+
+function AutoKatakuriFunc()
+	local function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+		
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
+			end
+		end
+	end
+
+	local function Attack(Character, Enemy)
+		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
+
+		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
+		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
+		local Humanoid = Character:FindFirstChild("Humanoid")
+
+		if not EnemyHumanoid or not Humanoid then Tween(Character.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934) / getgenv().Configuration.TweenSpeed), Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)}) return end
+
+		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
+		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
+
+		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
+		
+		repeat task.wait()
+			args = {
+				[1] = Enemy.Head,
+				[2] = {},
+				[4] = "0"
+			}
+			Character:SetPrimaryPartCFrame(EnemyRootPart.CFrame * CFrame.new(0,15,0))
+			Character.Humanoid:EquipTool(getTool())
+			AttackRemote:FireServer(0)
+			HitRemote:FireServer(unpack(args))
+		until EnemyHumanoid.Health < 0
+	end
+	
+	local MobList = {
+		"Cookie Crafter",
+		"Cake Guard",
+		"Baking Staff",
+		"Head Baker"
+	}
+	
+	local StartCF = CFrame.new(-2130.8335, 70.0277176, -12251.1934)
+	local portal = workspace.Map.CakeLoaf.BigMirror.Main
+	
+	local loop_thread = task.spawn(function()
+		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
+			for _, Inst in pairs(Enemies:GetChildren()) do
+				local hum = Inst:FindFirstChild("Humanoid")
+
+				local i = table.find(MobList, Inst.Name)
+				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
+					Attack(Char, Inst)
+					task.wait(.1)
+				end
+			end
+			task.wait()
+		end
+	end)
+end
+
+function AutoBone()
+
 end
 
 function closeThread(thread)
@@ -790,6 +585,18 @@ do
 		end
     end)
 	
+	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "AutoKatakuri", Default = false})
+
+    AutoKatakuri:OnChanged(function()
+        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
+		local loop_thread = task.spawn(AutoKatakuriFunc)
+		
+		if not Options.AutoKatakuri.Value then
+			Pause()
+			closeThread(loop_thread)
+		end
+    end)
+	
 	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
 
     CompleteRaid1:OnChanged(function()
@@ -848,7 +655,7 @@ do
 	Island:OnChanged(function(Value)
 		val = Value
 	end)
-
+	
     StartTravel:OnChanged(function()
 		local loop_thread = task.spawn(function()
 			local function Anchor(Char)
