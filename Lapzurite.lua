@@ -360,7 +360,6 @@ function AutoKatakuriFunc()
 				[4] = "0"
 			}
 			Character:SetPrimaryPartCFrame(EnemyRootPart.CFrame * CFrame.new(0,15,0))
-			Character.Humanoid:EquipTool(getTool())
 			AttackRemote:FireServer(0)
 			HitRemote:FireServer(unpack(args))
 		until EnemyHumanoid.Health < 0
@@ -378,7 +377,9 @@ function AutoKatakuriFunc()
 	
 	local Enemies = workspace.Enemies
 	
+	Anchor(Char)
 	local loop_thread = task.spawn(function()
+		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934) / getgenv().Configuration.TweenSpeed), Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
