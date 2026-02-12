@@ -245,28 +245,6 @@ function AutoFarmChests()
 end
 
 local function CompleteRaid()
-	function Anchor(Char)
-		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-			
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.CompleteRaid
-			end
-		end
-	end
-
 	local Enemies = workspace.Enemies
 	MobList = {
 		"Sorcerer",
@@ -298,6 +276,28 @@ local function CompleteRaid()
 		end
 	end
 	
+	local function Anchor(Char)
+		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.CompleteRaid
+			end
+		end
+	end
+
 	local function IslandCheck()
 		local Notifications = game:GetService("Players").LocalPlayer.PlayerGui.Notifications
 		
@@ -318,8 +318,8 @@ local function CompleteRaid()
 		end
 	end
 	
-	Anchor(Char)
 	local loop_thread = task.spawn(function()
+		Anchor(Char)
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
 			local rType = getgenv().ModuleSetting.Raid.RaidType
 			local islandPosition
@@ -358,28 +358,7 @@ local function CompleteRaid()
 end
 
 function AutoKatakuriFunc()
-	function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-			
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
-			end
-		end
-	end
-
+	
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
@@ -401,6 +380,28 @@ function AutoKatakuriFunc()
 		end
 	end
 	
+	local function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
+			end
+		end
+	end
+
 	local function MessageCheck()
 		local Notifications = game:GetService("Players").LocalPlayer.PlayerGui.Notifications
 		
@@ -459,7 +460,7 @@ end
 function AutoBoneFunc()
 	local StartPos = CFrame.new(9521.92676, 172.149506, 6144.80225)
 
-	function Anchor(Char)
+	local function Anchor(Char)
 		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
