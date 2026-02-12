@@ -724,7 +724,6 @@ do
 		val = Value
 	end)
 	
-	--[[
     StartTravel:OnChanged(function()
 		local function Anchor(Char)
 			if Options.StartTravel.Value then
@@ -753,14 +752,12 @@ do
 		if Char and island then
 			Anchor(Char)
 			Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
-			end
 		end
 		
 		if not Options.StartTravel.Value then
 			Pause()
 		end
     end)
-	--]]
 
  	local Tool = Tabs.Settings:AddDropdown("Tool", {
 		Title = "Weapon type",
