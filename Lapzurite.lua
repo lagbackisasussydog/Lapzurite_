@@ -747,12 +747,13 @@ do
 					end
 				end
 			end
+		end
 			
-			local island = workspace.Map:FindFirstChild(val) or workspace:FindFirstChild(val)
+		local island = workspace.Map:FindFirstChild(val) or workspace:FindFirstChild(val)
 			
-			if Char and island then
-				Anchor(Char)
-				Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
+		if Char and island then
+			Anchor(Char)
+			Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
 			end
 		end
 		
