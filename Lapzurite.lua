@@ -793,7 +793,7 @@ do
 	
     StartTravel:OnChanged(function()
 		local function Anchor(Char)
-			if Options.StartTravel.Value then
+			if Options.StartTravel.Value and Char:FindFirstChild("f") == nil then
 				local f = Instance.new("BodyVelocity")
 				f.Name = "f"
 				f.P = 15000
