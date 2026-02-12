@@ -373,13 +373,14 @@ function AutoKatakuriFunc()
 				local check = MessageCheck()
 				local i = table.find(MobList, Inst.Name)
 				
+				--[[
 				if check[1] == true then
 					Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(portal.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new({portal.Position})})
 					task.wait(5)
 					Attack(Char, Enemies:FindFirstChild(check[2]))
 					Character.Humanoid.Health = 0
 				end
-
+				]]--
 				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
 					Attack(Char, Inst)
 					task.wait(.1)
@@ -461,6 +462,37 @@ local Tabs = {
 
 local Options = Fluent.Options
 
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/main/addons/InterfaceManager.lua"))()
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+
+InterfaceManager:SetFolder("Lapzurite")
+SaveManager:SetFolder("Lapzurite/configs")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+task.spawn(function()
+	for optionName, option in pairs(Options) do
+		option:OnChanged(function()
+			if getgenv().Configuration.Modules[optionName] ~= nil then
+				getgenv().Configuration.Modules[optionName] = option.Value
+			end
+
+			if getgenv().ModuleSetting.AutoFarmChests[optionName] ~= nil then
+				getgenv().ModuleSetting.AutoFarmChests[optionName] = option.Value
+			end
+		end)
+	end
+end)
+
+SaveManager:LoadAutoloadConfig()
+
 do
 	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
 
@@ -474,7 +506,7 @@ do
 		end
     end)
 
-	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
+	local Delay = Tabs.SubFarm:AddSlider("Delay", {
         Title = "Delay between chests",
         Description = "Changes how long your character stays after collected a chest",
         Default = 1,
@@ -594,7 +626,12 @@ do
 	Tool:OnChanged(function(Value)
 		getgenv().Configuration.Tool = Value
 	end)
-end
 
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-SaveManager:LoadAutoloadConfig()
+	Tabs.Settings:AddButton({
+        Title = "Fast Mode",
+        Description = "Enable Blox Fruits fast mode",
+        Callback = function()
+            game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/OnEventServiceActivity"):FireServer("HUD/Button/Settings/FastMode")
+        end
+    })
+end
