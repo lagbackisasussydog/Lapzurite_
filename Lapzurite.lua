@@ -376,6 +376,8 @@ function AutoKatakuriFunc()
 	local StartCF = CFrame.new(-2130.8335, 70.0277176, -12251.1934)
 	local portal = workspace.Map.CakeLoaf.BigMirror.Main
 	
+	local Enemies = workspace.Enemies
+	
 	local loop_thread = task.spawn(function()
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			for _, Inst in pairs(Enemies:GetChildren()) do
