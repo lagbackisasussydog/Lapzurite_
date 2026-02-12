@@ -147,16 +147,16 @@ end
 
 local function FireHitRemote(enemy, tool,character)
     local args = {
-        [1] = enemy.Head,
-        [2] = {},
-		[4] = "0"
+        enemy.Head,
+        {},
+		"0"
     }
     
     local success, err = pcall(function()
 		if character then
 			character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-			AttackRemote:FireServer(0)
-			HitRemote:FireServer(unpack(args))
+			game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack"):FireServer(math.random(0,1))
+			game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit"):FireServer(unpack(args))
 		end
     end)
     
