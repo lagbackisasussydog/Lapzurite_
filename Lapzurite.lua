@@ -724,6 +724,7 @@ do
 		val = Value
 	end)
 	
+	--[[
     StartTravel:OnChanged(function()
 		local function Anchor(Char)
 			if Options.StartTravel.Value then
@@ -759,6 +760,7 @@ do
 			Pause()
 		end
     end)
+	--]]
 
  	local Tool = Tabs.Settings:AddDropdown("Tool", {
 		Title = "Weapon type",
