@@ -190,7 +190,14 @@ end
 
 local function CompleteRaid()
 	local Enemies = workspace.Enemies
-	local MobList
+	MobList = {
+		"Sorcerer",
+		"Bone Breaker",
+		"Shocker",
+		"Bladesmith",
+		"Flame User",
+		"Flame Master"
+	}
 	
 	local function Anchor(Char)
 		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
@@ -732,7 +739,6 @@ do
 			Terrain.WaterWaveSpeed = 0
 			Terrain.WaterReflectance = 0
 			Terrain.WaterTransparency = 0
-			Lighting.GlobalShadows = false
 			Lighting.FogEnd = 9e9
 			settings().Rendering.QualityLevel = 1
 			for i,v in pairs(game:GetDescendants()) do
