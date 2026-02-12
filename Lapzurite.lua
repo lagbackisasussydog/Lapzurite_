@@ -330,7 +330,7 @@ function AutoKatakuriFunc()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 		
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 do
 			Humanoid:EquipTool(getTool())
 			FireHitRemote(Enemy, getTool(),Character)
 			task.wait(.1)
@@ -367,6 +367,7 @@ function AutoKatakuriFunc()
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
+		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			Char = getChar()
 			for _, Inst in pairs(Enemies:GetChildren()) do
@@ -447,7 +448,7 @@ function AutoBoneFunc()
 	}
 
 	local loop_thread = task.spawn(function()
-		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(startPos.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = StartPos})
+		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(StartPos.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = StartPos})
 		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoBone and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			Char = getChar()
