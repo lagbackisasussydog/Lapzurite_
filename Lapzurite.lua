@@ -30,10 +30,66 @@ getgenv().ModuleSetting = {
 	}
 }
 
-getgenv().Threads = {}
+getgenv().ModuleManager = {
+    Modules = {},
+    Threads = {}
+}
+
+local Manager = getgenv().ModuleManager
+
+function Manager:Register(name, startFunc, stopFunc)
+    self.Modules[name] = {
+        Start = startFunc,
+        Stop = stopFunc,
+        Enabled = false
+    }
+end
+
+function Manager:Start(name)
+    local mod = self.Modules[name]
+    if not mod then return end
+    if mod.Enabled then return end
+
+    mod.Enabled = true
+
+    if self.Threads[name] then
+        task.cancel(self.Threads[name])
+    end
+
+    self.Threads[name] = task.spawn(function()
+        mod.Start()
+    end)
+end
+
+function Manager:Stop(name)
+    local mod = self.Modules[name]
+    if not mod then return end
+
+    mod.Enabled = false
+
+    if self.Threads[name] then
+        task.cancel(self.Threads[name])
+        self.Threads[name] = nil
+    end
+
+    if mod.Stop then
+        mod.Stop()
+    end
+end
+
+function Manager:RestartAll()
+    for name, mod in pairs(self.Modules) do
+        if mod.Enabled then
+            self:Stop(name)
+            task.wait()
+            self:Start(name)
+        end
+    end
+end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Plr = game.Players.LocalPlayer
+local Char = Plr.Character or Plr.CharacterAdded:Wait()
 
 local HitRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
 local AttackRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
@@ -41,6 +97,28 @@ local CommF_ = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):Wait
 
 local function getChar()
 	return Plr.Character or Plr.CharacterAdded:Wait()
+end
+
+local function Anchor(Char, State)
+	if State and Char.PrimaryPart:FindFirstChild("f") == nil then
+		local f = Instance.new("BodyVelocity")
+		f.Name = "f"
+		f.P = 15000
+		f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+		f.Velocity = Vector3.new(0,.01,0)
+		f.Parent = Char.PrimaryPart
+	else
+		local bv = Char.PrimaryPart:FindFirstChild("f")
+		if bv then
+			bv:Destroy()
+		end
+	end
+		
+	for _,part in pairs(Char:GetChildren()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = State
+		end
+	end
 end
 
 local function Tween(Inst, Info,Properties)
@@ -88,28 +166,6 @@ local function FireHitRemote(enemy, tool,character)
 end
 
 function AutoFarmChests()
-	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoFarmChests then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-		
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.AutoFarmChests
-			end
-		end
-	end
-	
 	local FirstSeasChests = {
 		CFrame.new(1147.56067, 19.7403679, 1260.95337),
 		CFrame.new(958.973572, 16.3185673, 1339.90894),
@@ -158,10 +214,10 @@ function AutoFarmChests()
 		CFrame.new(-1070.09130859375, 120.7647476196289, 857.2682495117188)
 	}
 	
-	local Char = getChar()
 
-	Anchor(Char)
+	Anchor(getgenv().Configuration.Modules.AutoFarmChests)
 	while getgenv().Configuration.Modules.AutoFarmChests do
+		Char = getChar()
 		local root = Char.PrimaryPart
 		if not root then task.wait() continue end
 		
@@ -198,29 +254,7 @@ local function CompleteRaid()
 		"Flame User",
 		"Flame Master"
 	}
-	
-	local function Anchor(Char)
-		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-		
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.CompleteRaid
-			end
-		end
-	end
-	
+
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
@@ -235,7 +269,7 @@ local function CompleteRaid()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 		
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 do
 			Humanoid:EquipTool(getTool())
 			FireHitRemote(Enemy, getTool(),Character)
 			task.wait(.1)
@@ -262,15 +296,20 @@ local function CompleteRaid()
 		end
 	end
 	
-	local Char = getChar()
-
-	Anchor(Char)
+	Anchor(Char, getgenv().Configuration.Modules.CompleteRaid)
 	local loop_thread = task.spawn(function()
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
 			Char = getChar()
 			local rType = getgenv().ModuleSetting.Raid.RaidType
 			local islandPosition
 			local island = IslandCheck()
+
+			if not Char or Char.PrimaryPart then
+				task.wait(10)
+				continue
+			end
+
+			
 
 			if rType == "Flame" then
 				MobList = {
@@ -290,7 +329,6 @@ local function CompleteRaid()
 
 				local i = table.find(MobList, Inst.Name)
 				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
-					print("Attacking")
 					Attack(Char, Inst)
 					task.wait(.1)
 				end
@@ -301,28 +339,6 @@ local function CompleteRaid()
 end
 
 function AutoKatakuriFunc()
-	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-		
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
-			end
-		end
-	end
-
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
@@ -371,7 +387,7 @@ function AutoKatakuriFunc()
 	local Enemies = workspace.Enemies
 	local Char = getChar()
 
-	Anchor(Char)
+	Anchor(Char, getgenv().Configuration.Modules.AutoKatakuri)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		task.wait(5)
@@ -405,7 +421,7 @@ function AutoBoneFunc()
 	local Char = getChar()
 
 	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
 			f.P = 15000
@@ -421,7 +437,7 @@ function AutoBoneFunc()
 		
 		for _,part in pairs(Char:GetChildren()) do
 			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
+				part.CanCollide = getgenv().Configuration.Modules.AutoBone
 			end
 		end
 	end
@@ -440,7 +456,7 @@ function AutoBoneFunc()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 		
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 do
 			Humanoid:EquipTool(getTool())
 			FireHitRemote(Enemy, getTool(),Character)
 			task.wait(.1)
@@ -459,9 +475,8 @@ function AutoBoneFunc()
 		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoBone and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			Char = getChar()
-			for _, Inst in pairs(Enemies:GetChildren()) do
+			for _, Inst in pairs(workspace.Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
-				local check = MessageCheck()
 				local i = table.find(MobList, Inst.Name)
 				
 				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
@@ -502,12 +517,6 @@ function getIslandList()
 end
 
 task.spawn(function()
-	Plr.CharacterAdded:Connect(function(newChar)
-		Char = newChar
-	end)
-end)
-
-task.spawn(function()
 	if game.PlaceId == 7449423635 then
 		getgenv().Configuration.CurrentPlace = "Third-Seas"
 	elseif game.PlaceId == 4442272183 then
@@ -521,8 +530,15 @@ task.spawn(function()
 	CommF_:InvokeServer("SetTeam","Pirates")
 end)
 
+task.spawn(function()
+	Plr.CharacterAdded:Connect(function()
+		task.wait(1)
+		Manager:RestartAll()
+	end)
+end)
+
 local Window = Fluent:CreateWindow({
-    Title = "Lapzurite ",
+    Title = "Lapzurite_",
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -573,18 +589,44 @@ end)
 SaveManager:LoadAutoloadConfig()
 --]]
 
+Manager:Register(
+    "AutoChest",
+    AutoFarmChests,
+    function()
+        Pause()
+end)
+
+Manager:Register(
+    "AutoKatakuri",
+    AutoKatakuriFunc,
+    function()
+        Pause()
+end)
+
+Manager:Register(
+    "AutoBone",
+    AutoBoneFunc,
+    function()
+        Pause()
+end)
+
+Manager:Register(
+    "CompleteRaid",
+    CompleteRaid,
+    function()
+        Pause()
+end)
+
 do
 	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
 
     AutoChest:OnChanged(function()
-        getgenv().Configuration.Modules.AutoFarmChests = Options.AutoChest.Value
-		startThread("AutoChest", AutoFarmChests)
-		
-		if not Options.AutoChest.Value then
-			Pause()
-			closeThread("AutoChest")
+		if Options.AutoChest.Value then
+			Manager:Start("AutoChest")
+		else
+			Manager:Stop("AutoChest")
 		end
-    end)
+	end)
 
 	local Delay = Tabs.SubFarm:AddSlider("Delay", {
         Title = "Delay between chests",
@@ -601,38 +643,32 @@ do
 	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "Auto Katakuri", Default = false})
 
     AutoKatakuri:OnChanged(function()
-        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
-		startThread("AutoKatakuri", AutoKatakuriFunc)
-		
-		if not Options.AutoKatakuri.Value then
-			Pause()
-			closeThread("AutoKatakuri")
+		if Options.AutoKatakuri.Value then
+			Manager:Start("AutoKatakuri")
+		else
+			Manager:Stop("AutoKatakuri")
 		end
-    end)
+	end)
 
 	local AutoBone = Tabs.SubFarm:AddToggle("AutoBone", {Title = "AutoFarm Bones", Default = false})
 
     AutoBone:OnChanged(function()
-        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
-		startThread("AutoBone", AutoBoneFunc)
-		
-		if not Options.AutoBone.Value then
-			Pause()
-			closeThread("AutoBone")
+		if Options.AutoBone.Value then
+			Manager:Start("AutoBone")
+		else
+			Manager:Stop("AutoBone")
 		end
-    end)
+	end)
 	
 	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
 
     CompleteRaid1:OnChanged(function()
-        getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
-		startThread("CompleteRaid", CompleteRaid)
-			
-		if not Options.CompleteRaid.Value then
-			Pause()
-			closeThread("CompleteRaid")
+		if Options.CompleteRaid.Value then
+			Manager:Start("CompleteRaid")
+		else
+			Manager:Stop("CompleteRaid")
 		end
-    end)
+	end)
 	
 	local RaidType = Tabs.Raid:AddDropdown("RaidType", {
 		Title = "Fruit",
@@ -674,7 +710,7 @@ do
 	end)
 	
     StartTravel:OnChanged(function()
-		local loop_thread = task.spawn(function()
+		local function Travel()
 			local function Anchor(Char)
 				if Options.StartTravel.Value then
 					local f = Instance.new("BodyVelocity")
@@ -705,12 +741,14 @@ do
 			end
 		end)
 		
+		startThread("Travel", Travel)
+
 		if not Options.StartTravel.Value then
 			Pause()
-			closeThread(loop_thread)
+			closeThread("Travel")
 		end
-    end)
-	
+    end
+
  	local Tool = Tabs.Settings:AddDropdown("Tool", {
 		Title = "Weapon type",
 		Description = "",
