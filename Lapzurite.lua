@@ -260,6 +260,7 @@ local function CompleteRaid()
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
+			Char = getChar()
 			local rType = getgenv().ModuleSetting.Raid.RaidType
 			local islandPosition
 			local island = IslandCheck()
@@ -359,7 +360,6 @@ function AutoKatakuriFunc()
 	}
 	
 	local StartCF = CFrame.new(-2130.8335, 70.0277176, -12251.1934)
-	local portal = workspace.Map.CakeLoaf.BigMirror.Main
 	
 	local Enemies = workspace.Enemies
 	local Char = getChar()
@@ -368,6 +368,7 @@ function AutoKatakuriFunc()
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
+			Char = getChar()
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
 				local check = MessageCheck()
@@ -391,8 +392,78 @@ function AutoKatakuriFunc()
 	end)
 end
 
-function AutoBone()
+function AutoBoneFunc()
+	local StartPos = CFrame.new(9521.92676, 172.149506, 6144.80225)
+	local Char = getChar()
 
+	local function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+		
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
+			end
+		end
+	end
+
+	local function Attack(Character, Enemy)
+		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
+
+		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
+		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
+		local Humanoid = Character:FindFirstChild("Humanoid")
+
+		if not EnemyHumanoid or not Humanoid then return end
+
+		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
+		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
+
+		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
+		
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+			Humanoid:EquipTool(getTool())
+			FireHitRemote(Enemy, getTool(),Character)
+			task.wait(.1)
+		end
+	end
+
+	local MobList = {
+		"Reborn Skeleton",
+		"Posessed Mummy",
+		"Living Zombie",
+		"Demonic Soul"
+	}
+
+	local loop_thread = task.spawn(function()
+		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(startPos.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = StartPos})
+		task.wait(5)
+		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoBone and getgenv().Configuration.CurrentPlace == "Third-Seas" do
+			Char = getChar()
+			for _, Inst in pairs(Enemies:GetChildren()) do
+				local hum = Inst:FindFirstChild("Humanoid")
+				local check = MessageCheck()
+				local i = table.find(MobList, Inst.Name)
+				
+				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
+					Attack(Char, Inst)
+					task.wait(.1)
+				end
+			end
+			task.wait()
+		end
+	end)
 end
 
 function startThread(thread, func)
@@ -492,7 +563,8 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
-]]--
+--]]
+
 do
 	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
 
@@ -529,6 +601,18 @@ do
 			closeThread("AutoKatakuri")
 		end
     end)
+
+	local AutoBone = Tabs.SubFarm:AddToggle("AutoBone", {Title = "AutoFarm Bones", Default = false})
+
+    AutoBone:OnChanged(function()
+        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
+		startThread("AutoBone", AutoBoneFunc)
+		
+		if not Options.AutoBone.Value then
+			Pause()
+			closeThread("AutoBone")
+		end
+    end)
 	
 	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
 
@@ -545,10 +629,14 @@ do
 	local RaidType = Tabs.Raid:AddDropdown("RaidType", {
 		Title = "Fruit",
 		Description = "",
-		Values = {"Flame"},
+		Values = {"Flame", "Ice", "Quake", "Dark", "Spider"},
 		Multi = false,
 		Default = 1,
 	})
+
+	RaidType:OnChanged(function(Value)
+		getgenv().ModuleSetting.Raid.RaidType = Value
+	end)
 	
 	local TweenSpeed = Tabs.Settings:AddSlider("TweenSpeed", {
         Title = "Tween Speed",
@@ -629,9 +717,55 @@ do
 
 	Tabs.Settings:AddButton({
         Title = "Fast Mode",
-        Description = "Enable Blox Fruits fast mode",
+        Description = "Enable Fast mode",
         Callback = function()
-            game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/OnEventServiceActivity"):FireServer("HUD/Button/Settings/FastMode")
+			Fluent:Notify({
+				Title = "Lapzurite",
+				Content = "Success",
+				SubContent = "",
+				Duration = 5 
+    		})
+
+			local Terrain = workspace:FindFirstChildOfClass('Terrain')
+			Terrain.WaterWaveSize = 0
+			Terrain.WaterWaveSpeed = 0
+			Terrain.WaterReflectance = 0
+			Terrain.WaterTransparency = 0
+			Lighting.GlobalShadows = false
+			Lighting.FogEnd = 9e9
+			settings().Rendering.QualityLevel = 1
+			for i,v in pairs(game:GetDescendants()) do
+				if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+					v.Material = "Plastic"
+					v.Reflectance = 0
+				elseif v:IsA("Decal") then
+					v.Transparency = 1
+				elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+					v.Lifetime = NumberRange.new(0)
+				elseif v:IsA("Explosion") then
+					v.BlastPressure = 1
+					v.BlastRadius = 1
+				end
+			end
+			for i,v in pairs(Lighting:GetDescendants()) do
+				if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+					v.Enabled = false
+				end
+			end
+			workspace.DescendantAdded:Connect(function(child)
+				task.spawn(function()
+					if child:IsA('ForceField') then
+						RunService.Heartbeat:Wait()
+						child:Destroy()
+					elseif child:IsA('Sparkles') then
+						RunService.Heartbeat:Wait()
+						child:Destroy()
+					elseif child:IsA('Smoke') or child:IsA('Fire') then
+						RunService.Heartbeat:Wait()
+						child:Destroy()
+					end
+				end)
+			end)
         end
     })
 end
