@@ -215,7 +215,7 @@ function AutoFarmChests()
 	}
 	
 
-	Anchor(getgenv().Configuration.Modules.AutoFarmChests)
+	Anchor(Char, getgenv().Configuration.Modules.AutoFarmChests)
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		Char = getChar()
 		local root = Char.PrimaryPart
@@ -299,17 +299,14 @@ local function CompleteRaid()
 	Anchor(Char, getgenv().Configuration.Modules.CompleteRaid)
 	local loop_thread = task.spawn(function()
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
-			Char = getChar()
 			local rType = getgenv().ModuleSetting.Raid.RaidType
 			local islandPosition
 			local island = IslandCheck()
 
-			if not Char or Char.PrimaryPart then
+			if not Char or not Char.PrimaryPart then
 				task.wait(10)
 				continue
 			end
-
-			
 
 			if rType == "Flame" then
 				MobList = {
@@ -392,7 +389,6 @@ function AutoKatakuriFunc()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
-			Char = getChar()
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
 				local check = MessageCheck()
@@ -418,7 +414,6 @@ end
 
 function AutoBoneFunc()
 	local StartPos = CFrame.new(9521.92676, 172.149506, 6144.80225)
-	local Char = getChar()
 
 	local function Anchor(Char)
 		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
@@ -474,7 +469,6 @@ function AutoBoneFunc()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(StartPos.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = StartPos})
 		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoBone and getgenv().Configuration.CurrentPlace == "Third-Seas" do
-			Char = getChar()
 			for _, Inst in pairs(workspace.Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
 				local i = table.find(MobList, Inst.Name)
@@ -743,7 +737,7 @@ do
 				Anchor(Char)
 				Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
 			end
-		end)
+		end
 		
 		startThread("Travel", Travel)
 
@@ -751,7 +745,7 @@ do
 			Pause()
 			closeThread("Travel")
 		end
-    end
+    end)
 
  	local Tool = Tabs.Settings:AddDropdown("Tool", {
 		Title = "Weapon type",
