@@ -725,26 +725,24 @@ do
 	end)
 	
     StartTravel:OnChanged(function()
-		local function Travel()
-			local function Anchor(Char)
-				if Options.StartTravel.Value then
-					local f = Instance.new("BodyVelocity")
-					f.Name = "f"
-					f.P = 15000
-					f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-					f.Velocity = Vector3.new(0,.01,0)
-					f.Parent = Char.PrimaryPart
-				else
-					local bv = Char.PrimaryPart:FindFirstChild("f")
-					if bv then
-						bv:Destroy()
-					end
+		local function Anchor(Char)
+			if Options.StartTravel.Value then
+				local f = Instance.new("BodyVelocity")
+				f.Name = "f"
+				f.P = 15000
+				f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+				f.Velocity = Vector3.new(0,.01,0)
+				f.Parent = Char.PrimaryPart
+			else
+				local bv = Char.PrimaryPart:FindFirstChild("f")
+				if bv then
+					bv:Destroy()
 				end
-				
-				for _,part in pairs(Char:GetChildren()) do
-					if part:IsA("BasePart") then
-						part.CanCollide = Options.StartTravel.Value
-					end
+			end
+			
+			for _,part in pairs(Char:GetChildren()) do
+				if part:IsA("BasePart") then
+					part.CanCollide = Options.StartTravel.Value
 				end
 			end
 		end
@@ -757,11 +755,8 @@ do
 			end
 		end
 		
-		startThread("Travel", Travel)
-
 		if not Options.StartTravel.Value then
 			Pause()
-			closeThread("Travel")
 		end
     end)
 
