@@ -30,7 +30,6 @@ getgenv().ModuleSetting = {
 	}
 }
 
---local Bracket = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlexR32/Bracket/main/BracketV32.lua"))()
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Plr = game.Players.LocalPlayer
 local Char = Plr.Character or Plr.CharacterAdded:Wait()
@@ -39,8 +38,6 @@ local Root = Char:WaitForChild("HumanoidRootPart")
 local HitRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
 local AttackRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
 local CommF_ = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_")
-
---game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam","Pirates")
 
 local function Tween(Inst, Info,Properties)
     local TweenSvc = game:GetService("TweenService")
@@ -61,16 +58,12 @@ end
 local function getTool()
 	for _, v in pairs(Plr.Backpack:GetChildren()) do
 		if v.ToolTip == getgenv().Configuration.Tool then
-			--if Char:FindFirstChild(v.Name) then continue end
 			return v
 		end
 	end
 end
 
 local function FireHitRemote(enemy, tool,character)
-    -- Create the hit parts table (usually contains the humanoid root part and maybe other parts)
-    
-    -- These arguments might need adjustment based on your game
     local args = {
         [1] = enemy.Head,
         [2] = {},
@@ -89,16 +82,6 @@ local function FireHitRemote(enemy, tool,character)
         warn("Failed to fire HitRemote:", err)
     end
 end
-
-task.spawn(function()
-	if game.PlaceId == 7449423635 then
-		getgenv().Configuration.CurrentPlace = "Third-Seas"
-	elseif game.PlaceId == 4442272183 then
-		getgenv().Configuration.CurrentPlace = "Second-Seas"
-	elseif game.PlaceId == 2753915549 then
-		getgenv().Configuration.CurrentPlace = "First-Seas"
-	end
-end)
 
 function AutoFarmChests()
 	local function Anchor(Char)
@@ -172,23 +155,6 @@ function AutoFarmChests()
 	}
 	
 	Anchor(Char)
-	--[[
-	while getgenv().Configuration.Modules.AutoFarmChests do
-		if getgenv().Configuration.Modules.AutoFarmChests == false then break end
-		if getgenv().Configuration.CurrentPlace == "First-Seas" then
-			for _, chest in pairs(FirstSeasChests) do
-				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
-				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
-			end
-		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
-			for _, chest in pairs(SecondSeasChests) do
-				Tween(Char.PrimaryPart, TweenInfo.new((chest.Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = chest})
-				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
-			end
-		end
-	end
-	--]]
-	
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		local root = Char.PrimaryPart
 		if not root then task.wait() continue end
@@ -348,7 +314,7 @@ function AutoKatakuriFunc()
 		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
 		local Humanoid = Character:FindFirstChild("Humanoid")
 
-		if not EnemyHumanoid or not Humanoid then Tween(Character.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934) / getgenv().Configuration.TweenSpeed), Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)}) return end
+		if not EnemyHumanoid or not Humanoid then Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)}) return end
 
 		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
 		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
@@ -357,7 +323,7 @@ function AutoKatakuriFunc()
 		
 		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
 			Humanoid:EquipTool(getTool())
-			FireHitRemote(Enemy, Tool,Character)
+			FireHitRemote(Enemy, getTool(),Character)
 			task.wait(.1)
 		end
 	end
@@ -376,7 +342,7 @@ function AutoKatakuriFunc()
 	
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
-		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934) / getgenv().Configuration.TweenSpeed), Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
+		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
@@ -423,6 +389,20 @@ task.spawn(function()
 	Plr.CharacterAdded:Connect(function(newChar)
 		Char = newChar
 	end)
+end)
+
+task.spawn(function()
+	if game.PlaceId == 7449423635 then
+		getgenv().Configuration.CurrentPlace = "Third-Seas"
+	elseif game.PlaceId == 4442272183 then
+		getgenv().Configuration.CurrentPlace = "Second-Seas"
+	elseif game.PlaceId == 2753915549 then
+		getgenv().Configuration.CurrentPlace = "First-Seas"
+	end
+end)
+
+task.spawn(function()
+	CommF_:InvokeServer("SetTeam","Pirates")
 end)
 
 local Window = Fluent:CreateWindow({
