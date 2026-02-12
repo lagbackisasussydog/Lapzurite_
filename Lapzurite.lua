@@ -67,26 +67,28 @@ local function getTool()
 	end
 end
 
-local function FireHitRemote(enemy,character,tool)
-		local args = {
-			[1] = enemy:FindFirstChild("Head"),
-			[2] = {},
-			[4] = "0"
-		}
-		
-		local success, err = pcall(function()
-			if character and enemy then
-				character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-				character.Humanoid:EquipTool(tool)
-				AttackRemote:FireServer(0)
-				HitRemote:FireServer(unpack(args))
-			end
-		end)
-		
-		if not success then
-			warn(err)
+local function FireHitRemote(enemy, tool,character)
+    -- Create the hit parts table (usually contains the humanoid root part and maybe other parts)
+    
+    -- These arguments might need adjustment based on your game
+    local args = {
+        [1] = enemy.Head,
+        [2] = {},
+		[4] = "0"
+    }
+    
+    local success, err = pcall(function()
+		if character then
+			character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
+			AttackRemote:FireServer(0)
+			HitRemote:FireServer(unpack(args))
 		end
-	end
+    end)
+    
+    if not success then
+        warn("Failed to fire HitRemote:", err)
+    end
+end
 
 task.spawn(function()
 	if game.PlaceId == 7449423635 then
@@ -353,16 +355,11 @@ function AutoKatakuriFunc()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 		
-		repeat task.wait()
-			args = {
-				[1] = Enemy.Head,
-				[2] = {},
-				[4] = "0"
-			}
-			Character:SetPrimaryPartCFrame(EnemyRootPart.CFrame * CFrame.new(0,15,0))
-			AttackRemote:FireServer(0)
-			HitRemote:FireServer(unpack(args))
-		until EnemyHumanoid.Health < 0
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+			Humanoid:EquipTool(getTool())
+			FireHitRemote(Enemy, Tool,Character)
+			task.wait(.1)
+		end
 	end
 	
 	local MobList = {
@@ -428,133 +425,6 @@ task.spawn(function()
 	end)
 end)
 
-local name,version = identifyexecutor()
---[[
-local Window = Bracket:Window({Name = tostring("Lapzurite"),Enabled = true,Color = Color3.new(0,0,.25),Size = UDim2.new(0,496,0,496),Position = UDim2.new(0.5,-350,0.5,-248)}) do
-	local Tab = Window:Tab({Name = "Home"}) do
-		local AFSection = Tab:Section({Name = "SubFarm",Side = "Left"}) 
-		local AFSection1 = Tab:Section({Name = "AutoFarm",Side = "Left"})
-		local RSection = Tab:Section({Name = "Raid",Side = "Left"})
-		local STSection = Tab:Section({Name = "Settings",Side = "Right"})
-		local TVSection = Tab:Section({Name = "Travel",Side = "Right"})
-
-		local Toggle3 = RSection:Toggle({Name = "Complete Raid",Side = "Left",Value = false,Callback = function(Bool)
-			getgenv().Configuration.Modules.CompleteRaid = Bool
-			local loop_thread = task.spawn(CompleteRaid)
-			
-			if not Bool then
-				Pause()
-				closeThread(loop_thread)
-			end
-		end})		
-		
-		local Toggle1 = AFSection:Toggle({Name = "Auto Collect Chests",Side = "Left",Value = false,Callback = function(Bool)
-			getgenv().Configuration.Modules.AutoFarmChests = Bool
-			local loop_thread = task.spawn(AutoFarmChest)
-			
-			if not Bool then
-				closeThread(loop_thread)
-			end
-		end})
-			
-		local Slider1 = AFSection:Slider({Name = "Delay between collect",Side = "Left",Min = 0,Max = 5,Value = 1,Precise = 1,Unit = "",Callback = function(Number)
-			getgenv().ModuleSetting.AutoFarmChests.Delay = Number
-		end})
-		
-		local Slider = STSection:Slider({Name = "Tween Speed",Side = "Left",Min = 250,Max = 300,Value = 250,Precise = 2,Unit = "",Callback = function(Number)
-			getgenv().Configuration.TweenSpeed = Number
-		end})
-			
-		-- Tools
-		local Dropdown = STSection:Dropdown({Name = "Weapon type",Side = "Left",Default = getgenv().Configuration.Tool,List = {
-			{
-				Name = "Melee",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().Configuration.Tool = Selected
-				end
-			},
-			{
-				Name = "Sword",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().Configuration.Tool = Selected
-				end
-			}
-		}})
-		
-		local Dropdown1 = RSection:Dropdown({Name = "Raid Type",Side = "Left",Default = getgenv().ModuleSetting.Raid.RaidType,List = {
-			{
-				Name = "Flame",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-			{
-				Name = "Ice",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-			{
-				Name = "Dark",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-			{
-				Name = "Spider",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-			{
-				Name = "Buddha",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-			{
-				Name = "Light",
-				Mode = "Button",
-				--Value = false,
-				Callback = function(Selected)
-					getgenv().ModuleSetting.Raid.RaidType = Selected
-				end
-			},
-		}})
-		
-		local Dropdown2 = TVSection:Dropdown({Name = "Island",Side = "Left",Default = "")
-		local Button1 = TVSection:Button({Name = "Refresh list", Side = "Left", Callback = function()
-			for _, island in pairs(workspace.Map:GetChildren()) do
-				if island:IsA("Model") then
-					print(island.Name)
-				end
-			end
-		end})
-		
-		--Dropdown:Clear()
-		--Dropdown:AddOption("Option")
-		--Dropdown:RemoveOption("Option")
-		--Dropdown:SelectOption("Option")
-		--Dropdown:ChangeName("Dropdown")
-		--Dropdown:ToolTip("ToolTip")
-		end
-end
-]]--
-
 local Window = Fluent:CreateWindow({
     Title = "Lapzurite ",
     SubTitle = "",
@@ -588,7 +458,7 @@ do
 		end
     end)
 	
-	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "AutoKatakuri", Default = false})
+	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "Auto Katakuri", Default = false})
 
     AutoKatakuri:OnChanged(function()
         getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
