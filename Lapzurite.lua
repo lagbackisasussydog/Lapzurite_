@@ -99,28 +99,6 @@ local function getChar()
 	return Plr.Character or Plr.CharacterAdded:Wait()
 end
 
-local function Anchor(Char, State)
-	if State and Char.PrimaryPart:FindFirstChild("f") == nil then
-		local f = Instance.new("BodyVelocity")
-		f.Name = "f"
-		f.P = 15000
-		f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-		f.Velocity = Vector3.new(0,.01,0)
-		f.Parent = Char.PrimaryPart
-	else
-		local bv = Char.PrimaryPart:FindFirstChild("f")
-		if bv then
-			bv:Destroy()
-		end
-	end
-		
-	for _,part in pairs(Char:GetChildren()) do
-		if part:IsA("BasePart") then
-			part.CanCollide = State
-		end
-	end
-end
-
 local function Tween(Inst, Info,Properties)
     local TweenSvc = game:GetService("TweenService")
     local Track = TweenSvc:Create(Inst, Info, Properties)
@@ -166,6 +144,28 @@ local function FireHitRemote(enemy, tool,character)
 end
 
 function AutoFarmChests()
+	function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoFarmChests and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoFarmChests
+			end
+		end
+	end
+
 	local FirstSeasChests = {
 		CFrame.new(1147.56067, 19.7403679, 1260.95337),
 		CFrame.new(958.973572, 16.3185673, 1339.90894),
@@ -215,7 +215,7 @@ function AutoFarmChests()
 	}
 	
 
-	Anchor(Char, getgenv().Configuration.Modules.AutoFarmChests)
+	Anchor(Char)
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		Char = getChar()
 		local root = Char.PrimaryPart
@@ -245,6 +245,28 @@ function AutoFarmChests()
 end
 
 local function CompleteRaid()
+	function Anchor(Char)
+		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.CompleteRaid
+			end
+		end
+	end
+
 	local Enemies = workspace.Enemies
 	MobList = {
 		"Sorcerer",
@@ -296,7 +318,7 @@ local function CompleteRaid()
 		end
 	end
 	
-	Anchor(Char, getgenv().Configuration.Modules.CompleteRaid)
+	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
 			local rType = getgenv().ModuleSetting.Raid.RaidType
@@ -336,6 +358,28 @@ local function CompleteRaid()
 end
 
 function AutoKatakuriFunc()
+	function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoKatakuri
+			end
+		end
+	end
+
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
@@ -384,7 +428,7 @@ function AutoKatakuriFunc()
 	local Enemies = workspace.Enemies
 	local Char = getChar()
 
-	Anchor(Char, getgenv().Configuration.Modules.AutoKatakuri)
+	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		task.wait(5)
@@ -414,6 +458,28 @@ end
 
 function AutoBoneFunc()
 	local StartPos = CFrame.new(9521.92676, 172.149506, 6144.80225)
+
+	function Anchor(Char)
+		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
+			local f = Instance.new("BodyVelocity")
+			f.Name = "f"
+			f.P = 15000
+			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+			f.Velocity = Vector3.new(0,.01,0)
+			f.Parent = Char.PrimaryPart
+		else
+			local bv = Char.PrimaryPart:FindFirstChild("f")
+			if bv then
+				bv:Destroy()
+			end
+		end
+			
+		for _,part in pairs(Char:GetChildren()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = getgenv().Configuration.Modules.AutoBone
+			end
+		end
+	end
 
 	local function Anchor(Char)
 		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
@@ -465,6 +531,7 @@ function AutoBoneFunc()
 		"Demonic Soul"
 	}
 
+	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(StartPos.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = StartPos})
 		task.wait(5)
@@ -787,8 +854,6 @@ do
 			Terrain.WaterWaveSpeed = 0
 			Terrain.WaterReflectance = 0
 			Terrain.WaterTransparency = 0
-			Lighting.FogEnd = 9e9
-			settings().Rendering.QualityLevel = 1
 			for i,v in pairs(game:GetDescendants()) do
 				if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
 					v.Material = "Plastic"
