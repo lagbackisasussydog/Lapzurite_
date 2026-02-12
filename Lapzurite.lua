@@ -149,14 +149,14 @@ local function FireHitRemote(enemy, tool,character)
     local args = {
         enemy.Head,
         {},
-		"0"
+		""
     }
     
     local success, err = pcall(function()
 		if character then
 			character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-			game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack"):FireServer(math.random(0,1))
-			game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit"):FireServer(unpack(args))
+			AttackRemote:FireServer("0")
+			HitRemote:FireServer(unpack(args))
 		end
     end)
     
@@ -523,6 +523,23 @@ end)
 task.spawn(function()
 	CommF_:InvokeServer("SetTeam","Pirates")
 end)
+
+coroutine.wrap(function()
+	local namecall
+	namecall = hookmetamethod(game,"__namecall",function(self,...)
+		local args = {...}
+		local method = getnamecallmethod()
+		if not checkcaller() and self == AttackRemote and method == "FireServer" then
+			args[1] = "0"
+			return namecall(self,unpack(args))
+		end
+		if not checkcaller() and self == HitRemote and method == "FireServer" then
+			args[4] = ""
+			return namecall(self,unpack(args))
+		end
+		return namecall(self,...)
+	end)
+end)()
 
 task.spawn(function()
 	Plr.CharacterAdded:Connect(function()
