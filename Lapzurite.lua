@@ -30,14 +30,18 @@ getgenv().ModuleSetting = {
 	}
 }
 
+getgenv().Threads = {}
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Plr = game.Players.LocalPlayer
-local Char = Plr.Character or Plr.CharacterAdded:Wait()
-local Root = Char:WaitForChild("HumanoidRootPart")
 
 local HitRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
 local AttackRemote = game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
 local CommF_ = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_")
+
+local function getChar()
+	return Plr.Character or Plr.CharacterAdded:Wait()
+end
 
 local function Tween(Inst, Info,Properties)
     local TweenSvc = game:GetService("TweenService")
@@ -154,6 +158,8 @@ function AutoFarmChests()
 		CFrame.new(-1070.09130859375, 120.7647476196289, 857.2682495117188)
 	}
 	
+	local Char = getChar()
+
 	Anchor(Char)
 	while getgenv().Configuration.Modules.AutoFarmChests do
 		local root = Char.PrimaryPart
@@ -184,15 +190,7 @@ end
 
 local function CompleteRaid()
 	local Enemies = workspace.Enemies
-	local MobList = {
-		"Bladesmith",
-		"Sorcerer",
-		"Bone Breaker",
-		"Shocker",
-		"Flame User",
-		"Ice User",
-		"Dark User"
-	}
+	local MobList
 	
 	local function Anchor(Char)
 		if getgenv().Configuration.Modules.CompleteRaid and Char.PrimaryPart:FindFirstChild("f") == nil then
@@ -230,8 +228,10 @@ local function CompleteRaid()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 		
-		while Character and Enemy and EnemyHumanoid.Health > 0 do
-			task.wait()
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Config.IsRunning do
+			Humanoid:EquipTool(getTool())
+			FireHitRemote(Enemy, getTool(),Character)
+			task.wait(.1)
 		end
 	end
 	
@@ -241,34 +241,42 @@ local function CompleteRaid()
 		for _, v in pairs(Notifications:GetChildren()) do
 			if v:IsA("TextLabel") and v.Name == "NotificationTemplate" then
 				if string.find(v.Text, "Island #1 cleared!") then
-					return 2
+					return 1
 				elseif string.find(v.Text, "Island #2 cleared!") then
-					return 3
+					return 2
 				elseif string.find(v.Text, "Island #3 cleared!") then
-					return 4
+					return 3
 				elseif string.find(v.Text, "Island #4 cleared!") then
-					return 5
+					return 4
 				elseif string.find(v.Text, "Island #5 cleared!") then
-					return 0
+					return 1
 				end
 			end
 		end
 	end
 	
+	local Char = getChar()
+
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		while Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.CompleteRaid and (getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas") do
 			local rType = getgenv().ModuleSetting.Raid.RaidType
-			
+			local islandPosition
+			local island = IslandCheck()
+
 			if rType == "Flame" then
-				local island = IslandCheck()
-				local islandPosition = {
-					CFrame.new(71721.1171875, 10.41573715209961, -25441.32421875),
-					CFrame.new(71670, 9.053179740905762, -23932.7265625),
+				MobList = {
+					"Sorcerer",
+					"Bone Breaker",
+					"Shocker",
+					"Bladesmith",
+					"Flame User",
+					"Flame Master"
 				}
 				
-				Tween(Char.PrimaryPart, TweenInfo.new((islandPosition[1].Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = islandPosition[1] * CFrame.new(0,15,0)})
+				Tween(Char.PrimaryPart, TweenInfo.new((islandPosition[island].Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = islandPosition[1] * CFrame.new(0,15,0)})
 			end
+
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
 
@@ -314,7 +322,7 @@ function AutoKatakuriFunc()
 		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
 		local Humanoid = Character:FindFirstChild("Humanoid")
 
-		if not EnemyHumanoid or not Humanoid then Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)}) return end
+		if not EnemyHumanoid or not Humanoid then return end
 
 		local TargetCFrame = EnemyRootPart.CFrame * CFrame.new(0, 15, 0)
 		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
@@ -328,6 +336,21 @@ function AutoKatakuriFunc()
 		end
 	end
 	
+	local function MessageCheck()
+		local Notifications = game:GetService("Players").LocalPlayer.PlayerGui.Notifications
+		
+		for _, v in pairs(Notifications:GetChildren()) do
+			if v:IsA("TextLabel") and v.Name == "NotificationTemplate" then
+				if string.find(v.Text, "A Dimension has spawned") then
+					return {true, "Cake Prince"}
+				elseif string.find(v.Text, "A Dimension worthy of a god has spawned") then
+					return {true, "Dough King"}
+				end
+				return {false, ""}
+			end
+		end
+	end
+
 	local MobList = {
 		"Cookie Crafter",
 		"Cake Guard",
@@ -339,15 +362,24 @@ function AutoKatakuriFunc()
 	local portal = workspace.Map.CakeLoaf.BigMirror.Main
 	
 	local Enemies = workspace.Enemies
-	
+	local Char = getChar()
+
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
-
+				local check = MessageCheck()
 				local i = table.find(MobList, Inst.Name)
+				
+				if check[1] == true then
+					Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(portal.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new({portal.Position})})
+					task.wait(5)
+					Attack(Char, Enemies:FindFirstChild(check[2]))
+					Character.Humanoid.Health = 0
+				end
+
 				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
 					Attack(Char, Inst)
 					task.wait(.1)
@@ -362,16 +394,20 @@ function AutoBone()
 
 end
 
-function closeThread(thread)
-	--[[
-	for _, v in pairs(getreg()) do
-		if v == thread then				
-			coroutine.close(thread)
-		end
+function startThread(thread, func)
+	if getgenv().Threads[thread] then
+		task.cancel(getgenv().Threads[thread])
+		getgenv().Threads[thread] = nil
 	end
-	--]]
-	
-	task.cancel(thread)
+
+	getgenv().Threads[thread] = task.spawn(func) 
+end
+
+function closeThread(thread)
+	if getgenv().Threads[thread] then
+		task.cancel(getgenv().Threads[thread])
+		getgenv().Threads[thread] = nil
+	end
 end
 
 function getIslandList()
@@ -430,46 +466,14 @@ do
 
     AutoChest:OnChanged(function()
         getgenv().Configuration.Modules.AutoFarmChests = Options.AutoChest.Value
-		local loop_thread = task.spawn(AutoFarmChests)
+		startThread("AutoChest", AutoFarmChests)
 		
 		if not Options.AutoChest.Value then
 			Pause()
-			closeThread(loop_thread)
+			closeThread("AutoChest")
 		end
     end)
-	
-	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "Auto Katakuri", Default = false})
 
-    AutoKatakuri:OnChanged(function()
-        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
-		local loop_thread = task.spawn(AutoKatakuriFunc)
-		
-		if not Options.AutoKatakuri.Value then
-			Pause()
-			closeThread(loop_thread)
-		end
-    end)
-	
-	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
-
-    CompleteRaid1:OnChanged(function()
-        getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
-		local loop_thread = task.spawn(CompleteRaid)
-			
-		if not Options.CompleteRaid.Value then
-			Pause()
-			closeThread(loop_thread)
-		end
-    end)
-	
-	local RaidType = Tabs.Raid:AddDropdown("RaidType", {
-		Title = "Fruit",
-		Description = "",
-		Values = {"Flame"},
-		Multi = false,
-		Default = 1,
-	})
-	
 	local Delay = Tabs.SubFarm:AddSlider("CollectDelay", {
         Title = "Delay between chests",
         Description = "Changes how long your character stays after collected a chest",
@@ -481,6 +485,38 @@ do
 			getgenv().ModuleSetting.AutoFarmChests.Delay = Value
         end
     })
+	
+	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "Auto Katakuri", Default = false})
+
+    AutoKatakuri:OnChanged(function()
+        getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
+		startThread("AutoKatakuri", AutoKatakuriFunc)
+		
+		if not Options.AutoKatakuri.Value then
+			Pause()
+			closeThread("AutoKatakuri")
+		end
+    end)
+	
+	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
+
+    CompleteRaid1:OnChanged(function()
+        getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
+		startThread("CompleteRaid", CompleteRaid)
+			
+		if not Options.CompleteRaid.Value then
+			Pause()
+			closeThread("CompleteRaid")
+		end
+    end)
+	
+	local RaidType = Tabs.Raid:AddDropdown("RaidType", {
+		Title = "Fruit",
+		Description = "",
+		Values = {"Flame"},
+		Multi = false,
+		Default = 1,
+	})
 	
 	local TweenSpeed = Tabs.Settings:AddSlider("TweenSpeed", {
         Title = "Tween Speed",
