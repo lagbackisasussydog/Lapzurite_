@@ -569,7 +569,7 @@ do
 				end
 			end
 			
-			local island = workspace.Map:FindFirstChild(val)
+			local island = workspace.Map:FindFirstChild(val) or workspace:FindFirstChild(val)
 			
 			if Char and island then
 				Anchor(Char)
