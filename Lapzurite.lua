@@ -594,28 +594,32 @@ Manager:Register(
     AutoFarmChests,
     function()
         Pause()
-end)
+	end
+)
 
 Manager:Register(
     "AutoKatakuri",
     AutoKatakuriFunc,
     function()
         Pause()
-end)
+	end
+)
 
 Manager:Register(
     "AutoBone",
     AutoBoneFunc,
     function()
         Pause()
-end)
+	end
+)
 
 Manager:Register(
     "CompleteRaid",
     CompleteRaid,
     function()
         Pause()
-end)
+	end
+)
 
 do
 	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
