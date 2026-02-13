@@ -331,15 +331,6 @@ local function CompleteRaid()
 			end
 
 			if rType == "Flame" then
-				MobList = {
-					"Sorcerer",
-					"Bone Breaker",
-					"Shocker",
-					"Bladesmith",
-					"Flame User",
-					"Flame Master"
-				}
-				
 				Tween(Char.PrimaryPart, TweenInfo.new((islandPosition[island].Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = islandPosition[1] * CFrame.new(0,15,0)})
 			end
 
@@ -358,7 +349,6 @@ local function CompleteRaid()
 end
 
 function AutoKatakuriFunc()
-	
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
@@ -432,7 +422,6 @@ function AutoKatakuriFunc()
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
-		task.wait(5)
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
 			for _, Inst in pairs(Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
