@@ -50,8 +50,6 @@ function Manager:Start(name)
     if not mod then return end
     if mod.Enabled then return end
 
-    mod.Enabled = true
-
     if self.Threads[name] then
         task.cancel(self.Threads[name])
     end
@@ -64,8 +62,6 @@ end
 function Manager:Stop(name)
     local mod = self.Modules[name]
     if not mod then return end
-
-    mod.Enabled = false
 
     if self.Threads[name] then
         task.cancel(self.Threads[name])
