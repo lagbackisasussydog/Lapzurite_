@@ -616,11 +616,11 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "house"}),
-	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = "house"}),
-	Raid = Window:AddTab({ Title = "Raid", Icon = "beef"}),
-	Travel = Window:AddTab({ Title = "Travel", Icon = "plane"}),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings"})
+    AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = ""}),
+	SubFarm = Window:AddTab({ Title = "MiscFarm", Icon = ""}),
+	Raid = Window:AddTab({ Title = "Raid", Icon = ""}),
+	Travel = Window:AddTab({ Title = "Travel", Icon = ""}),
+    Settings = Window:AddTab({ Title = "Settings", Icon = ""})
 }
 
 local Options = Fluent.Options
@@ -693,6 +693,7 @@ do
 	local AutoChest = Tabs.SubFarm:AddToggle("AutoChest", {Title = "Auto Chest", Default = false})
 
     AutoChest:OnChanged(function()
+		getgenv().Configuration.Modules.AutoFarmChests = Options.AutoChest.Value
 		if Options.AutoChest.Value then
 			Manager:Start("AutoChest")
 		else
@@ -715,6 +716,7 @@ do
 	local AutoKatakuri = Tabs.SubFarm:AddToggle("AutoKatakuri", {Title = "Auto Katakuri", Default = false})
 
     AutoKatakuri:OnChanged(function()
+		getgenv().Configuration.Modules.AutoKatakuri = Options.AutoKatakuri.Value
 		if Options.AutoKatakuri.Value then
 			Manager:Start("AutoKatakuri")
 		else
@@ -725,6 +727,7 @@ do
 	local AutoBone = Tabs.SubFarm:AddToggle("AutoBone", {Title = "AutoFarm Bones", Default = false})
 
     AutoBone:OnChanged(function()
+		getgenv().Configuration.Modules.AutoBone = Options.AutoBone.Value
 		if Options.AutoBone.Value then
 			Manager:Start("AutoBone")
 		else
@@ -735,6 +738,7 @@ do
 	local CompleteRaid1 = Tabs.Raid:AddToggle("CompleteRaid", {Title = "Complete raid", Default = false})
 
     CompleteRaid1:OnChanged(function()
+		getgenv().Configuration.Modules.CompleteRaid = Options.CompleteRaid.Value
 		if Options.CompleteRaid.Value then
 			Manager:Start("CompleteRaid")
 		else
