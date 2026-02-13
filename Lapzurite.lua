@@ -50,6 +50,8 @@ function Manager:Start(name)
     if not mod then return end
     if mod.Enabled then return end
 
+	mod.Enabled = true
+
     if self.Threads[name] then
         task.cancel(self.Threads[name])
     end
@@ -62,6 +64,8 @@ end
 function Manager:Stop(name)
     local mod = self.Modules[name]
     if not mod then return end
+
+	mod.Enabled = false
 
     if self.Threads[name] then
         task.cancel(self.Threads[name])
@@ -738,7 +742,7 @@ do
 	
     StartTravel:OnChanged(function()
 		local function Anchor(Char)
-			if Options.StartTravel.Value and Char:FindFirstChild("f") == nil then
+			if Options.StartTravel.Value and Char.PrimaryPart:FindFirstChild("f") == nil then
 				local f = Instance.new("BodyVelocity")
 				f.Name = "f"
 				f.P = 15000
