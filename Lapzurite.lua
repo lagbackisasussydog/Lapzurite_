@@ -125,9 +125,9 @@ end
 
 local function FireHitRemote(enemy, tool,character)
     local args = {
-        enemy.Head,
-        {},
-		""
+        [1] = enemy.Head,
+        [2] = {},
+		[4] = "0"
     }
     
     local success, err = pcall(function()
@@ -365,9 +365,9 @@ function AutoKatakuriFunc()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri do
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 do
 			Humanoid:EquipTool(Tool)
-			FireHitRemote(Enemy, getTool(),Character)
+			FireHitRemote(Enemy, Tool,Character)
 			task.wait(.1)
 		end
 	end
