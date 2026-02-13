@@ -428,7 +428,7 @@ function AutoKatakuriFunc()
 				local hum = Inst:FindFirstChild("Humanoid")
 				local i = table.find(MobList, Inst.Name)
 
-				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
+				if hum and hum.Health > 0 and i then
 					Attack(Char, Inst)
 					task.wait(.1)
 				end
