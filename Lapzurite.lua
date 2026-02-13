@@ -352,6 +352,8 @@ function AutoKatakuriFunc()
 	local function Attack(Character, Enemy)
 		if not Enemy or not Enemy:FindFirstChild("HumanoidRootPart") then return end
 
+		local Tool = getTool()
+
 		local EnemyHumanoid = Enemy:FindFirstChild("Humanoid")
 		local EnemyRootPart = Enemy:FindFirstChild("HumanoidRootPart")
 		local Humanoid = Character:FindFirstChild("Humanoid")
@@ -362,16 +364,16 @@ function AutoKatakuriFunc()
 		local TweenDuration = Plr:DistanceFromCharacter(EnemyRootPart.Position) / getgenv().Configuration.TweenSpeed
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
-		
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 do
-			Humanoid:EquipTool(getTool())
+
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri do
+			Humanoid:EquipTool(Tool)
 			FireHitRemote(Enemy, getTool(),Character)
 			task.wait(.1)
 		end
 	end
 	
 	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoKatakuri and getChar().PrimaryPart:FindFirstChild("f") == nil then
+		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
 			f.P = 15000
@@ -416,26 +418,16 @@ function AutoKatakuriFunc()
 	
 	local StartCF = CFrame.new(-2130.8335, 70.0277176, -12251.1934)
 	
-	local Enemies = workspace.Enemies
 	local Char = getChar()
 
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
 		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
-			for _, Inst in pairs(Enemies:GetChildren()) do
+			for _, Inst in pairs(workspace.Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
-				local check = MessageCheck()
 				local i = table.find(MobList, Inst.Name)
-				
-				--[[
-				if check[1] == true then
-					Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(portal.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new({portal.Position})})
-					task.wait(5)
-					Attack(Char, Enemies:FindFirstChild(check[2]))
-					Character.Humanoid.Health = 0
-				end
-				]]--
+
 				if hum and hum.Health > 0 and i and Plr:DistanceFromCharacter(Inst.PrimaryPart.Position) < 150 then
 					Attack(Char, Inst)
 					task.wait(.1)
@@ -448,28 +440,6 @@ end
 
 function AutoBoneFunc()
 	local StartPos = CFrame.new(9521.92676, 172.149506, 6144.80225)
-
-	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
-			local f = Instance.new("BodyVelocity")
-			f.Name = "f"
-			f.P = 15000
-			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
-		else
-			local bv = Char.PrimaryPart:FindFirstChild("f")
-			if bv then
-				bv:Destroy()
-			end
-		end
-			
-		for _,part in pairs(Char:GetChildren()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = getgenv().Configuration.Modules.AutoBone
-			end
-		end
-	end
 
 	local function Anchor(Char)
 		if getgenv().Configuration.Modules.AutoBone and Char.PrimaryPart:FindFirstChild("f") == nil then
