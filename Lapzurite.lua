@@ -371,13 +371,13 @@ function AutoKatakuriFunc()
 	end
 	
 	local function Anchor(Char)
-		if getgenv().Configuration.Modules.AutoKatakuri and Char.PrimaryPart:FindFirstChild("f") == nil then
+		if getgenv().Configuration.Modules.AutoKatakuri and getChar().PrimaryPart:FindFirstChild("f") == nil then
 			local f = Instance.new("BodyVelocity")
 			f.Name = "f"
 			f.P = 15000
 			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
 			f.Velocity = Vector3.new(0,.01,0)
-			f.Parent = Char.PrimaryPart
+			f.Parent = getChar().PrimaryPart
 		else
 			local bv = Char.PrimaryPart:FindFirstChild("f")
 			if bv then
@@ -775,11 +775,6 @@ do
 	})
 	
 	local StartTravel = Tabs.Travel:AddToggle("StartTravel", {Title = "Travel", Default = false})
-	local val
-
-	Island:OnChanged(function(Value)
-		val = Value
-	end)
 	
     StartTravel:OnChanged(function()
 		local function Anchor(Char)
@@ -804,7 +799,7 @@ do
 			end
 		end
 			
-		local island = workspace.Map:FindFirstChild(val) or workspace:FindFirstChild(val)
+		local island = workspace.Map:FindFirstChild(Options.Island.Value) or workspace:FindFirstChild(Options.Island.Value)
 			
 		if Char and island then
 			Anchor(Char)
