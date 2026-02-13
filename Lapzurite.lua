@@ -361,7 +361,7 @@ function AutoKatakuriFunc()
 
 		Tween(Character.PrimaryPart, TweenInfo.new(TweenDuration, Enum.EasingStyle.Linear), {CFrame = TargetCFrame})
 
-		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 getgenv().Configuration.Modules.AutoKatakuri do
+		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri do
 			Humanoid:EquipTool(Tool)
 			FireHitRemote(Enemy, Tool,Character)
 			task.wait(.1)
