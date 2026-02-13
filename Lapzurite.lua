@@ -133,7 +133,7 @@ local function FireHitRemote(enemy, tool,character)
     local success, err = pcall(function()
 		if character then
 			character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
-			AttackRemote:FireServer("0")
+			AttackRemote:FireServer(0)
 			HitRemote:FireServer(unpack(args))
 		end
     end)
