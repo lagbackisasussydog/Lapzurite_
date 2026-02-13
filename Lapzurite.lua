@@ -363,7 +363,6 @@ function AutoKatakuriFunc()
 
 		while Humanoid and EnemyHumanoid and EnemyHumanoid.Health > 0 getgenv().Configuration.Modules.AutoKatakuri do
 			Humanoid:EquipTool(Tool)
-			Character.PrimaryPart.CFrame = EnemyRootPart.CFrame * CFrame.new(0,15,0)
 			FireHitRemote(Enemy, Tool,Character)
 			task.wait(.1)
 		end
