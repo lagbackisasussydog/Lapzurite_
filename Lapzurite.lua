@@ -548,13 +548,9 @@ coroutine.wrap(function()
 		local args = {...}
 		local method = getnamecallmethod()
 		if not checkcaller() and self == AttackRemote and method == "FireServer" then
-			args[1] = "0"
+			args[1] = 0
 			return namecall(self,unpack(args))
-		end
-		if not checkcaller() and self == HitRemote and method == "FireServer" then
-			args[4] = ""
-			return namecall(self,unpack(args))
-		end
+		ends
 		return namecall(self,...)
 	end)
 end)()
