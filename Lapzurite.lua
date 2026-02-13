@@ -394,21 +394,6 @@ function AutoKatakuriFunc()
 		end
 	end
 
-	local function MessageCheck()
-		local Notifications = game:GetService("Players").LocalPlayer.PlayerGui.Notifications
-		
-		for _, v in pairs(Notifications:GetChildren()) do
-			if v:IsA("TextLabel") and v.Name == "NotificationTemplate" then
-				if string.find(v.Text, "A Dimension has spawned") then
-					return {true, "Cake Prince"}
-				elseif string.find(v.Text, "A Dimension worthy of a god has spawned") then
-					return {true, "Dough King"}
-				end
-				return {false, ""}
-			end
-		end
-	end
-
 	local MobList = {
 		"Cookie Crafter",
 		"Cake Guard",
@@ -423,12 +408,18 @@ function AutoKatakuriFunc()
 	Anchor(Char)
 	local loop_thread = task.spawn(function()
 		Tween(Char.PrimaryPart, TweenInfo.new(Plr:DistanceFromCharacter(Vector3.new(-2130.8335, 70.0277176, -12251.1934)) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2130.8335, 70.0277176, -12251.1934)})
-		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri and getgenv().Configuration.CurrentPlace == "Third-Seas" do
+		while Char and Char.Humanoid and Char.Humanoid.Health > 0 and getgenv().Configuration.Modules.AutoKatakuri do
 			for _, Inst in pairs(workspace.Enemies:GetChildren()) do
 				local hum = Inst:FindFirstChild("Humanoid")
 				local i = table.find(MobList, Inst.Name)
 
-				if hum and hum.Health > 0 and i then
+				if hum and i then
+					Fluent:Notify({
+						Title = "Lapzurite",
+						Content = "Success",
+						SubContent = "",
+						Duration = 5 
+					})
 					Attack(Char, Inst)
 					task.wait(.1)
 				end
