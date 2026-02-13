@@ -135,6 +135,7 @@ local function FireHitRemote(enemy, tool,character)
 			character:SetPrimaryPartCFrame(enemy.PrimaryPart.CFrame * CFrame.new(0,15,0))
 			AttackRemote:FireServer(0)
 			HitRemote:FireServer(unpack(args))
+			task.wait(.1)
 		end
     end)
     
@@ -542,6 +543,7 @@ task.spawn(function()
 	CommF_:InvokeServer("SetTeam","Pirates")
 end)
 
+--[[
 coroutine.wrap(function()
 	local namecall
 	namecall = hookmetamethod(game,"__namecall",function(self,...)
@@ -554,6 +556,8 @@ coroutine.wrap(function()
 		return namecall(self,...)
 	end)
 end)()
+]]--
+
 
 task.spawn(function()
 	Plr.CharacterAdded:Connect(function()
