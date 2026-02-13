@@ -762,7 +762,7 @@ do
 			
 		local island = workspace.Map:FindFirstChild(Options.Island.Value) or workspace:FindFirstChild(Options.Island.Value)
 			
-		if Char and island then
+		if Char and island and Options.StartTravel.Value then
 			Anchor(Char)
 			Tween(Char.PrimaryPart, TweenInfo.new((island:GetPivot().Position - Char.PrimaryPart.Position).Magnitude / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = island:GetPivot()})
 		end
