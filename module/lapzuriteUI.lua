@@ -103,7 +103,7 @@ function Lapzurite:CreateWindow(Theme : string)
 	function Window:AddTab(Config)
 		local Tabs = {}
 		
-		local tName = Config.Name
+		local tName = Config.Name or "Tab"
 
 		local Tab = Instance.new("TextButton")
 		local UIGradient = Instance.new("UIGradient")
@@ -165,7 +165,7 @@ function Lapzurite:CreateWindow(Theme : string)
 		end)
 
 		function Tabs:AddButton(Config)
-			local tName = Config.Title
+			local tName = Config.Title or "Title"
 			
 			local Button = Instance.new("TextButton")
 			local UICorner = Instance.new("UICorner")
@@ -223,7 +223,7 @@ function Lapzurite:CreateWindow(Theme : string)
 		end
 		
 		function Tabs:AddToggle(Config)
-			local tName = Config.Title
+			local tName = Config.Title or "Title"
 			local State = Config.State or false
 			
 			local Toggle = Instance.new("Frame")
@@ -323,7 +323,7 @@ function Lapzurite:CreateWindow(Theme : string)
 			Title.Size = UDim2.new(0, 148, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = Config.Title .. ": " .. outputValue
+			Title.Text = Config.Title .. ": " .. outputValue or "Title"
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
 			Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -414,7 +414,7 @@ function Lapzurite:CreateWindow(Theme : string)
 			Title.Size = UDim2.new(0, 148, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = Config.Title
+			Title.Text = Config.Title or "Title"
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
 			Title.TextXAlignment = Enum.TextXAlignment.Left
