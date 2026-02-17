@@ -37,7 +37,10 @@ function Lapzurite:CreateWindow(Theme : string)
 			BtnColor = Color3.fromRGB(170, 0, 255)
 			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
 		elseif Theme == "Pink" then
-			
+			BgColor = Color3.fromRGB(85, 170, 255)
+			BgColor1 = Color3.fromRGB(85, 85, 255)
+			BtnColor = Color3.fromRGB(43, 87, 130)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
 		end
 	end)
 
