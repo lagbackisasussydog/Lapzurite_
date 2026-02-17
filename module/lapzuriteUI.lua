@@ -1,7 +1,8 @@
 local Lapzurite = {}
-local Window = {}
 
 function Lapzurite:CreateWindow(Theme : string)
+	local Window = {}
+	
 	local Lapzurite = Instance.new("ScreenGui")
 	local Main = Instance.new("ImageLabel")
 	local Title = Instance.new("TextLabel")
