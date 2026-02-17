@@ -15,35 +15,33 @@ function Lapzurite:CreateWindow(Theme : string)
 	local BgColor1 = Color3.new(0, 0, 0)
 	local TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
 	
-	task.spawn(function()
-		if Theme == "Blue" then
-			BgColor = Color3.fromRGB(85, 170, 255)
-			BgColor1 = Color3.fromRGB(85, 85, 255)
-			BtnColor = Color3.fromRGB(43, 87, 130)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
-		elseif Theme == "Red" then
-			BgColor = Color3.fromRGB(255, 0, 0)
-			BgColor1 = Color3.fromRGB(121, 0, 0)
-			BtnColor = Color3.fromRGB(170, 0, 0)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 0, 0))}
-		elseif Theme == "Green" then
-			BgColor = Color3.fromRGB(72, 216, 0)
-			BgColor1 = Color3.fromRGB(0, 91, 0)
-			BtnColor = Color3.fromRGB(0, 198, 0)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 255, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 76, 0))}
-		elseif Theme == "Amethyst" then
-			BgColor = Color3.fromRGB(170, 85, 255)
-			BgColor1 = Color3.fromRGB(105, 0, 158)
-			BtnColor = Color3.fromRGB(170, 0, 255)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
-		elseif Theme == "Pink" then
-			BgColor = Color3.fromRGB(85, 170, 255)
-			BgColor1 = Color3.fromRGB(85, 85, 255)
-			BtnColor = Color3.fromRGB(43, 87, 130)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
-		end
-	end)
-
+	if Theme == "Blue" then
+		BgColor = Color3.fromRGB(85, 170, 255)
+		BgColor1 = Color3.fromRGB(85, 85, 255)
+		BtnColor = Color3.fromRGB(43, 87, 130)
+		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
+	elseif Theme == "Red" then
+		BgColor = Color3.fromRGB(255, 0, 0)
+		BgColor1 = Color3.fromRGB(121, 0, 0)
+		BtnColor = Color3.fromRGB(170, 0, 0)
+		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 0, 0))}
+	elseif Theme == "Green" then
+		BgColor = Color3.fromRGB(72, 216, 0)
+		BgColor1 = Color3.fromRGB(0, 91, 0)
+		BtnColor = Color3.fromRGB(0, 198, 0)
+		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 255, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 76, 0))}
+	elseif Theme == "Amethyst" then
+		BgColor = Color3.fromRGB(170, 85, 255)
+		BgColor1 = Color3.fromRGB(105, 0, 158)
+		BtnColor = Color3.fromRGB(170, 0, 255)
+		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
+	elseif Theme == "Pink" then
+		BgColor = Color3.fromRGB(85, 170, 255)
+		BgColor1 = Color3.fromRGB(85, 85, 255)
+		BtnColor = Color3.fromRGB(43, 87, 130)
+		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
+	end
+	
 	Lapzurite.Name = "Lapzurite"
 	Lapzurite.Parent = game.CoreGui
 	Lapzurite.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
