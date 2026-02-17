@@ -42,7 +42,7 @@ function Lapzurite:CreateWindow(Theme : string)
 	end)
 
 	Lapzurite.Name = "Lapzurite"
-	Lapzurite.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Lapzurite.Parent = game.CoreGui
 	Lapzurite.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Main.Name = "Main"
