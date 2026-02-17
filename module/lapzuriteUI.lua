@@ -164,8 +164,7 @@ function Lapzurite:CreateWindow(Theme : string)
 
 		function Tabs:AddButton(Config)
 			local tName = Config.Title
-			local tSubName = Config.SubTitle
-
+			
 			local Button = Instance.new("TextButton")
 			local UICorner = Instance.new("UICorner")
 			local Title = Instance.new("TextLabel")
