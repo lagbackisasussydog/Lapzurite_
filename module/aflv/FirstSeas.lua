@@ -564,7 +564,7 @@ coroutine.wrap(function()
 		end
 		
 		if getgenv().Config.QuestTaken then
-			if tmp or getgenv.Config.MobKilled >= CurrentRoutine.QuestGoal then
+			if tmp or getgenv().Config.MobKilled >= CurrentRoutine.QuestGoal then
 				getgenv().Config.QuestTaken = false
 				getgenv().Config.MobKilled = 0
 			else
