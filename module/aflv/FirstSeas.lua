@@ -19,24 +19,6 @@ getgenv().Config = {
 	Puzzle = false,
 }
 
-local module = loadstring(game:HttpGet"https://raw.githubusercontent.com/LeoKholYt/roblox/main/lk_serverhop.lua")()
-
-coroutine.wrap(function()
-	local character = Plr.Character or Plr.CharacterAdded:Wait()
-	local hum = character.Humanoid
-	local death = 0
-	
-	hum.HealthChanged:Connect(function(h)
-		if h <= 0 then
-			death += 1
-			if death == 5 then
-				task.wait(1)
-				module:Teleport(game.PlaceId)
-			end
-		end
-	end)
-end)()
-
 local function Anchor(Char)
     --f Char.PrimaryPart:FindFirstChild("f") then return end
     local f = Instance.new("BodyVelocity")
