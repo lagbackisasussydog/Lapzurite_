@@ -10,7 +10,7 @@ end
 
 function Thread:StartThread(thread)
 	local a = Thread._thread[thread]
-	if a.Running then
+	if a.Running ~= nil then
 		task.cancel(a.Running)
 		a.Running = nil
 	end
@@ -20,7 +20,7 @@ end
 
 function Thread:CloseThread(thread)
 	local a = Thread._thread[thread]
-	if a.Running then
+	if a.Running ~= nil then
 		task.cancel(a.Running)
 		a.Running = nil
 	end
@@ -29,7 +29,7 @@ end
 function Thread:ResetThread()
 	for _, v in pairs(Thread._thread) do
 		if v.Running then
-			task.cancel(v.Function)
+			task.cancel(v.Running)
 			v.Running = task.spawn(v.Function)
 		end
 	end
