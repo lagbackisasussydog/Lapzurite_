@@ -1,8 +1,7 @@
 local Lapzurite = {}
+local Window = {}
 
-function Lapzurite:CreateWindow(Theme : string)
-	local Window = {}
-	
+function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local Lapzurite = Instance.new("ScreenGui")
 	local Main = Instance.new("ImageLabel")
 	local Title = Instance.new("TextLabel")
@@ -16,35 +15,34 @@ function Lapzurite:CreateWindow(Theme : string)
 	local BgColor1 = Color3.new(0, 0, 0)
 	local TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
 	
-	if Theme == "Blue" then
-		BgColor = Color3.fromRGB(85, 170, 255)
-		BgColor1 = Color3.fromRGB(85, 85, 255)
-		BtnColor = Color3.fromRGB(43, 87, 130)
-		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
-	elseif Theme == "Red" then
-		BgColor = Color3.fromRGB(255, 0, 0)
-		BgColor1 = Color3.fromRGB(121, 0, 0)
-		BtnColor = Color3.fromRGB(170, 0, 0)
-		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 0, 0))}
-	elseif Theme == "Green" then
-		BgColor = Color3.fromRGB(72, 216, 0)
-		BgColor1 = Color3.fromRGB(0, 91, 0)
-		BtnColor = Color3.fromRGB(0, 198, 0)
-		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 255, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 76, 0))}
-	elseif Theme == "Amethyst" then
-		BgColor = Color3.fromRGB(170, 85, 255)
-		BgColor1 = Color3.fromRGB(105, 0, 158)
-		BtnColor = Color3.fromRGB(170, 0, 255)
-		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
-	elseif Theme == "Pink" then
-		BgColor = Color3.fromRGB(85, 170, 255)
-		BgColor1 = Color3.fromRGB(85, 85, 255)
-		BtnColor = Color3.fromRGB(43, 87, 130)
-		TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
-	end
-	
+	task.spawn(function()
+		if Theme == "Blue" then
+			BgColor = Color3.fromRGB(85, 170, 255)
+			BgColor1 = Color3.fromRGB(85, 85, 255)
+			BtnColor = Color3.fromRGB(43, 87, 130)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
+		elseif Theme == "Red" then
+			BgColor = Color3.fromRGB(255, 0, 0)
+			BgColor1 = Color3.fromRGB(121, 0, 0)
+			BtnColor = Color3.fromRGB(170, 0, 0)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 0, 0))}
+		elseif Theme == "Green" then
+			BgColor = Color3.fromRGB(72, 216, 0)
+			BgColor1 = Color3.fromRGB(0, 91, 0)
+			BtnColor = Color3.fromRGB(0, 198, 0)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 255, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 76, 0))}
+		elseif Theme == "Amethyst" then
+			BgColor = Color3.fromRGB(170, 85, 255)
+			BgColor1 = Color3.fromRGB(105, 0, 158)
+			BtnColor = Color3.fromRGB(170, 0, 255)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
+		elseif Theme == "Pink" then
+			
+		end
+	end)
+
 	Lapzurite.Name = "Lapzurite"
-	Lapzurite.Parent = game.CoreGui
+	Lapzurite.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	Lapzurite.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Main.Name = "Main"
@@ -65,7 +63,7 @@ function Lapzurite:CreateWindow(Theme : string)
 	Title.BackgroundTransparency = 1.000
 	Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Title.BorderSizePixel = 0
-	Title.Size = UDim2.new(0.470588237, 0, 0.0733333305, 0)
+	Title.Size = UDim2.new(0, 100, 0, 50)
 	Title.Font = Enum.Font.SourceSansBold
 	Title.Text = "Lapzurite_"
 	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -77,7 +75,7 @@ function Lapzurite:CreateWindow(Theme : string)
 
 	UIPadding.Parent = Title
 	UIPadding.PaddingLeft = UDim.new(0, 10)
-	UIPadding.PaddingTop = UDim.new(0, 5)
+	UIPadding.PaddingTop = UDim.new(0, -26)
 
 	ButtonList.Name = "ButtonList"
 	ButtonList.Parent = Main
@@ -100,10 +98,67 @@ function Lapzurite:CreateWindow(Theme : string)
 	Storage.Name = "Storage"
 	Storage.Parent = Main
 	
+	local HideButton = Instance.new("ImageButton")
+
+	HideButton.Parent = Main
+	HideButton.AnchorPoint = Vector2.new(0.5, 0.5)
+	HideButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	HideButton.BackgroundTransparency = 1.000
+	HideButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	HideButton.BorderSizePixel = 0
+	HideButton.Position = UDim2.new(0.971307278, 0, 0.047034122, 0)
+	HideButton.Size = UDim2.new(0, 18, 0, 18)
+	HideButton.Image = "http://www.roblox.com/asset/?id=6023426928"
+	
+	if MinimizeKeybind ~= nil then
+		HideButton.Visible = false
+	end
+	
+	local state = false
+	
+	local function Hide(State)
+		if State then
+			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.fromScale(Main.Size.X.Scale,0.05)})
+			ButtonList.Visible = false
+			for _, s in pairs(Storage:GetChildren()) do
+				if s:IsA("ScrollingFrame") then
+					s.Visible = false
+				end
+			end
+			
+			for _,a in pairs(Main:GetChildren()) do
+				if a:IsA("ScrollingFrame") then
+					a.Visible = false
+				end
+			end
+			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.5)}):Play()
+			t:Play()
+		else
+			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.fromScale(Main.Size.X.Scale,0.5859375)})
+			ButtonList.Visible = true
+			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.047034122)}):Play()
+			t:Play()
+		end
+	end
+	
+	game:GetService("UserInputService").InputBegan:Connect(function(inp, proc)
+		if proc then return end
+		
+		if inp.KeyCode == MinimizeKeybind and MinimizeKeybind ~= nil then
+			state = not state
+			Hide(state)
+		end
+	end)
+	
+	HideButton.MouseButton1Up:Connect(function()
+		state = not state
+		Hide(state)
+	end)
+	
 	function Window:AddTab(Config)
 		local Tabs = {}
 		
-		local tName = Config.Name or "Tab"
+		local tName = Config.Name
 
 		local Tab = Instance.new("TextButton")
 		local UIGradient = Instance.new("UIGradient")
@@ -165,8 +220,9 @@ function Lapzurite:CreateWindow(Theme : string)
 		end)
 
 		function Tabs:AddButton(Config)
-			local tName = Config.Title or "Title"
-			
+			local tName = Config.Title
+			local tSubName = Config.SubTitle
+
 			local Button = Instance.new("TextButton")
 			local UICorner = Instance.new("UICorner")
 			local Title = Instance.new("TextLabel")
@@ -223,7 +279,7 @@ function Lapzurite:CreateWindow(Theme : string)
 		end
 		
 		function Tabs:AddToggle(Config)
-			local tName = Config.Title or "Title"
+			local tName = Config.Title
 			local State = Config.State or false
 			
 			local Toggle = Instance.new("Frame")
@@ -323,7 +379,7 @@ function Lapzurite:CreateWindow(Theme : string)
 			Title.Size = UDim2.new(0, 148, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = Config.Title .. ": " .. outputValue or "Title"
+			Title.Text = Config.Title .. ": " .. outputValue
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
 			Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -414,7 +470,7 @@ function Lapzurite:CreateWindow(Theme : string)
 			Title.Size = UDim2.new(0, 148, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = Config.Title or "Title"
+			Title.Text = Config.Title
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
 			Title.TextXAlignment = Enum.TextXAlignment.Left
