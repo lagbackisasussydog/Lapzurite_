@@ -1,6 +1,6 @@
 local autochest = {}
 
-function autochest:Init()
+function Init()
 	local FirstSeasChests = {
 		CFrame.new(1147.56067, 19.7403679, 1260.95337),
 		CFrame.new(958.973572, 16.3185673, 1339.90894),
@@ -48,7 +48,10 @@ function autochest:Init()
 		CFrame.new(-1014.435302734375, 70.8125991821289, 850.7462768554688),
 		CFrame.new(-1070.09130859375, 120.7647476196289, 857.2682495117188)
 	}
-
+	
+	local Plr = game.Players.LocalPlayer
+	local Char = Plr.Character
+	
 	local function Tween(Inst, Info,Properties)
 		if not Inst or not Inst.Parent then return end
 		local TweenSvc = game:GetService("TweenService")
@@ -94,6 +97,10 @@ function autochest:Init()
 			task.wait()
 		end
 	end)
+end
+
+function autochest:get()
+	return Init
 end
 
 return autochest
