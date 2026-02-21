@@ -199,7 +199,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		UIGridLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
 		UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
 		UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 5)
-		UIGridLayout_2.CellSize = UDim2.new(0, 273, 0, 50)
+		UIGridLayout_2.CellSize = UDim2.new(0.642352939, 0, 0, 50)
 
 		UIGradient_2.Rotation = -90
 		UIGradient_2.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(1.00, 1.00)}
