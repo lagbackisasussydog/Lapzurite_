@@ -1,27 +1,31 @@
 local Thread = {}
 
 function Thread:AddThread(thread, func)
-	if getgenv().Threads[thread] then
-		task.cancel(getgenv().Threads[thread])
-		getgenv().Threads[thread] = nil
-	end
-
-	getgenv().Threads[thread] = task.spawn(func) 
+	getgenv().Threads[thread] = {
+		["Func"] = func
+	}
 end
 
-function closeThread(thread)
+function Thread:StartThread(thread)
 	if getgenv().Threads[thread] then
-		task.cancel(getgenv().Threads[thread])
-		getgenv().Threads[thread] = nil
+		task.cancel(getgenv().Threads[thread].Func)
+	end
+
+	task.spawn(getgenv().Threads[thread].Func)
+end
+
+function Thread:CloseThread(thread)
+	if getgenv().Threads[thread] then
+		task.cancel(getgenv().Threads[thread].Func)
 	end
 end
 
-function resetThread()
+function Thread:ResetThread()
 	for _, v in pairs(getgenv().Threads) do
 		if v then
-			task.cancel(v)
+			task.cancel(v.Func)
 			task.wait(1)
-			task.spawn(v)
+			task.spawn(v.Func)
 		end
 	end
 end
