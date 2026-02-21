@@ -1,6 +1,6 @@
 local autochest = {}
 
-function autoChest:Init()
+function autochest:Init()
 	local FirstSeasChests = {
 		CFrame.new(1147.56067, 19.7403679, 1260.95337),
 		CFrame.new(958.973572, 16.3185673, 1339.90894),
@@ -96,4 +96,4 @@ function autoChest:Init()
 	end)
 end
 
-return autoChest
+return autochest
