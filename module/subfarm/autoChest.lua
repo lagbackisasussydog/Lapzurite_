@@ -69,6 +69,14 @@ function Init()
 			f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
 			f.Velocity = Vector3.new(0,.01,0)
 		end
+		
+		if not getgenv().Configuration.Modules.AutoFarmChests then
+			for _, v in pair(Char.PrimaryPart:GetChildren()) do
+				if v:IsA("BodyVelocity") then
+					v:Destroy()
+				end
+			end
+		end
 	end
 
 	local loop_thread = task.spawn(function()
