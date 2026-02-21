@@ -79,31 +79,31 @@ function Init()
 		end
 	end
 
-	local loop_thread = task.spawn(function()
-		Anchor(Char)
-		while getgenv().Configuration.Modules.AutoFarmChests do
-			local root = Char.PrimaryPart
-			if not root then task.wait() continue end
-			
-			local chestList
-			if getgenv().Configuration.CurrentPlace == "First-Seas" then
-				chestList = FirstSeasChests
-			elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
-				chestList = SecondSeasChests
-			end
-			
-			if chestList then
-				for _, chest in pairs(chestList) do
-					if not getgenv().Configuration.Modules.AutoFarmChests then break end
-					
-					local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
-					
-					Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
-					task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
-				end
-			end
-			task.wait()
+	pcall(function()
+	Anchor(Char)
+	while getgenv().Configuration.Modules.AutoFarmChests do
+		local root = Char.PrimaryPart
+		if not root then task.wait() continue end
+		
+		local chestList
+		if getgenv().Configuration.CurrentPlace == "First-Seas" then
+			chestList = FirstSeasChests
+		elseif getgenv().Configuration.CurrentPlace == "Second-Seas" then
+			chestList = SecondSeasChests
 		end
+		
+		if chestList then
+			for _, chest in pairs(chestList) do
+				if not getgenv().Configuration.Modules.AutoFarmChests then break end
+					
+				local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
+					
+				Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
+				task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+			end
+		end
+		task.wait()
+	end
 	end)
 end
 
