@@ -17,13 +17,21 @@ function autochest:Init()
 		while getgenv().Configuration.Modules.AutoFarmChests do
 			for _, chest in pairs(getinstances()) do
 				if chest:IsA("BasePart") and string.find(chest.Name, "Chest") then
-					if not getgenv().Configuration.Modules.AutoFarmChests then break end
-					
-					local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
-							
-					Tween(Char.PrimaryPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest:GetPivot()})
-					Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-					task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+					if getgenv().ModuleSetting.AutoFarmChests.Method == "Tween" then
+						if not getgenv().Configuration.Modules.AutoFarmChests then break end
+						
+						local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
+								
+						Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
+						Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+					elseif getgenv().ModuleSetting.AutoFarmChests.Method == "Teleport" then
+						if not getgenv().Configuration.Modules.AutoFarmChests then break end
+						
+						Char:PivotTo(chest:GetPivot())
+						Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
+					end
 				end
 			end
 		end
