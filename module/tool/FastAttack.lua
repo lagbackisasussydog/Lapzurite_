@@ -13,7 +13,7 @@ function fastAttack:PerformAttack(Char, Target)
 			local Args = {
 				[1] = Head,
 				[2] = {},
-				[3] = "89134891234"
+				[4] = "89134891234"
 			}
 			
 			require(ReplicatedStorage.Modules.Net):RemoteEvent("RegisterHit", true)
@@ -34,7 +34,7 @@ function fastAttack:InstantKillSpoof(Char, Target)
 			local Args = {
 				[1] = Head,
 				[2] = {},
-				[3] = "89134891234"
+				[4] = "89134891234"
 			}
 			
 			HitRemote:FireServer(unpack(Args))
