@@ -21,7 +21,7 @@ function autochest:Init()
 					
 					local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
 							
-					Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest:GetPivot()})
+					Tween(Char.PrimaryPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest:GetPivot()})
 					Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 					task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 				end
