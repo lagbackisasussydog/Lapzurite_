@@ -1,6 +1,11 @@
 local Lapzurite = {}
 local Window = {}
 
+local BtnColor = Color3.new(0, 0, 0)
+local BgColor = Color3.new(0,0,0)
+local BgColor1 = Color3.new(0, 0, 0)
+local TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
+
 function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local Lapzurite = Instance.new("ScreenGui")
 	local Main = Instance.new("ImageLabel")
@@ -10,10 +15,6 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local ButtonList = Instance.new("ScrollingFrame")
 	local UIGridLayout = Instance.new("UIGridLayout")
 	local Storage = Instance.new("Folder")
-	local BtnColor = Color3.new(0, 0, 0)
-	local BgColor = Color3.new(0,0,0)
-	local BgColor1 = Color3.new(0, 0, 0)
-	local TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
 	
 	task.spawn(function()
 		if Theme == "Blue" then
@@ -42,7 +43,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	end)
 
 	Lapzurite.Name = "Lapzurite"
-	Lapzurite.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Lapzurite.Parent = game.CoreGui
 	Lapzurite.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Main.Name = "Main"
@@ -118,7 +119,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	
 	local function Hide(State)
 		if State then
-			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.fromScale(Main.Size.X.Scale,0.05)})
+			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.new(0,425,0,25)})
 			ButtonList.Visible = false
 			for _, s in pairs(Storage:GetChildren()) do
 				if s:IsA("ScrollingFrame") then
@@ -134,7 +135,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.5)}):Play()
 			t:Play()
 		else
-			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.fromScale(Main.Size.X.Scale,0.5859375)})
+			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.new(0,425,0,300)})
 			ButtonList.Visible = true
 			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.047034122)}):Play()
 			t:Play()
@@ -199,7 +200,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		UIGridLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
 		UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
 		UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 5)
-		UIGridLayout_2.CellSize = UDim2.new(0.642352939, 0, 0, 50)
+		UIGridLayout_2.CellSize = UDim2.new(0, 273, 0, 50)
 
 		UIGradient_2.Rotation = -90
 		UIGradient_2.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(1.00, 1.00)}
@@ -552,6 +553,62 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	end
 
 	return Window
+end
+
+function Lapzurite:Alarm(Config)
+	local Alarm = Instance.new("ScreenGui")
+	local Main = Instance.new("Frame")
+	local Content = Instance.new("TextLabel")
+	local ImageLabel = Instance.new("ImageLabel")
+	local UIGradient = Instance.new("UIGradient")
+	local UIStroke = Instance.new("UIStroke")
+	
+	Alarm.Name = "Alarm"
+	Alarm.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Alarm.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	Main.Name = "Main"
+	Main.Parent = Alarm
+	Main.AnchorPoint = Vector2.new(0.5, 0.5)
+	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Main.BackgroundTransparency = 1
+	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Main.BorderSizePixel = 0
+	Main.Position = UDim2.new(0.492863953, 0, 0.935039341, 0)
+	Main.Size = UDim2.new(0, 300, 0, 25)
+
+	UIStroke.Parent = Main
+	UIStroke.Color = Color3.new(255,255,255)
+	
+	UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, BgColor), ColorSequenceKeypoint.new(1.00, BgColor1)}
+	UIGradient.Rotation = -90
+	UIGradient.Parent = UIStroke
+
+	Content.Name = "Content"
+	Content.Parent = Main
+	Content.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Content.BackgroundTransparency = 1.000
+	Content.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Content.BorderSizePixel = 0
+	Content.Position = UDim2.new(0.0816666633, 0, 0, 0)
+	Content.Size = UDim2.new(0.918333352, 0, 1, 0)
+	Content.Font = Enum.Font.SourceSans
+	Content.Text = Config.Content
+	Content.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Content.TextSize = 14.000
+	Content.TextWrapped = true
+
+	ImageLabel.Parent = Main
+	ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+	ImageLabel.BackgroundTransparency = 1.000
+	ImageLabel.BorderSizePixel = 0
+	ImageLabel.Position = UDim2.new(0.0399999991, 0, 0.479999989, 0)
+	ImageLabel.Size = UDim2.new(0, 25, 0, 25)
+	ImageLabel.Image = "http://www.roblox.com/asset/?id=6035202033"
+	
+	game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Transparency = 0.5}):Play()
+	
+	game.Debris:AddItem(Alarm, Config.Lifetime)
 end
 
 return Lapzurite
