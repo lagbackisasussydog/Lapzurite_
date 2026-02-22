@@ -58,7 +58,7 @@ function fastAttack:InstantKillSpoof(Char, Target)
 			
 			HitRemote:FireServer(unpack(Args))
 			AttackRemote:FireServer(0)
-			Target.Humanoid:TakeDamage(99999999)
+			Target.Humanoid:BreakJoints()
 		end
 	end
 end
