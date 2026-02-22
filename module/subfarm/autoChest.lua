@@ -22,14 +22,14 @@ function autochest:Init()
 						
 						local time = Plr:DistanceFromCharacter(chest.Position) / getgenv().Configuration.TweenSpeed
 								
-						Tween(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
-						Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						Tween(Char.PrimaryPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = chest})
+						--Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 						task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 					elseif getgenv().ModuleSetting.AutoFarmChests.Method == "Teleport" then
 						if not getgenv().Configuration.Modules.AutoFarmChests then break end
 						
 						Char:PivotTo(chest:GetPivot())
-						Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						--Char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 						task.wait(getgenv().ModuleSetting.AutoFarmChests.Delay)
 					end
 				end
