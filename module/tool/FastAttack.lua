@@ -27,7 +27,7 @@ function fastAttack:PerformAttack()
 					local hum = v:FindFirstChild("Humanoid")
 					if v ~= char and hrp and hum and hum.Health > 0 and (hrp.Position - root.Position).Magnitude <= 60 then
 						for _, _v in ipairs(v:GetChildren()) do
-							if _v:IsA("BasePart") and (hrp.Position - root.Position).Magnitude <= getgenv().Configuration.Distance then
+							if _v:IsA("BasePart") and (hrp.Position - root.Position).Magnitude <= 60 then
 								parts[#parts+1] = {v, _v}
 							end
 						end
