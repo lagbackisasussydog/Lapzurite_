@@ -3,20 +3,20 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local fastAttack = {}
 
 function fastAttack:PerformAttack()
-	pcall(function()
-	local remote, idremote
-	for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
-		for _, n in next, v:GetChildren() do
-			if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
-				remote, idremote = n, n:GetAttribute("Id")				
+	local s, e = pcall(function()
+		local remote, idremote
+		for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
+			for _, n in next, v:GetChildren() do
+				if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
+					remote, idremote = n, n:GetAttribute("Id")				
+				end
 			end
+			v.ChildAdded:Connect(function(n)
+				if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
+					remote, idremote = n, n:GetAttribute("Id")
+				end
+			end)
 		end
-		v.ChildAdded:Connect(function(n)
-			if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
-				remote, idremote = n, n:GetAttribute("Id")
-			end
-		end)
-	end
 
 		while task.wait(0.05) do
 			local char = game.Players.LocalPlayer.Character
@@ -51,6 +51,8 @@ function fastAttack:PerformAttack()
 			end
 		end
 	end)
+	
+	if e then print(e) end
 end
 
 function fastAttack:InstantKillSpoof(Char, Target)
