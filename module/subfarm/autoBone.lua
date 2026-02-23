@@ -1,6 +1,6 @@
 local autobone ={}
 
-local function autobone:Init()
+function autobone:Init()
 	return function()
 		local Enemies = workspace.Enemies
 		local Char = game.Players.LocalPlayer.Character
