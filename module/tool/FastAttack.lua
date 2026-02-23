@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local fastAttack = {}
 
 function fastAttack:PerformAttack()
+	pcall(function()
 	local remote, idremote
 	for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
 		for _, n in next, v:GetChildren() do
@@ -16,7 +17,7 @@ function fastAttack:PerformAttack()
 			end
 		end)
 	end
-	task.spawn(function()
+
 		while task.wait(0.05) do
 			local char = game.Players.LocalPlayer.Character
 			local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -27,7 +28,7 @@ function fastAttack:PerformAttack()
 					local hum = v:FindFirstChild("Humanoid")
 					if v ~= char and hrp and hum and hum.Health > 0 and (hrp.Position - root.Position).Magnitude <= 60 then
 						for _, _v in ipairs(v:GetChildren()) do
-							if _v:IsA("BasePart") and (hrp.Position - root.Position).Magnitude <= 60 then
+							if _v:IsA("BasePart") and (hrp.Position - root.Position).Magnitude <= getgenv().Configuration.Distance then
 								parts[#parts+1] = {v, _v}
 							end
 						end
