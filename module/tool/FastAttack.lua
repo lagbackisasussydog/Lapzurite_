@@ -44,13 +44,15 @@ function fastAttack:InstantKillSpoof(Char, Target)
 	end
 end
 
-function fastAttack:ReturnNearbyTarget(Char)
+function fastAttack:ReturnNearbyTargetLoop(Char)
 	local Enemies, Characters = workspace.Enemies, workspace.Charaters
 	
-	for _, Target in ipairs({Enemies, Characters} or {}) do
-		local TargetHumanoid = Target:FindFirstChild("Humanoid")
-		if Target ~= Char and TargetHumanoid and TargetHumanoid.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Target:GetPivot().Position) < getgenv().Configuration.Distance then
-			return Target
+	while task.wait(0.05) do
+		for _, Target in ipairs({Enemies, Characters} or {}) do
+			local TargetHumanoid = Target:FindFirstChild("Humanoid")
+			if Target ~= Char and TargetHumanoid and TargetHumanoid.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Target:GetPivot().Position) < getgenv().Configuration.Distance then
+				return Target
+			end
 		end
 	end
 end
