@@ -38,9 +38,14 @@ end
 function Thread:ExecuteOnRuntime(thread)
 	local a = Thread._thread[thread]
 	
-	pcall(function()
-		task.spawn(a)
+	local success , err = pcall(function()
+		a.Running = task.spawn(a.Function)
 	end)
+	
+	if err then
+		task.cancel(a.Running)
+		a.Running = task.spawn(a.Function)
+	end
 end
 
 return Thread
