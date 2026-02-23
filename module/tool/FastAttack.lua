@@ -45,7 +45,7 @@ function fastAttack:InstantKillSpoof(Char, Target)
 end
 
 function fastAttack:ReturnNearbyTargetLoop(Char)
-	local Enemies, Characters = workspace.Enemies, workspace.Charaters
+	local Enemies, Characters = workspace.Enemies, workspace.Characters
 	
 	while task.wait(0.05) do
 		for _, Target in ipairs({Enemies, Characters} or {}) do
