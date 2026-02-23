@@ -38,7 +38,7 @@ local function autobone:Init()
 					until enemyHum.Health <= 0
 				end
 			end
-			task.wait()
+			task.wait(0.05)
 		end
 	end	
 end
