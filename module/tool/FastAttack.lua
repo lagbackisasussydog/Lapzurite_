@@ -2,32 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local fastAttack = {}
 
-function fastAttack:PerformAttack(Char)
-	--[[
-	local HitRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
-	local AttackRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
-	
-	if Char and Target then
-		if getgenv().Configuration.CurrentPlace == "Third-Seas" then
-			
-		end
-	
-		local Head = Target.Head
-		
-		if Head then
-			local Args = {
-				[1] = Head,
-				[2] = {},
-				[3] = "89134891234"
-			}
-			
-			require(ReplicatedStorage.Modules.Net):RemoteEvent("RegisterHit", true)
-			AttackRemote:FireServer(0)
-			HitRemote:FireServer(unpack(Args))
-		end
-	end
-	--]]
-	
+function fastAttack:PerformAttack()
 	local remote, idremote
 	for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
 		for _, n in next, v:GetChildren() do
