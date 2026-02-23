@@ -13,7 +13,7 @@ function fastAttack:PerformAttack(Char, Target)
 			local Args = {
 				[1] = Head,
 				[2] = {},
-				[3] = "89134891234"
+				[3] = "0"
 			}
 			
 			require(ReplicatedStorage.Modules.Net):RemoteEvent("RegisterHit", true)
@@ -34,7 +34,7 @@ function fastAttack:InstantKillSpoof(Char, Target)
 			local Args = {
 				[1] = Head,
 				[2] = {},
-				[3] = "89134891234"
+				[3] = "0"
 			}
 			
 			HitRemote:FireServer(unpack(Args))
@@ -48,11 +48,13 @@ function fastAttack:ReturnNearbyTargetLoop(Char)
 	local Enemies, Characters = workspace.Enemies, workspace.Characters
 	
 	while task.wait(0.05) do
-		for _, Target in ipairs({Enemies, Characters} or {}) do
+		for _, a in next, ({ Enemies, Characters}) do
+		for _, Target in pairs(a:GetChildren()) do
 			local TargetHumanoid = Target:FindFirstChild("Humanoid")
 			if Target ~= Char and TargetHumanoid and TargetHumanoid.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Target:GetPivot().Position) < getgenv().Configuration.Distance then
 				return Target
 			end
+		end
 		end
 	end
 end
