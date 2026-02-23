@@ -80,7 +80,7 @@ local a = {
 }
 
 -- Add Thread
---ThreadManager:AddThread("autoChest", a[1]:Init())
+ThreadManager:AddThread("autoChest", a[1]:Init())
 ThreadManager:AddThread("autoBone", a[3]:Init())
 ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
@@ -94,17 +94,6 @@ Tabs.SubFarm:AddToggle({Title = "AutoFarm Chest", Callback = function(State)
 		ThreadManager:StartThread("autoChest")
 	else
 		ThreadManager:CloseThread("autoChest")
-		Pause()
-	end
-end})
-
-Tabs.SubFarm:AddToggle({Title = "Auto Bone", Callback = function(State)
-	getgenv().Configuration.Modules.AutoBone = State
-	Anchor(Plr.Character)
-	if State then
-		ThreadManager:StartThread("autoBone")
-	else
-		ThreadManager:CloseThread("autoBone")
 		Pause()
 	end
 end})
