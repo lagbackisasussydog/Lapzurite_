@@ -48,10 +48,11 @@ function fastAttack:ReturnNearbyTargetLoop(Char)
 	local Enemies, Characters = workspace.Enemies, workspace.Characters
 	
 	while task.wait(0.05) do
-		for _, a in next, ({ Enemies, Characters}) do
+		for _, a in next, ({ Enemies, Characters }) do
 		for _, Target in pairs(a:GetChildren()) do
 			local TargetHumanoid = Target:FindFirstChild("Humanoid")
 			if Target ~= Char and TargetHumanoid and TargetHumanoid.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Target:GetPivot().Position) < getgenv().Configuration.Distance then
+				print(Target.Name)
 				return Target
 			end
 		end
