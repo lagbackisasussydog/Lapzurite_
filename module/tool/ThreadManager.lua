@@ -10,7 +10,7 @@ end
 
 function Thread:StartThread(thread)
 	local a = Thread._thread[thread]
-	if a.Running ~= nil then
+	if a.Running then
 		task.cancel(a.Running)
 		a.Running = nil
 	end
@@ -20,7 +20,7 @@ end
 
 function Thread:CloseThread(thread)
 	local a = Thread._thread[thread]
-	if a.Running ~= nil then
+	if a.Running then
 		task.cancel(a.Running)
 		a.Running = nil
 	end
@@ -33,6 +33,14 @@ function Thread:ResetThread()
 			v.Running = task.spawn(v.Function)
 		end
 	end
+end
+
+function Thread:ExecuteOnRuntime(thread)
+	local a = Thread._thread[thread]
+	
+	pcall(function()
+		task.spawn(a)
+	end)
 end
 
 return Thread
