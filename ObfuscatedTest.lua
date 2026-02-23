@@ -76,12 +76,12 @@ end)
 local a = {
 	[1] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoChest.lua"))(),
 	[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))(),
-	[3] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
+	--[3] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
 }
 
 -- Add Thread
 ThreadManager:AddThread("autoChest", a[1]:Init())
-ThreadManager:AddThread("autoBone", a[3]:Init())
+--ThreadManager:AddThread("autoBone", a[3]:Init())
 ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
 -- Execute
