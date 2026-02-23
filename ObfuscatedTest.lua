@@ -73,21 +73,25 @@ Plr.CharacterAdded:Connect(function()
 	ThreadManager:ResetThread()
 end)
 
+--[[
 local a = {
 	[1] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoChest.lua"))(),
 	[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))(),
-	--[3] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
+	[3] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
 }
 
 -- Add Thread
 ThreadManager:AddThread("autoChest", a[1]:Init())
---ThreadManager:AddThread("autoBone", a[3]:Init())
+ThreadManager:AddThread("autoBone", a[3]:Init())
 ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
 -- Execute
 ThreadManager:StartThread("killMob")
 
+--]]
+
 Tabs.SubFarm:AddToggle({Title = "AutoFarm Chest", Callback = function(State)
+	--[[
 	getgenv().Configuration.Modules.AutoFarmChests = State
 	Anchor(Plr.Character)
 	if State then
@@ -96,6 +100,7 @@ Tabs.SubFarm:AddToggle({Title = "AutoFarm Chest", Callback = function(State)
 		ThreadManager:CloseThread("autoChest")
 		Pause()
 	end
+	--]]
 end})
 
 Tabs.SubFarm:AddDropdown({Title = "Mode", List = {"Tween", "Teleport"}, Callback = function(Value)
