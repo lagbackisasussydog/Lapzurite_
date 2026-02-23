@@ -15,8 +15,8 @@ function autochest:Init()
 		end
 		
 		while getgenv().Configuration.Modules.AutoFarmChests do
-			for _, chest in next, getinstances() do
-				if chest:IsA("BasePart") and string.find(chest.Name, "Chest") then
+			for _, chest in pairs(getinstances()) do
+				if chest:IsA("BasePart") and string.find(chest.Name, "Chest") and chest.Parent == workspace then
 					if getgenv().ModuleSetting.AutoFarmChests.Method == "Tween" then
 						if not getgenv().Configuration.Modules.AutoFarmChests then break end
 						
