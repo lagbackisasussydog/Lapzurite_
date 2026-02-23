@@ -26,19 +26,21 @@ function autobone:Init()
 				if enemy and enemy.Humanoid.Health > 0 and MobList[enemy.Name] then
 					local enemyRoot = enemy.PrimaryPart
 					local enemyHum = enemy.Humanoid
-				
-					Tween(Root, TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
 					
-					repeat
-						for _, _enemy in pairs(Enemies:GetChildren()) do
-							if _enemy.Humanoid and _enemy.Humanoid.Health > 0 and _enemy.Name == enemy then
-								_enemy:PivotTo(enemy:GetPivot())
+					if enemyRoot then
+						Tween(Root, TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
+						
+						repeat
+							for _, _enemy in pairs(Enemies:GetChildren()) do
+								if _enemy.Humanoid and _enemy.Humanoid.Health > 0 and _enemy.Name == enemy then
+									_enemy:PivotTo(enemy:GetPivot())
+								end
 							end
-						end
-					until enemyHum.Health <= 0
+						until enemyHum.Health <= 0
+					end
 				end
 			end
-			task.wait(0.05)
+			task.wait()
 		end
 	end	
 end
