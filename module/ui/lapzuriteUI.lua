@@ -15,6 +15,8 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local ButtonList = Instance.new("ScrollingFrame")
 	local UIGridLayout = Instance.new("UIGridLayout")
 	local Storage = Instance.new("Folder")
+	local UIGradient_1 = Instance.new("UIGradient")
+	local UIStroke = Instance.new("UIStroke")
 	
 	task.spawn(function()
 		if Theme == "Blue" then
@@ -48,12 +50,12 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 	Main.Name = "Main"
 	Main.Parent = Lapzurite
-	Main.AnchorPoint = Vector2.new(0.5, 0.5)
+	Main.AnchorPoint = Vector2.new(0.5, 0)
 	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BackgroundTransparency = 0.500
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
-	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Main.Position = UDim2.new(0.5, 0, 0, 0)
 	Main.Size = UDim2.new(0,425,0,300)
 	Main.Active = true
 	Main.Draggable = true
@@ -77,6 +79,14 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	UIPadding.Parent = Title
 	UIPadding.PaddingLeft = UDim.new(0, 10)
 	UIPadding.PaddingTop = UDim.new(0, -26)
+
+	UIStroke.Parent = ButtonList
+	UIStroke.Color = Color3.fromRGB(255,255,255)
+
+	UIGradient_1.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, BgColor), ColorSequenceKeypoint.new(1.00, BgColor1)}
+	UIGradient_1.Rotation = -90
+	UIGradient_1.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 1), NumberSequenceKeypoint.new(1.00, 0.50)}
+	UIGradient_1.Parent = UIStroke
 
 	ButtonList.Name = "ButtonList"
 	ButtonList.Parent = Main
@@ -132,13 +142,13 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 					a.Visible = false
 				end
 			end
-			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.5)}):Play()
 			t:Play()
+			HideButton.Image = "http://www.roblox.com/asset/?id=6026568245"
 		else
 			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.new(0,425,0,300)})
 			ButtonList.Visible = true
-			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.fromScale(0.971307278, 0.047034122)}):Play()
 			t:Play()
+			HideButton.Image = "http://www.roblox.com/asset/?id=6023426928"
 		end
 	end
 	
@@ -548,6 +558,48 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 				end
 			end)
 		end
+		
+		function Tabs:AddLabel(Config)
+			local Dropdown = Instance.new("TextLabel")
+			local UICorner = Instance.new("UICorner")
+			local Title = Instance.new("TextLabel")
+			local UIPadding = Instance.new("UIPadding")
+
+			Dropdown.Name = "Dropdown"
+			Dropdown.Parent = Section
+			Dropdown.Active = true
+			Dropdown.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+			Dropdown.BackgroundTransparency = 0.800
+			Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			Dropdown.BorderSizePixel = 0
+			Dropdown.Selectable = true
+			Dropdown.Size = UDim2.new(0, 200, 0, 50)
+			Dropdown.Font = Enum.Font.SourceSans
+			Dropdown.Text = ""
+			Dropdown.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Dropdown.TextSize = 18.000
+
+			UICorner.Parent = Dropdown
+
+			Title.Name = "Title"
+			Title.Parent = Dropdown
+			Title.AnchorPoint = Vector2.new(0.5, 0.5)
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			Title.BorderSizePixel = 0
+			Title.Position = UDim2.new(0.483516484, 0, 0.455000013, 0)
+			Title.Size = UDim2.new(0, 264, 0, 22)
+			Title.ZIndex = 9999999
+			Title.Font = Enum.Font.SourceSans
+			Title.Text = Config.Title
+			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Title.TextSize = 18.000
+			Title.TextWrapped = true
+
+			UIPadding.Parent = Title
+			UIPadding.PaddingLeft = UDim.new(0, 10)
+		end
 	
 		return Tabs
 	end
@@ -564,7 +616,7 @@ function Lapzurite:Alarm(Config)
 	local UIStroke = Instance.new("UIStroke")
 	
 	Alarm.Name = "Alarm"
-	Alarm.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Alarm.Parent = game.CoreGui
 	Alarm.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Main.Name = "Main"
