@@ -46,7 +46,7 @@ function autobone:Init()
 			for _, enemy in ipairs(Enemies:GetChildren()) do
 				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
 					t[#t + 1] = enemy
-					if enemy.Name == t[1].Name then
+					if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
 						enemy:PivotTo(t[1]:GetPivot())
 					end
 				end
