@@ -37,25 +37,23 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
-		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
+		Char:PivotTo(Char:GetPivot() * CFrame.new(15,0,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
 		while getgenv().Configuration.Modules.AutoBone do
-			for _, enemy in pairs(Enemies:GetChildren()) do
-				local t = {}
-				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) and #enemies == 0 then
+			local t = {}
+			for _, enemy in ipairs(Enemies:GetChildren()) do
+				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
+					t[#t + 1] = enemy
+				end
+			end
+			if #t > 0 then
+				pcall(function()
+					local enemy = t[1]
 					Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
 					Anchor(enemy)
-					repeat task.wait(.01)
-						for _, _enemy in pairs(Enemies:GetChildren()) do
-							if _enemy and _enemy.Humanoid and _enemy.HumanoidRootPart and _enemy.Humanoid.Health > 0 and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-								_enemy:PivotTo(enemy:GetPivot())
-								t[#t + 1] = _enemy
-							end
-						end
-					until enemy.Humanoid.Health < 0 and t[1].Humanoid.Health < 0
-				end
+				end)
 			end
 			task.wait()
 		end
