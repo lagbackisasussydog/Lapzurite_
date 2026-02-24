@@ -46,6 +46,7 @@ function autobone:Init()
 			for _, enemy in ipairs(Enemies:GetChildren()) do
 				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
 					t[#t + 1] = enemy
+					enemy:PivotTo(t[1]:GetPivot())
 				end
 			end
 			if #t > 0 then
@@ -53,11 +54,6 @@ function autobone:Init()
 					local enemy = t[1]
 					Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
 					Anchor(enemy)
-					for _, v in ipairs(t) do
-						repeat
-							v:PivotTo(enemy)
-						until #t == 0
-					end
 				end)
 			end
 			task.wait()
