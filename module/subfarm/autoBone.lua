@@ -47,21 +47,19 @@ function autobone:Init()
 				for _, enemy in ipairs(Enemies:GetChildren()) do
 					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
 						t[#t + 1] = enemy
+						if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
+							enemy:PivotTo(t[1]:GetPivot())
+						end
 					end
 				end
 			end)
 			if #t > 0 then
 				pcall(function()
-					for _, enemy in ipairs(t) do
-						if enemy.Humanoid.Health > 0 then
-							repeat task.wait()
-								if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
-							        enemy:PivotTo(t[1]:GetPivot())
-								end
-						        Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						        Anchor(enemy)
-						    until enemy.Humanoid.Health <= 0
-						end
+					for _, enemy in ipairs(t) 
+						repeat task.wait()
+						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+						    Anchor(enemy)
+						until #t == 0
 					end
 				end)
 			end
