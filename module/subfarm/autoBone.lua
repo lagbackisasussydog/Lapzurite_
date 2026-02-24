@@ -25,7 +25,7 @@ function autobone:Init()
 			Track.Completed:Wait()
 		end
 		
-		game.ReplicatedStorage.Remotes.CommF_:InvokeServer(requestEntrance, vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
+		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,0,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
@@ -38,10 +38,11 @@ function autobone:Init()
 					if enemyRoot then
 						Tween(Root, TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
 						
-						repeat task.wait(.1)
-							for _, _enemy in pairs(Enemies:GetChildren()) do
-								if _enemy.Humanoid.Health > 0 and _enemy == enemy then
-									_enemy:PivotTo(enemy:GetPivot())
+						repeat task.wait(.05)
+							Char:PivotTo(enemyRoot.CFrame * CFrame.new(0,15,0))
+							for _, v in pairs(Enemies:GetChildren()) do
+								if v.Humanoid.Health > 0 and v.Name == enemy.Name and (v.PrimaryPart.Position - enemyRoot.Position).Magnitude <= getgenv().Configuration.Distance then
+									v:PivotTo(enemy:GetPivot())
 								end
 							end
 						until enemyHum.Health <= 0
