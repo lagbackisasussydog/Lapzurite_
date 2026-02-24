@@ -55,7 +55,7 @@ function autobone:Init()
 			end)
 			if #t > 0 then
 				pcall(function()
-					for _, enemy in ipairs(t) 
+					for _, enemy in ipairs(t) do
 						repeat task.wait()
 						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
 						    Anchor(enemy)
