@@ -54,11 +54,13 @@ function autobone:Init()
 				pcall(function()
 					for _, enemy in ipairs(t) do
 						if enemy.Humanoid.Health > 0 then
+							repeat task.wait()
 								if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
-							enemy:PivotTo(t[1]:GetPivot())
+							        enemy:PivotTo(t[1]:GetPivot())
 								end
-						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						Anchor(enemy)
+						        Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+						        Anchor(enemy)
+						    until enemy.Humanoid.Health <= 0
 						end
 					end
 				end)
