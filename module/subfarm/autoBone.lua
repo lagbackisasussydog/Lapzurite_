@@ -52,15 +52,13 @@ function autobone:Init()
 			end)
 			if #t > 0 then
 				pcall(function()
-					local clone = cloneref(t[1])
 					for _, enemy in ipairs(t) do
 						repeat task.wait()
 						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
 						    if (enemy.PrimaryPart.Position - clone.PrimaryPart.Position).Magnitude < 160 then
 								enemy:PivotTo(clone:GetPivot())
 							end
-						until #t == 0
-						clone:Destroy()
+						until enemy.Humanoid.Health <= 0
 					end
 				end)
 			end
