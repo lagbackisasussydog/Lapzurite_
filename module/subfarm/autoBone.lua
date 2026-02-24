@@ -15,6 +15,7 @@ function autobone:Init()
 			"Demonic Soul",
 			"Posessed Mummy"
 		}
+		local enemies = {}
 		
 		function Anchor(Char)
 			if Char.PrimaryPart:FindFirstChild("f") == nil then
@@ -39,31 +40,32 @@ function autobone:Init()
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,0,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
-		while getgenv().Configuration.Modules.AutoBone do
-			for _, enemy in pairs(Enemies:GetChildren()) do
-				if enemy and enemy.Humanoid.Health > 0 and table.find(MobList, enemy.Name) then
-					local enemyRoot = enemy.PrimaryPart
-					local enemyHum = enemy.Humanoid
-					local enemies = {}
-					
-					if enemyRoot then
-						Tween(Root, TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
-						Anchor(enemy)
+		
+		pcall(function()
+			while getgenv().Configuration.Modules.AutoBone do
+				for _, enemy in pairs(Enemies:GetChildren()) do
+					if not getgenv().Configuration.Modules.AutoBone then break end
+					if enemy and enemy.Humanoid.Health > 0 and table.find(MobList, enemy.Name) then
+						local enemyRoot = enemy.PrimaryPart
+						local enemyHum = enemy.Humanoid
+								
+						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
+
+						if enemyRoot and enemyHum then
+							table.insert(enemies, enemy)
+						end
 						
-						repeat task.wait(.05)
-							Char:PivotTo(enemyRoot.CFrame * CFrame.new(0,15,0))
-							for _, v in pairs(Enemies:GetChildren()) do
-								if v.Humanoid and v.Humanoid.Health > 0 and v.Name == enemy.Name and (v.PrimaryPart.Position - enemyRoot.Position).Magnitude <= getgenv().Configuration.Distance then
-									enemies[#enemies + 1] = v
-									v:PivotTo(enemy:GetPivot())
-								end
-							end
-						until enemyHum.Health <= 0 and enemies[1]:FindFirstChild("Humanoid").Health <= 0
+						if #enemies > 0 and Root then
+							repeat task.wait(.01)
+								local target = enemies[1]
+								Char:PivotTo(target.PrimaryPart:GetPivot())
+							until #enemies == 0
+						end
 					end
 				end
+				task.wait()
 			end
-			task.wait()
-		end
+		end)
 	end	
 end
 
