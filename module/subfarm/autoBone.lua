@@ -2,8 +2,6 @@ local autobone ={}
 
 function autobone:Init()
 	return function()
-		local CommF_ = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/CommFManager.lua"))()
-		
 		local Plr = game.Players.LocalPlayer
 		local Enemies = workspace.Enemies
 		local Char = Plr.Character
@@ -24,8 +22,13 @@ function autobone:Init()
 			Track:Play()
 			Track.Completed:Wait()
 		end
-		
-		CommF_:requestEntrance(vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
+
+		local args = {
+			"requestEntrance",
+			vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625)
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		while getgenv().Configuration.Modules.AutoBone do
 			for _, enemy in pairs(Enemies:GetChildren()) do
