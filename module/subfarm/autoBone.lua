@@ -41,25 +41,27 @@ function autobone:Init()
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
-		while getgenv().Configuration.Modules.AutoBone do
-			local t = {}
-			for _, enemy in ipairs(Enemies:GetChildren()) do
-				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
-					t[#t + 1] = enemy
-					if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
-						enemy:PivotTo(t[1]:GetPivot())
+		pcall(function()
+			while getgenv().Configuration.Modules.AutoBone do
+				local t = {}
+				for _, enemy in ipairs(Enemies:GetChildren()) do
+					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
+						t[#t + 1] = enemy
+						if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
+							enemy:PivotTo(t[1]:GetPivot())
+						end
 					end
 				end
+				if #t > 0 then
+					pcall(function()
+						local enemy = t[1]
+						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+						Anchor(enemy)
+					end)
+				end
+				task.wait()
 			end
-			if #t > 0 then
-				pcall(function()
-					local enemy = t[1]
-					Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-					Anchor(enemy)
-				end)
-			end
-			task.wait()
-		end
+		end)
 	end	
 end
 
