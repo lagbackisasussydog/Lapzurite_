@@ -49,7 +49,9 @@ function autobone:Init()
 						Anchor(enemy)
 						repeat task.wait(.01)
 							for _, _enemy in pairs(Enemies:GetChildren()) do
-								if _enemy and _enemy.Humanoid and _enemy.Humanoid.Health > 0
+								if _enemy 
+								and _enemy.Humanoid 
+								and _enemy.Humanoid.Health > 0
 								and _enemy.HumanoidRootPart
 								and _enemy.Name == enemy.Name
 								and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
