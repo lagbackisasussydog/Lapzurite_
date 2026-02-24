@@ -47,19 +47,20 @@ function autobone:Init()
 				for _, enemy in ipairs(Enemies:GetChildren()) do
 					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
 						t[#t + 1] = enemy
-						if enemy.Name == t[1].Name and (enemy:GetPivot().Position - t[1]:GetPivot().Position).Magnitude < getgenv().Configuration.Distance then
-							enemy:PivotTo(t[1]:GetPivot())
-						end
 					end
 				end
 			end)
 			if #t > 0 then
 				pcall(function()
+					local clone = cloneref(t[1])
 					for _, enemy in ipairs(t) do
 						repeat task.wait()
 						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						    Anchor(enemy)
+						    if (enemy.PrimaryPart.Position - clone.PrimaryPart.Position).Magnitude < 160 then
+								enemy:PivotTo(clone:GetPivot)
+							end
 						until #t == 0
+						clone:Destroy()
 					end
 				end)
 			end
