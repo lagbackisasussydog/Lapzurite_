@@ -40,7 +40,7 @@ function autobone:Init()
 		local function getNearbyMob(mob)
 			for _, enemy in pairs(Enemies:GetChildren()) do
 				if enemy and enemy.Humanoid and enemy.HumanoidRootPart and enemy.Humanoid.Health > 0 and enemy.Name == mob.Name and (enemy.HumanoidRootPart.Position - mob.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-					table.insert(enemies, mob)
+					table.insert(enemies, enemy)
 				end
 			end
 		end
@@ -50,23 +50,21 @@ function autobone:Init()
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
-		pcall(function()
-			while getgenv().Configuration.Modules.AutoBone do
-				for _, enemy in pairs(Enemies:GetChildren()) do
-					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) and #enemies == 0 then
-						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						repeat task.wait(.01)
-							getNearbyMob()
-							for _, a in pairs(enemies) do
-								enemy:PivotTo(Char:GetPivot())
-								a:PivotTo(enemy:GetPivot())
-							end
-						until enemy.Humanoid.Health < 0 and #enemies == 0
-					end
+		while getgenv().Configuration.Modules.AutoBone do
+			for _, enemy in pairs(Enemies:GetChildren()) do
+				if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) and #enemies == 0 then
+					Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+					repeat task.wait(.01)
+						getNearbyMob(enemy)
+						for _, a in pairs(enemies) do
+							enemy:PivotTo(Char:GetPivot())
+							a:PivotTo(enemy:GetPivot())
+						end
+					until enemy.Humanoid.Health < 0 and #enemies == 0
 				end
-				task.wait()
 			end
-		end)
+			task.wait()
+		end
 	end	
 end
 
