@@ -43,27 +43,23 @@ function autobone:Init()
 		
 		pcall(function()
 			while getgenv().Configuration.Modules.AutoBone do
-				repeat
-					for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-						if enemy.Humanoid and enemy.HumanoidRootPart and string.find(MobList, enemy.Name) then
-							table.insert(enemies, enemy)
-						end
-					end
-					
-					if #enemies > 0 then
-						local enemy = enemies[1]
+				for _, enemy in pairs(Enemies:GetChildren()) do
+					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
 						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						for _,e in ipairs(enemies) do
-							local eRoot = e.PrimaryPart
-							local eHum = e.Humanoid
-							
-							if eRoot and eHum and eHum.Health > 0 and (eRoot.Position - enemy.PrimaryPart.Position).Magnitude < getgenv().Configuration.Distance then
-								Plr:PivotTo(enemy:GetPivot())
-								e:PivotTo(enemy:GetPivot())
+						Anchor(enemy)
+						repeat task.wait(.01)
+							for _, _enemy in pairs(Enemies:GetChildren()) do
+								if _enemy and _enemy.Humanoid and _enemy.Humanoid.Health > 0
+								and _enemy.HumanoidRootPart
+								and _enemy.Name == enemy.Name
+								and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+									_enemy:PivotTo(enemy:GetPivot())
+									table.insert(enemies, _enemy)
+								end
 							end
-						end
+						until #enemies == 0
 					end
-				until #enemies == 0
+				end
 				task.wait()
 			end
 		end)
