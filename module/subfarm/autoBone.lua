@@ -15,6 +15,7 @@ function autobone:Init()
 			"Demonic Soul",
 			"Posessed Mummy"
 		}
+		
 		local enemies = {}
 		
 		function Anchor(Char)
@@ -36,6 +37,14 @@ function autobone:Init()
 			Track.Completed:Wait()
 		end
 		
+		local function getNearbyMob(mob)
+			for _, enemy in pairs(Enemies:GetChildren()) do
+				if enemy and enemy.Humanoid and enemy.HumanoidRootPart and enemy.Humanoid.Health > 0 and enemy.Name == mob.Name and (enemy.HumanoidRootPart.Position - mob.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+					table.insert(enemies, mob)
+				end
+			end
+		end
+		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,0,0))
 		task.wait(1)
@@ -44,22 +53,15 @@ function autobone:Init()
 		pcall(function()
 			while getgenv().Configuration.Modules.AutoBone do
 				for _, enemy in pairs(Enemies:GetChildren()) do
-					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
+					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) and #enemies == 0 then
 						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						Anchor(enemy)
 						repeat task.wait(.01)
-							for _, _enemy in pairs(Enemies:GetChildren()) do
-								if _enemy 
-								and _enemy.Humanoid 
-								and _enemy.Humanoid.Health > 0
-								and _enemy.HumanoidRootPart
-								and _enemy.Name == enemy.Name
-								and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-									_enemy:PivotTo(enemy:GetPivot())
-									table.insert(enemies, _enemy)
-								end
+							getNearbyMob()
+							for _, a in pairs(enemies) do
+								enemy:PivotTo(Char:GetPivot())
+								a:PivotTo(enemy:GetPivot())
 							end
-						until #enemies == 0
+						until enemy.Humanoid.Health < 0 and #enemies == 0
 					end
 				end
 				task.wait()
