@@ -49,7 +49,7 @@ function autobone:Init()
 					Anchor(enemy)
 					repeat task.wait(.01)
 						for _, _enemy in pairs(Enemies:GetChildren()) do
-							if _enemy and _enemy.Humanoid and _enemy.HumanoidRootPart and _enemy.Humanoid.Health > 0 and _enemy.Name == mob.Name and (_enemy.HumanoidRootPart.Position - mob.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+							if _enemy and _enemy.Humanoid and _enemy.HumanoidRootPart and _enemy.Humanoid.Health > 0 and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
 								_enemy:PivotTo(enemy:GetPivot())
 								t[#t + 1] = _enemy
 							end
