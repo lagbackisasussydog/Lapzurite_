@@ -16,6 +16,16 @@ function autobone:Init()
 			"Posessed Mummy"
 		}
 		
+		function Anchor(Char)
+			if Char.PrimaryPart:FindFirstChild("f") == nil then
+				local f = Instance.new("BodyVelocity", Char.PrimaryPart)
+				f.Name = "f"
+				f.P = 15000
+				f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+				f.Velocity = Vector3.new(0,.01,0)
+			end
+		end
+		
 		local function Tween(Inst, Info,Properties)
 			if not Inst or not Inst.Parent then return end
 			local TweenSvc = game:GetService("TweenService")
@@ -34,18 +44,21 @@ function autobone:Init()
 				if enemy and enemy.Humanoid.Health > 0 and table.find(MobList, enemy.Name) then
 					local enemyRoot = enemy.PrimaryPart
 					local enemyHum = enemy.Humanoid
+					local enemies = {}
 					
 					if enemyRoot then
 						Tween(Root, TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(enemyRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemyRoot.CFrame * CFrame.new(0,15,0)})
+						Anchor(enemy)
 						
 						repeat task.wait(.05)
 							Char:PivotTo(enemyRoot.CFrame * CFrame.new(0,15,0))
 							for _, v in pairs(Enemies:GetChildren()) do
-								if v.Humanoid.Health > 0 and v.Name == enemy.Name and (v.PrimaryPart.Position - enemyRoot.Position).Magnitude <= getgenv().Configuration.Distance then
+								if v.Humanoid and v.Humanoid.Health > 0 and v.Name == enemy.Name and (v.PrimaryPart.Position - enemyRoot.Position).Magnitude <= getgenv().Configuration.Distance then
+									enemies[#enemies + 1] = v
 									v:PivotTo(enemy:GetPivot())
 								end
 							end
-						until enemyHum.Health <= 0
+						until enemyHum.Health <= 0 and enemies[1]:FindFirstChild("Humanoid").Health <= 0
 					end
 				end
 			end
