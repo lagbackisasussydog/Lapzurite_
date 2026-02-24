@@ -57,7 +57,7 @@ function autobone:Init()
 						repeat task.wait()
 						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
 						    if (enemy.PrimaryPart.Position - clone.PrimaryPart.Position).Magnitude < 160 then
-								enemy:PivotTo(clone:GetPivot)
+								enemy:PivotTo(clone:GetPivot())
 							end
 						until #t == 0
 						clone:Destroy()
