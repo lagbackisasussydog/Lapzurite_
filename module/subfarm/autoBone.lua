@@ -51,7 +51,19 @@ function autobone:Init()
 						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 						
 						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
-						b:GroupMob(enemy)
+						
+						repeat
+							task.wait(0.05)
+							
+							local Char = Plr.Character
+							if not Char then break end
+							
+							local Hum = Char:FindFirstChild("Humanoid")
+							if not Hum or Hum.Health <= 0 then break end
+							
+							b:GroupMob(enemy)
+							
+						until not isAlive(enemy) or not getgenv().Configuration.Modules.AutoBone
 					end
 				end
 			--end)
