@@ -32,7 +32,7 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
-		task.wait(1)
+		task.wait(.5)
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
@@ -58,10 +58,8 @@ function autobone:Init()
 									
 								if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
 									_enemy:PivotTo(enemy:GetPivot())
-									task.wait(0.3)
+									task.wait(0.1)
 								end
-								
-								repeat task.wait() until not isAlive(a[i])
 							end
 						end
 					end
