@@ -36,32 +36,40 @@ function autobone:Init()
 			Track.Completed:Wait()
 		end
 		
+		local function isAlive(mob)
+			if mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
+				return true
+			end
+		end
+		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
 		while getgenv().Configuration.Modules.AutoBone do
-			local t = {}
 			pcall(function()
-				for _, enemy in ipairs(Enemies:GetChildren()) do
-					if enemy and enemy.Humanoid and enemy.Humanoid.Health > 0 and enemy.HumanoidRootPart and table.find(MobList, enemy.Name) then
-						t[#t + 1] = enemy
-					end
-				end
-			end)
-			if #t > 0 then
-				pcall(function()
-					for _, enemy in ipairs(t) do
-						repeat task.wait()
-						    Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						    if (enemy.PrimaryPart.Position - clone.PrimaryPart.Position).Magnitude < 160 then
-								enemy:PivotTo(clone:GetPivot())
+				for _, enemy in pairs(Enemies:GetChildren()) do
+					if isAlive(enemy) and table.find(MobList, enemy.Name) then
+						local eRoot = enemy.HumanoidRootPart
+						local eHum = enemy.Humanoid
+						
+						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.CFrame), Enum.EasingStyle.Linear)
+						
+						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
+						
+						repeat
+							for _, _enemy in pairs(Enemies:GetChildren()) do
+								if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+									repeat taks.wait(0.01)
+										enemy:PivotTo(eRoot.CFrame * CFrame.new(0,15,0))
+										_enemy:PivotTo(enemy:GetPivot())
+									until _enemy.Humanoid.Health <= 0
+								end
 							end
 						until enemy.Humanoid.Health <= 0
 					end
-				end)
-			end
+				end
 			task.wait()
 		end
 	end	
