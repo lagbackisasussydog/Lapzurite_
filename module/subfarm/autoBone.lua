@@ -16,17 +16,6 @@ function autobone:Init()
 			"Posessed Mummy"
 		}
 		
-		
-		function Anchor(Char)
-			if Char.PrimaryPart:FindFirstChild("f") == nil then
-				local f = Instance.new("BodyVelocity", Char.PrimaryPart)
-				f.Name = "f"
-				f.P = 15000
-				f.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-				f.Velocity = Vector3.new(0,.01,0)
-			end
-		end
-		
 		local function Tween(Inst, Info,Properties)
 			if not Inst or not Inst.Parent then return end
 			local TweenSvc = game:GetService("TweenService")
@@ -54,20 +43,24 @@ function autobone:Init()
 						local eRoot = enemy.HumanoidRootPart
 						local eHum = enemy.Humanoid
 						
-						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.CFrame), Enum.EasingStyle.Linear)
+						if getgenv().Configuration.Modules.AutoBone == false or Char.Humanoid.Health <= 0 then break end
+						
+						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 						
 						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
 						
 						repeat
-							for _, _enemy in pairs(Enemies:GetChildren()) do
-								if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-									repeat taks.wait(0.01)
-										enemy:PivotTo(eRoot.CFrame * CFrame.new(0,15,0))
+							local a = Enemies:GetChildren()
+							if #a > 0 then
+								for i = 1, #a do
+									local _enemy = a[i]
+									
+									if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then	
 										_enemy:PivotTo(enemy:GetPivot())
-									until _enemy.Humanoid.Health <= 0
+									end
 								end
 							end
-						until enemy.Humanoid.Health <= 0
+						until not isAlive(enemy)
 					end
 				end
 			task.wait()
