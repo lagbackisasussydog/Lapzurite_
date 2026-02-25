@@ -55,10 +55,31 @@ function fastAttack:PerformAttack()
 	if e then print(e) end
 end
 
+function fastAttack:InstantKillSpoof(Char, Target)
+	local HitRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
+	local AttackRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
+	
+	if Char and Target then
+		local Head = Target.Head
+		
+		if Head then
+			local Args = {
+				[1] = Head,
+				[2] = {},
+				[3] = "89134891234"
+			}
+			
+			HitRemote:FireServer(unpack(Args))
+			AttackRemote:FireServer(0)
+			Target.Humanoid:BreakJoints()
+		end
+	end
+end
+
 function fastAttack:GroupMob(target)
 	local a = workspace.Enemies:GetChildren()
 	
-	task.spawn(function()
+	pcall(function()
 		if #a > 0 then
 			for _ = 1, #a do
 				local _enemy = a[_]
