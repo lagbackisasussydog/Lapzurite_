@@ -26,7 +26,7 @@ function autobone:Init()
 		end
 		
 		local function isAlive(mob)
-			if mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
+			if mob and mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
 				return true
 			end
 		end
@@ -55,7 +55,7 @@ function autobone:Init()
 								for i = 1, #a do
 									local _enemy = a[i]
 									
-									if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then	
+									if isAlive(_enemy) and _enemy.Name == enemy.Name and _enemy ~= enemy and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then	
 										_enemy:PivotTo(enemy:GetPivot())
 									end
 								end
@@ -63,7 +63,7 @@ function autobone:Init()
 						until not isAlive(enemy)
 					end
 				end
-			task.wait()
+			task.wait(0.05)
 			end)
 		end
 	end	
