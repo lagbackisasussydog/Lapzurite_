@@ -55,38 +55,22 @@ function fastAttack:PerformAttack()
 	if e then print(e) end
 end
 
-function fastAttack:InstantKillSpoof(Char, Target)
-	local HitRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
-	local AttackRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
+function fastAttack:GroupMob(target)
+	local a = workspace.Enemies:GetChildren()
 	
-	if Char and Target then
-		local Head = Target.Head
-		
-		if Head then
-			local Args = {
-				[1] = Head,
-				[2] = {},
-				[3] = "89134891234"
-			}
-			
-			HitRemote:FireServer(unpack(Args))
-			AttackRemote:FireServer(0)
-			Target.Humanoid:BreakJoints()
-		end
-	end
-end
-
-function fastAttack:ReturnNearbyTargetLoop(Char)
-	local Enemies, Characters = workspace.Enemies, workspace.Characters
-	
-	for _, n in next, ({Enemies, Characters}) do
-		for _, Target in pairs(n:GetChildren()) do
-			local TargetHumanoid = Target:FindFirstChild("Humanoid")
-			if Target ~= Char and TargetHumanoid and TargetHumanoid.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Target:GetPivot().Position) < getgenv().Configuration.Distance then
-				return Target
+	task.spawn(function()
+		if #a > 0 then
+			for _ = 1, #a do
+				local _enemy = a[_]
+				
+				local clone = target.PrimaryPart:Clone()
+				if _enemy and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+					_enemy:PivotTo(a[1]:GetPivot())
+					task.wait(0.01)
+				end
 			end
 		end
-	end
+	end)
 end
 
 return fastAttack
