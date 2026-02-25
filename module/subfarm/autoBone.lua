@@ -71,6 +71,7 @@ function autobone:Init()
 					end
 				end
 			task.wait()
+			end)
 		end
 	end	
 end
