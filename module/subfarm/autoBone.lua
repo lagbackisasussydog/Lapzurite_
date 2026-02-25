@@ -32,13 +32,14 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
+		task.wait(1)
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
 		while getgenv().Configuration.Modules.AutoBone do
 			task.wait(0.05)
-			pcall(function()
+			--pcall(function()
 				for _, enemy in pairs(Enemies:GetChildren()) do
 					if isAlive(enemy) and table.find(MobList, enemy.Name) then
 						local eRoot = enemy.HumanoidRootPart
@@ -55,15 +56,17 @@ function autobone:Init()
 							for i = 1, #a do
 								local _enemy = a[i]
 									
-								while isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance do
+								if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
 									_enemy:PivotTo(enemy:GetPivot())
 									task.wait(0.3)
 								end
+								
+								repeat task.wait() until not isAlive(a[i])
 							end
 						end
 					end
 				end
-			end)
+			--end)
 		end
 	end	
 end
