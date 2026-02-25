@@ -542,6 +542,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 						TextButton.MouseButton1Up:Connect(function()
 							Config.Callback(v)
 							DropdownMenu.Visible = false
+							Title.Text = Config.Title .. " - " .. tostring(v)
 							ImageLabel.Rotation = 90
 						end)
 					end
