@@ -63,7 +63,7 @@ function autobone:Init()
 							
 							b:GroupMob(enemy)
 							
-						until not isAlive(enemy) or not getgenv().Configuration.Modules.AutoBone
+						until not getgenv().Configuration.Modules.AutoBone
 					end
 				end
 			--end)
