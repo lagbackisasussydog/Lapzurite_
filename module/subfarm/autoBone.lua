@@ -15,6 +15,7 @@ function autobone:Init()
 			"Demonic Soul",
 			"Posessed Mummy"
 		}
+		local b = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))()
 		
 		local function Tween(Inst, Info,Properties)
 			if not Inst or not Inst.Parent then return end
@@ -32,7 +33,7 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
-		task.wait(.5)
+		task.wait(1)
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
@@ -50,22 +51,7 @@ function autobone:Init()
 						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 						
 						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
-
-						repeat task.wait(0.05)
-							local a = Enemies:GetChildren()
-							local b = {}
-							if #a > 0 then
-								for i = 1, #a do
-									local _enemy = a[i]
-										
-									if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-										_enemy:PivotTo(enemy:GetPivot())
-										b[#b + 1] = _enemy
-										task.wait(0.1)
-									end
-								end
-							end
-						until #b == 0
+						b:GroupMob(enemy)
 					end
 				end
 			--end)
