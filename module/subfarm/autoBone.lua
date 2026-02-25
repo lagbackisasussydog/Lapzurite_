@@ -58,6 +58,7 @@ function autobone:Init()
 									
 									if isAlive(_enemy) and _enemy.Name == enemy.Name and _enemy ~= enemy and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then	
 										_enemy:PivotTo(enemy:GetPivot())
+										task.wait(0.3)
 									end
 								end
 							end
