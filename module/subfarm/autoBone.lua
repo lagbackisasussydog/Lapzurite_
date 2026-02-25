@@ -50,18 +50,22 @@ function autobone:Init()
 						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 						
 						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
-						
-						local a = Enemies:GetChildren()
-						if #a > 0 then
-							for i = 1, #a do
-								local _enemy = a[i]
-									
-								if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-									_enemy:PivotTo(enemy:GetPivot())
-									task.wait(0.1)
+
+						repeat task.wait(0.05)
+							local a = Enemies:GetChildren()
+							local b = {}
+							if #a > 0 then
+								for i = 1, #a do
+									local _enemy = a[i]
+										
+									if isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
+										_enemy:PivotTo(enemy:GetPivot())
+										b[#b + 1] = _enemy
+										task.wait(0.1)
+									end
 								end
 							end
-						end
+						until #b == 0
 					end
 				end
 			--end)
