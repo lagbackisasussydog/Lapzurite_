@@ -55,7 +55,7 @@ function autobone:Init()
 							for i = 1, #a do
 								local _enemy = a[i]
 									
-								while isAlive(_enemy) and _enemy.Name == enemy.Name and _enemy ~= enemy and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance do
+								while isAlive(_enemy) and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance do
 									_enemy:PivotTo(enemy:GetPivot())
 									task.wait(0.3)
 								end
