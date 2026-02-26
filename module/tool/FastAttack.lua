@@ -77,21 +77,37 @@ function fastAttack:InstantKillSpoof(Char, Target)
 end
 
 function fastAttack:GroupMob(target)
-	local a = workspace.Enemies:GetChildren()
+	if not target or not target.Parent then return end
 	
-	pcall(function()
-		if #a > 0 then
-			for _ = 1, #a do
-				local _enemy = a[_]
+	local targetRoot = target:FindFirstChild("HumanoidRootPart")
+	local targetHum = target:FindFirstChild("Humanoid")
+	
+	if not targetRoot or not targetHum or targetHum.Health <= 0 then
+		return
+	end
+	
+	local enemiesFolder = workspace:FindFirstChild("Enemies")
+	if not enemiesFolder then return end
+	
+	local enemies = enemiesFolder:GetChildren()
+	if #enemies == 0 then return end
+	
+	for _, enemy in ipairs(enemies) do
+		if enemy ~= target then
+			
+			local eRoot = enemy:FindFirstChild("HumanoidRootPart")
+			local eHum = enemy:FindFirstChild("Humanoid")
+			
+			if eRoot and eHum and eHum.Health > 0 then
+				local distance = (eRoot.Position - targetRoot.Position).Magnitude
 				
-				local clone = target.PrimaryPart:Clone()
-				if _enemy and _enemy.Name == enemy.Name and (_enemy.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude < getgenv().Configuration.Distance then
-					_enemy:PivotTo(a[1]:GetPivot())
+				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
+					enemy:PivotTo(target:GetPivot())
 					task.wait(0.01)
 				end
 			end
 		end
-	end)
+	end
 end
 
 return fastAttack
