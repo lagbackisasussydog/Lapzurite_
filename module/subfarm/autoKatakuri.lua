@@ -37,7 +37,7 @@ function autokatakuri:Init()
 		end
 		
 		local function Attack()
-			--local success, err = pcall(function()
+			local success, err = pcall(function()
 				for i, inst in pairs({Enemies, game.ReplicatedStorage}) do
 					for _, enemy in pairs(inst:GetChildren()) do
 						if isAlive(enemy) and (table.find(MobList, enemy.Name) or table.find(BossList, enemy.Name)) then
@@ -60,15 +60,14 @@ function autokatakuri:Init()
 								if not Hum or Hum.Health <= 0 then break end
 								
 								Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-								Char.Humanoid:EquipTool(b:getTool())
 								b:GroupMob(enemy)
 							end
 						end
 					end
 				end
-			--end)
+			end)
 			
-			--if err then print(err) end
+			if err then print(err) end
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
