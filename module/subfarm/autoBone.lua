@@ -36,7 +36,8 @@ function autobone:Init()
 		Char:PivotTo(CFrame.new(-5060.41162109375, 300.50201416015625, -3193.224853515625))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
-		
+
+		pcall(function()
 		while getgenv().Configuration.Modules.AutoBone do
 			task.wait(0.05)
 			--pcall(function()
@@ -64,8 +65,8 @@ function autobone:Init()
 						until not enemy or not isAlive(enemy) or getgenv().Configuration.Modules.AutoBone == false
 					end
 				end
-			--end)
-		end
+			--end0
+		end)
 	end	
 end
 
