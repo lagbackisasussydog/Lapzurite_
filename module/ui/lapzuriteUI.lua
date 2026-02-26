@@ -302,7 +302,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 			Toggle.Name = "Toggle"
 			Toggle.Parent = Section
-			Toggle.Active = true
+			Toggle.Active = false
 			Toggle.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 			Toggle.BackgroundTransparency = 0.800
 			Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -326,7 +326,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
 			Title.TextXAlignment = Enum.TextXAlignment.Left
-
+			
 			UIPadding.Parent = Title
 			UIPadding.PaddingLeft = UDim.new(0, 10)
 
@@ -370,7 +370,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 			Slider.Name = "Slider"
 			Slider.Parent = Section
-			Slider.Active = true
+			Slider.Active = false
 			Slider.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 			Slider.BackgroundTransparency = 0.800
 			Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -461,7 +461,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 			Dropdown.Name = "Dropdown"
 			Dropdown.Parent = Section
-			Dropdown.Active = true
+			Dropdown.Active = false
 			Dropdown.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 			Dropdown.BackgroundTransparency = 0.800
 			Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -569,7 +569,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 			Dropdown.Name = "Dropdown"
 			Dropdown.Parent = Section
-			Dropdown.Active = true
+			Dropdown.Active = false
 			Dropdown.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 			Dropdown.BackgroundTransparency = 0.800
 			Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -620,7 +620,7 @@ function Lapzurite:Alarm(Config)
 	Alarm.Name = "Alarm"
 	Alarm.Parent = game.CoreGui
 	Alarm.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+	
 	Main.Name = "Main"
 	Main.Parent = Alarm
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
