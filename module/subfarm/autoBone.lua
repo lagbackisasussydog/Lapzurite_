@@ -54,6 +54,7 @@ function autobone:Init()
 							local Hum = Char:FindFirstChild("Humanoid")
 							if not Hum or Hum.Health <= 0 then break end
 							
+							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
 							b:GroupMob(enemy)
 						end
 					end
