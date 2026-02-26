@@ -9,6 +9,7 @@ function autobone:Init()
 		local Char = Plr.Character
 		local Root = Char.PrimaryPart or Char:FindFirstChild("HumanoidRootPart")
 		local a = CFrame.new(-9502.98145, 172.149506, 6154.40332, -0.999924958, 5.73953107e-09, -0.0122516705, 5.38207168e-09, 1, 2.92093407e-08, 0.0122516705, 2.91412086e-08, -0.999924958)
+		local ThreadManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/ThreadManager.lua"))()
 		local MobList = {
 			"Reborn Skeleton",
 			"Living Zombie",
@@ -33,14 +34,13 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
-		Char:PivotTo(CFrame.new(-5060.41162109375, 300.50201416015625, -3193.224853515625))
+		Char:PivotTo(Char:GetPivot() * CFrame.new(15,50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
-
-		pcall(function()
-			while getgenv().Configuration.Modules.AutoBone do
+		
+		while getgenv().Configuration.Modules.AutoBone do
 			task.wait(0.05)
-			--pcall(function()
+			local s, e = pcall(function()
 				for _, enemy in pairs(Enemies:GetChildren()) do
 					if isAlive(enemy) and table.find(MobList, enemy.Name) then
 						local eRoot = enemy.HumanoidRootPart
@@ -65,8 +65,14 @@ function autobone:Init()
 						until not enemy or not isAlive(enemy) or getgenv().Configuration.Modules.AutoBone == false
 					end
 				end
+			end)
+
+			if e then
+				print(e)
+				ThreadManager:ResetThread()
+				break
 			end
-		end)
+		end
 	end	
 end
 
