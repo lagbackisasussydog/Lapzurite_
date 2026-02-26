@@ -32,12 +32,21 @@ function autobone:Init()
 			end
 		end
 		
+		local function getTool()
+			for _, tool in pairs(Plr.Backpack:GetChildren()) do
+				if tool:GetAttribute("WeaponType") == getgenv().Configuration.Tool and Char:FindFirstChild(tool.Name) == nil then
+					return tool
+				end
+			end
+		end
+		
 		local function Attack()
 			local success, err = pcall(function()
 				for _, enemy in pairs(Enemies:GetChildren()) do
 					if isAlive(enemy) and table.find(MobList, enemy.Name) then
 						local eRoot = enemy.HumanoidRootPart
 						local eHum = enemy.Humanoid
+						local tool = getTool()
 						
 						if getgenv().Configuration.Modules.AutoBone == false or Char.Humanoid.Health <= 0 then break end
 						
@@ -55,7 +64,7 @@ function autobone:Init()
 							if not Hum or Hum.Health <= 0 then break end
 							
 							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-							Char.Humanoid:EquipTool(b:getTool())
+							Char.Humanoid:EquipTool(tool)
 							b:GroupMob(enemy)
 						end
 					end
@@ -67,7 +76,6 @@ function autobone:Init()
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,50,0))
-		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
 		while getgenv().Configuration.Modules.AutoBone do
