@@ -36,30 +36,28 @@ function autokatakuri:Init()
 		
 		local function Attack()
 			local success, err = pcall(function()
-				for i, inst in ipairs({Enemies, game.ReplicatedStorage}) do
-					for _, enemy in pairs(inst:GetChildren()) do
-						if isAlive(enemy) and table.find(MobList, enemy.Name) then
-							local eRoot = enemy.HumanoidRootPart
-							local eHum = enemy.Humanoid
+				for _, enemy in pairs(inst:GetChildren()) do
+					if isAlive(enemy) and table.find(MobList, enemy.Name) then
+						local eRoot = enemy.HumanoidRootPart
+						local eHum = enemy.Humanoid
 							
-							if getgenv().Configuration.Modules.autokatakuri == false or Char.Humanoid.Health <= 0 then break end
+						if getgenv().Configuration.Modules.autokatakuri == false or Char.Humanoid.Health <= 0 then break end
 							
-							local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
+						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 							
-							Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
+						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
 							
-							while enemy and isAlive(enemy) and getgenv().Configuration.Modules.autokatakuri == true do
-								task.wait(0.05)
+						while enemy and isAlive(enemy) and getgenv().Configuration.Modules.autokatakuri == true do
+							task.wait(0.05)
 								
-								local Char = Plr.Character
-								if not Char then break end
+							local Char = Plr.Character
+							if not Char then break end
 								
-								local Hum = Char:FindFirstChild("Humanoid")
-								if not Hum or Hum.Health <= 0 then break end
-								
-								Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-								b:GroupMob(enemy)
-							end
+							local Hum = Char:FindFirstChild("Humanoid")
+							if not Hum or Hum.Health <= 0 then break end
+							
+							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
+							b:GroupMob(enemy)
 						end
 					end
 				end
