@@ -38,7 +38,7 @@ function autobone:Init()
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 
 		pcall(function()
-		while getgenv().Configuration.Modules.AutoBone do
+			while getgenv().Configuration.Modules.AutoBone do
 			task.wait(0.05)
 			--pcall(function()
 				for _, enemy in pairs(Enemies:GetChildren()) do
@@ -65,7 +65,7 @@ function autobone:Init()
 						until not enemy or not isAlive(enemy) or getgenv().Configuration.Modules.AutoBone == false
 					end
 				end
-			--end0
+			end
 		end)
 	end	
 end
