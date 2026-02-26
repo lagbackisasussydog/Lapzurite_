@@ -77,10 +77,9 @@ function fastAttack:InstantKillSpoof(Char, Target)
 end
 
 function fastAttack:getTool()
-	for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-		if tool and tool:GetAttribute("WeaponType") == getgenv().Configuration.Tool then
-			return tool
-		end
+	local tool = game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
+	if tool and tool:GetAttribute("WeaponType") == getgenv().Configuration.Tool then
+		return tool
 	end
 end
 
