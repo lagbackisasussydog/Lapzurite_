@@ -34,7 +34,7 @@ function autobone:Init()
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		task.wait(1)
-		Char:PivotTo(Char:GetPivot() * CFrame.new(15,-50,0))
+		Char:PivotTo(CFrame.new(-5060.41162109375, 300.50201416015625, -3193.224853515625))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
@@ -63,7 +63,7 @@ function autobone:Init()
 							
 							b:GroupMob(enemy)
 							
-						until #enemy == 0
+						until #Enemies:GetChildren() == 0
 					end
 				end
 			--end)
