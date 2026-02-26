@@ -1,0 +1,2 @@
+getgenv().Theme = "Amethyst" --Blue, Red, Green
+loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/Lapzurite.lua"))()
