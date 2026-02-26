@@ -207,7 +207,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		Section.Visible = false
 	
 		UIGridLayout_2.Parent = Section
-		UIGridLayout_2.FillDirection = Enum.FillDirection.Vertical
+		UIGridLayout_2.FillDirection = Enum.FillDirection.Horizontal
 		UIGridLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
 		UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
 		UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 5)
