@@ -33,7 +33,6 @@ function autobone:Init()
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
-		task.wait(1)
 		Char:PivotTo(CFrame.new(-5060.41162109375, 300.50201416015625, -3193.224853515625))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
@@ -62,8 +61,7 @@ function autobone:Init()
 							if not Hum or Hum.Health <= 0 then break end
 							
 							b:GroupMob(enemy)
-							
-						until #Enemies:GetChildren() == 0
+						until not enemy or not isAlive(enemy) or getgenv().Configuration.Modules.AutoBone == false
 					end
 				end
 			--end)
