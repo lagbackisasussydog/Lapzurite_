@@ -55,6 +55,7 @@ function autobone:Init()
 							if not Hum or Hum.Health <= 0 then break end
 							
 							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
+							Char.Humanoid:EquipTool(b:getTool())
 							b:GroupMob(enemy)
 						end
 					end
