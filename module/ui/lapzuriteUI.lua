@@ -143,11 +143,13 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 				end
 			end
 			t:Play()
+			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.new(0.971307278, 0, 0.49, 0)}):Play()
 			HideButton.Image = "http://www.roblox.com/asset/?id=6026568245"
 		else
 			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.new(0,425,0,300)})
 			ButtonList.Visible = true
 			t:Play()
+			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.new(0.971307278, 0, 0.047034122, 0)}):Play()
 			HideButton.Image = "http://www.roblox.com/asset/?id=6023426928"
 		end
 	end
