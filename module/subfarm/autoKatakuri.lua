@@ -74,6 +74,7 @@ function autokatakuri:Init()
 		
 		while getgenv().Configuration.Modules.AutoKatakuri do
 			task.wait(0.05)
+			game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CakePrinceSpawner")
 			Attack()
 		end
 	end	
