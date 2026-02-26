@@ -36,7 +36,7 @@ function autokatakuri:Init()
 		
 		local function Attack()
 			local success, err = pcall(function()
-				for _, enemy in pairs(inst:GetChildren()) do
+				for _, enemy in pairs(Enemies:GetChildren()) do
 					if isAlive(enemy) and table.find(MobList, enemy.Name) then
 						local eRoot = enemy.HumanoidRootPart
 						local eHum = enemy.Humanoid
