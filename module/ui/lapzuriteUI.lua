@@ -203,6 +203,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		Section.Position = UDim2.new(0.336470574, 0, 0.0966666639, 0)
 		Section.Size = UDim2.new(0.642352939, 0, 0.860000014, 0)
 		Section.ScrollBarThickness = 0
+		Section.AutomaticCanvasSize = Enum.AutomaticSize.Y
 		Section.Visible = false
 	
 		UIGridLayout_2.Parent = Section
