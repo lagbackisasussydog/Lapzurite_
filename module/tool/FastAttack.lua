@@ -76,6 +76,14 @@ function fastAttack:InstantKillSpoof(Char, Target)
 	end
 end
 
+function fastAttack:getTool()
+	for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+		if tool and tool:GetAttribute("WeaponType") == getgenv().Configuration.Tool then
+			return tool
+		end
+	end
+end
+
 function fastAttack:GroupMob(target)
 	if not target or not target.Parent then return end
 	
@@ -102,7 +110,7 @@ function fastAttack:GroupMob(target)
 				local distance = (eRoot.Position - targetRoot.Position).Magnitude
 				
 				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
-					local t = game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed, Enum.EasingStyle.Linear), {CFrame = target:GetPivot() * CFrame.new(0,5,0)})
+					local t = game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed, Enum.EasingStyle.Linear), {CFrame = target:GetPivot()})
 					t:Play()
 					t.Completed:Wait()
 				end
