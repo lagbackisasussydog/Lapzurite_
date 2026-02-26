@@ -41,13 +41,13 @@ function autokatakuri:Init()
 						local eRoot = enemy.HumanoidRootPart
 						local eHum = enemy.Humanoid
 							
-						if getgenv().Configuration.Modules.autoKatakuri == false or Char.Humanoid.Health <= 0 then break end
+						if getgenv().Configuration.Modules.AutoKatakuri == false or Char.Humanoid.Health <= 0 then break end
 							
 						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 							
 						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
 							
-						while enemy and isAlive(enemy) and getgenv().Configuration.Modules.autoKatakuri == true do
+						while enemy and isAlive(enemy) and getgenv().Configuration.Modules.AutoKatakuri == true do
 							task.wait(0.05)
 								
 							local Char = Plr.Character
