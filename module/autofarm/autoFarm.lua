@@ -179,6 +179,7 @@ function level:Init()
 	while getgenv().Configuration.Modules.AutoFarmLevel do
 		if State.QuestTaken and (checkNotification() or Plr.PlayerGui.Main.Quest.Visible == false) then
 			State.QuestTaken = false
+			State.CurrentTarget = ""
 		end
 		
 		task.wait(0.05)
