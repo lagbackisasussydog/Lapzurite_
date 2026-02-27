@@ -663,7 +663,7 @@ function Lapzurite:Alarm(Config)
 	Main.BackgroundTransparency = 1
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
-	Main.Position = UDim2.new(0.492863953, 0, -1.935039341, 0)
+	Main.Position = UDim2.new(0.492863953, 0, 1.3, 0)
 	Main.Size = UDim2.new(0, 300, 0, 25)
 
 	UIStroke.Parent = Main
