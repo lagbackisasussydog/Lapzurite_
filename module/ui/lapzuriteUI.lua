@@ -5,10 +5,11 @@ local BtnColor = Color3.new(0, 0, 0)
 local BgColor = Color3.new(0,0,0)
 local BgColor1 = Color3.new(0, 0, 0)
 local TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(85, 170, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(85, 85, 255))}
+local BgColor2 = Color3.fromRGB(0,0,0)
 
 function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local Lapzurite = Instance.new("ScreenGui")
-	local Main = Instance.new("ImageLabel")
+	local Main = Instance.new("Frame")
 	local Title = Instance.new("TextLabel")
 	local UIGradient = Instance.new("UIGradient")
 	local UIPadding = Instance.new("UIPadding")
@@ -17,6 +18,10 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	local Storage = Instance.new("Folder")
 	local UIGradient_1 = Instance.new("UIGradient")
 	local UIStroke = Instance.new("UIStroke")
+	local Img = {
+		"rbxassetid://81795510619972",
+		"rbxassetid://95241809145761"
+	}
 	
 	task.spawn(function()
 		if Theme == "Blue" then
@@ -40,7 +45,26 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			BtnColor = Color3.fromRGB(170, 0, 255)
 			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
 		elseif Theme == "Pink" then
+			local astolf = Instance.new("ImageLabel")
+
+			astolf.Name = "astolf"
+			astolf.Parent = Main
+			astolf.Active = false
+			astolf.AnchorPoint = Vector2.new(0.5,0.5)
+			astolf.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			astolf.BackgroundTransparency = 1.000
+			astolf.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			astolf.BorderSizePixel = 0
+			astolf.Position = UDim2.new(0.78, 0,0.56, 0)
+			astolf.Size = UDim2.new(0.449, 0,0.877, 0)
+			astolf.ZIndex = 0
+			astolf.Image = Img[math.random(1, #Img)]
 			
+			BgColor = Color3.fromRGB(255, 85, 127)
+			BgColor1 = Color3.fromRGB(120, 40, 60)
+			BtnColor = Color3.fromRGB(112, 56, 84)
+			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 85, 127)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 85, 127))}
+			BgColor2 = Color3.fromRGB(255, 85, 127)
 		end
 	end)
 
@@ -51,7 +75,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	Main.Name = "Main"
 	Main.Parent = Lapzurite
 	Main.AnchorPoint = Vector2.new(0.5, 0)
-	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Main.BackgroundColor3 = BgColor2
 	Main.BackgroundTransparency = 0.500
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
@@ -142,6 +166,8 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 					a.Visible = false
 				end
 			end
+			
+			if Theme == "Pink" then Main:WaitForChild("astolf").Visible = false end
 			t:Play()
 			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.new(0.971307278, 0, 0.49, 0)}):Play()
 			HideButton.Image = "http://www.roblox.com/asset/?id=6026568245"
@@ -149,6 +175,8 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			local t = game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Size = UDim2.new(0,425,0,300)})
 			ButtonList.Visible = true
 			t:Play()
+			t.Completed:Wait()
+			if Theme == "Pink" then Main:WaitForChild("astolf").Visible = false end
 			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.new(0.971307278, 0, 0.047034122, 0)}):Play()
 			HideButton.Image = "http://www.roblox.com/asset/?id=6023426928"
 		end
@@ -571,9 +599,9 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 
 			Dropdown.Name = "Dropdown"
 			Dropdown.Parent = Section
-			Dropdown.Active = false
+			Dropdown.Active = true
 			Dropdown.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-			Dropdown.BackgroundTransparency = 0.800
+			Dropdown.BackgroundTransparency = 1.000
 			Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Dropdown.BorderSizePixel = 0
 			Dropdown.Selectable = true
@@ -588,18 +616,21 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			Title.Name = "Title"
 			Title.Parent = Dropdown
 			Title.AnchorPoint = Vector2.new(0.5, 0.5)
-			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			Title.BackgroundTransparency = 1.000
+			Title.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
+			Title.BackgroundTransparency = 0.500
 			Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Title.BorderSizePixel = 0
-			Title.Position = UDim2.new(0.483516484, 0, 0.455000013, 0)
-			Title.Size = UDim2.new(0, 264, 0, 22)
+			Title.Position = UDim2.new(0.503663003, 0, 0.455000013, 0)
+			Title.Size = UDim2.new(0, 253, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = Config.Title
+			Title.Text = "Title"
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-			Title.TextSize = 18.000
+			Title.TextSize = 14.000
 			Title.TextWrapped = true
+
+			UIPadding.Parent = Title
+			UIPadding.PaddingLeft = UDim.new(0, 10)
 
 			UIPadding.Parent = Title
 			UIPadding.PaddingLeft = UDim.new(0, 10)
