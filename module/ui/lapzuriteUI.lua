@@ -663,7 +663,7 @@ function Lapzurite:Alarm(Config)
 	Main.BackgroundTransparency = 1
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
-	Main.Position = UDim2.new(0.492863953, 0, 0.935039341, 0)
+	Main.Position = UDim2.new(0.492863953, 0, -1.935039341, 0)
 	Main.Size = UDim2.new(0, 300, 0, 25)
 
 	UIStroke.Parent = Main
@@ -686,16 +686,8 @@ function Lapzurite:Alarm(Config)
 	Content.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Content.TextSize = 14.000
 	Content.TextWrapped = true
-
-	ImageLabel.Parent = Main
-	ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-	ImageLabel.BackgroundTransparency = 1.000
-	ImageLabel.BorderSizePixel = 0
-	ImageLabel.Position = UDim2.new(0.0399999991, 0, 0.479999989, 0)
-	ImageLabel.Size = UDim2.new(0, 25, 0, 25)
-	ImageLabel.Image = "http://www.roblox.com/asset/?id=6035202033"
 	
-	game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Transparency = 0.5}):Play()
+	game:GetService("TweenService"):Create(Main, TweenInfo.new(), {Transparency = 0.5, Position = UDim2.new(0.492863953, 0, 0.935039341, 0)}):Play()
 	
 	game.Debris:AddItem(Alarm, Config.Lifetime)
 end
