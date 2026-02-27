@@ -1,18 +1,19 @@
 local Thread = {}
 Thread._thread = {}
 
-function Thread:AddThread(thread, func)
-	Thread._thread[thread] = {
-		["Function"] = func,
-		["Running"] = nil
-	}
+local function updateState()
+	task.spawn(function()
+		local HttpService = game:GetService("HttpService")
+		local path = "state.txt"
+		
+		if not isfile(path) then
+			writefile(path, "{}")
+		end
+		
+		local encoded = HttpService:JSONEncode(getgenv().Configuration.Modules)
+		writefile(path, encoded)
+	end)
 end
-
-function Thread:StartThread(thread)
-	local a = Thread._thread[thread]
-	if a.Running then
-		task.cancel(a.Running)local Thread = {}
-Thread._thread = {}
 
 function Thread:AddThread(thread, func)
 	Thread._thread[thread] = {
@@ -29,6 +30,7 @@ function Thread:StartThread(thread)
 	end
 	
 	a.Running = task.spawn(a.Function)
+	updateState()
 end
 
 function Thread:CloseThread(thread)
@@ -37,6 +39,7 @@ function Thread:CloseThread(thread)
 		task.cancel(a.Running)
 		a.Running = nil
 	end
+	updateState()
 end
 
 function Thread:ResetThread()
@@ -45,56 +48,6 @@ function Thread:ResetThread()
 			task.cancel(v.Running)
 			v.Running = task.spawn(v.Function)
 		end
-	end
-end
-
-function Thread:ExecuteOnRuntime(thread)
-	local a = Thread._thread[thread]
-	
-	local success , err = pcall(function()
-		a.Running = task.spawn(a.Function)
-	end)
-	
-	if err then
-		print(err)
-		task.cancel(a.Running)
-		a.Running = task.spawn(a.Function)
-	end
-end
-
-return Thread
-	end
-	
-	a.Running = task.spawn(a.Function)
-end
-
-function Thread:CloseThread(thread)
-	local a = Thread._thread[thread]
-	if a.Running then
-		task.cancel(a.Running)
-		a.Running = nil
-	end
-end
-
-function Thread:ResetThread()
-	for _, v in pairs(Thread._thread) do
-		if v.Running then
-			task.cancel(v.Running)
-			v.Running = task.spawn(v.Function)
-		end
-	end
-end
-
-function Thread:ExecuteOnRuntime(thread)
-	local a = Thread._thread[thread]
-	
-	local success , err = pcall(function()
-		a.Running = task.spawn(a.Function)
-	end)
-	
-	if err then
-		task.cancel(a.Running)
-		a.Running = task.spawn(a.Function)
 	end
 end
 
