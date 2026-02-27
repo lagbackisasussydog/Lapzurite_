@@ -87,6 +87,28 @@ function level:Init()
 				},
 				["NPC"] = "Villager"
 			}
+		elseif lv >= 120 and lv <= 150 then
+			return {
+				["Target"] = {
+					{"Chief Petty Officer", 120, 150},
+				},
+				["Quest"] = {
+					{"MarineQuest2", 1, 120, 150},
+				},
+				["NPC"] = "Marine"
+			}
+		elseif lv >= 150 and lv <= 250 then
+			return {
+				["Target"] = {
+					{"Sky Bandit", 150, 175},
+					{"Dark Master", 175, 250},
+				},
+				["Quest"] = {
+					{"SkyQuest", 1, 150, 175},
+					{"SkyQuest", 2, 175, 250},
+				},
+				["NPC"] = "Marine"
+			}
 		end
 	end
 	
