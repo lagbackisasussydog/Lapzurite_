@@ -127,7 +127,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 	UIGridLayout.Parent = ButtonList
 	UIGridLayout.FillDirection = Enum.FillDirection.Vertical
 	UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 6)
+	UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 5)
 	UIGridLayout.CellSize = UDim2.new(0, 124, 0, 30)
 	
 	Storage.Name = "Storage"
