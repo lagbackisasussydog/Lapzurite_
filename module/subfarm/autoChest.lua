@@ -16,7 +16,7 @@ function autochest:Init()
 		
 		while getgenv().Configuration.Modules.AutoFarmChests do
 			for _, chest in pairs(workspace.Map:GetDescendants()) do
-				if chest:IsA("Part") and string.find(chest.Name, "Chest") then
+				if chest:IsA("Part") and string.find(chest.Name, "Chest") and not chest:FindFirstAncestor("Fishmen") then
 					if getgenv().ModuleSetting.AutoFarmChests.Method == "Tween" then
 						if not getgenv().Configuration.Modules.AutoFarmChests then break end
 						
