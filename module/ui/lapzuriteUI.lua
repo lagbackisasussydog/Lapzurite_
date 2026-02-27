@@ -649,11 +649,13 @@ function Lapzurite:Alarm(Config)
 	local ImageLabel = Instance.new("ImageLabel")
 	local UIGradient = Instance.new("UIGradient")
 	local UIStroke = Instance.new("UIStroke")
+
+	if game.CoreGui:FindFirstChild("Alarm") then return end
 	
 	Alarm.Name = "Alarm"
 	Alarm.Parent = game.CoreGui
 	Alarm.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	
+		
 	Main.Name = "Main"
 	Main.Parent = Alarm
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
