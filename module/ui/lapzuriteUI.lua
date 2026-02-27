@@ -176,7 +176,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			ButtonList.Visible = true
 			t:Play()
 			t.Completed:Wait()
-			if Theme == "Pink" then Main:WaitForChild("astolf").Visible = false end
+			if Theme == "Pink" then Main:WaitForChild("astolf").Visible = true end
 			game:GetService("TweenService"):Create(HideButton, TweenInfo.new(), {Position = UDim2.new(0.971307278, 0, 0.047034122, 0)}):Play()
 			HideButton.Image = "http://www.roblox.com/asset/?id=6023426928"
 		end
