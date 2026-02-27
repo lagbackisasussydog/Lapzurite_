@@ -66,8 +66,8 @@ function level:Init()
 		elseif lv >= 60 and lv <= 90 then
 			return {
 				["Target"] = {
-					{"Desert Bandit" 60, 75},
-					{"Desert Officer" 75, 90}
+					{"Desert Bandit", 60, 75},
+					{"Desert Officer", 75, 90}
 				},
 				["Quest"] = {
 					{"DesertQuest", 1, 60, 75},
