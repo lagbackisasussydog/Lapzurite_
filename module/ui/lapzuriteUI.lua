@@ -321,7 +321,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		end
 		
 		function Tabs:AddToggle(Config)
-			local Toggle = {}
+			local Toggleh = {}
 			local tName = Config.Title
 			local State = Config.State or false
 			
@@ -398,7 +398,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			
 			ImageLabel.MouseButton1Up:Connect(Toggle)
 
-			function Toggle:SetToggle(State)
+			function Toggleh:SetToggle(State)
 				h(State)
 			end
 		end
