@@ -30,7 +30,6 @@ function Thread:StartThread(thread)
 	end
 	
 	a.Running = task.spawn(a.Function)
-	updateState()
 end
 
 function Thread:CloseThread(thread)
@@ -39,7 +38,6 @@ function Thread:CloseThread(thread)
 		task.cancel(a.Running)
 		a.Running = nil
 	end
-	updateState()
 end
 
 function Thread:ResetThread()
