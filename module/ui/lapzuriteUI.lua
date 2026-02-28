@@ -678,7 +678,7 @@ function Lapzurite:Alarm(Config)
 	Content.BackgroundTransparency = 1.000
 	Content.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Content.BorderSizePixel = 0
-	Content.Position = UDim2.new(0.0816666633, 0, 0, 0)
+	Content.Position = UDim2.new(0, 0, 0, 0)
 	Content.Size = UDim2.new(0.918333352, 0, 1, 0)
 	Content.Font = Enum.Font.SourceSans
 	Content.Text = Config.Content
