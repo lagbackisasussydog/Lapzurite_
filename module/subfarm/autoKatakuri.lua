@@ -88,50 +88,14 @@ function autokatakuri:Init()
 			if err then print(err) end
 		end
 		
-		local function Attack2()
-			local success, err = pcall(function()
-				for _ = 1, #game.ReplicatedStorage:GetChildren() do
-					local enemy = Enemies:GetChildren()[_]
-					if isAlive(enemy) and table.find(BossList, enemy.Name) and notification() then
-						local eRoot = enemy.HumanoidRootPart
-						local eHum = enemy.Humanoid
-						local tool = getTool()
-							
-						if getgenv().Configuration.Modules.AutoBone == false or Char.Humanoid.Health <= 0 then break end
-							
-						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
-						
-						Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
-							
-						while enemy and isAlive(enemy) and getgenv().Configuration.Modules.AutoKatakuri == true do
-							task.wait(0.05)
-								
-							local Char = Plr.Character
-							if not Char then break end
-								
-							local Hum = Char:FindFirstChild("Humanoid")
-							if not Hum or Hum.Health <= 0 then break end
-								
-							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-							Char.Humanoid:EquipTool(tool)
-							b:GroupMob(enemy)
-						end
-					end
-				end
-			end)
-			
-			if err then print(err) end
-		end
-		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
 		Char:PivotTo(Char:GetPivot() * CFrame.new(15,50,0))
 		task.wait(1)
 		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
 		
 		while getgenv().Configuration.Modules.AutoKatakuri do
-			task.wait(0.5)
+			task.wait(0.1)
 			game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CakePrinceSpawner")
-			Attack2()
 			Attack()
 		end
 	end	
