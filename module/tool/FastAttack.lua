@@ -84,7 +84,7 @@ function fastAttack:GroupMob(target)
 
     targetRoot.Parent = workspace
 	
-	if not targetRoot or not targetHum or targetHum.Health <= 0 then
+	if not target:FindFirstChild("HumanoidRootPart") or not targetHum or targetHum.Health <= 0 then
 		return
 	end
 	
