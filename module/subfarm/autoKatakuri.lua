@@ -57,12 +57,12 @@ function autokatakuri:Init()
 			local success, err = pcall(function()
 				for _ = 1, #Enemies:GetChildren() do
 					local enemy = Enemies:GetChildren()[1]
-					if isAlive(enemy) and table.find(MobList, enemy.Name) and not notification() then
+					if isAlive(enemy) and table.find(MobList, enemy.Name) then
 						local eRoot = enemy.HumanoidRootPart
 						local eHum = enemy.Humanoid
 						local tool = getTool()
 							
-						if getgenv().Configuration.Modules.AutoBone == false or Char.Humanoid.Health <= 0 then break end
+						if getgenv().Configuration.Modules.AutoKatakuri == false or Char.Humanoid.Health <= 0 then break end
 							
 						local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
 						
@@ -95,7 +95,7 @@ function autokatakuri:Init()
 		
 		while getgenv().Configuration.Modules.AutoKatakuri do
 			task.wait(0.1)
-			game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CakePrinceSpawner")
+			--game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CakePrinceSpawner")
 			Attack()
 		end
 	end	
