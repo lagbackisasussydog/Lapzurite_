@@ -79,7 +79,7 @@ end
 function fastAttack:GroupMob(target)
 	if not target or not target.Parent then return end
 	
-	local targetRoot = target:FindFirstChild("HumanoidRootPart")
+	local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
 	local targetHum = target:FindFirstChild("Humanoid")
 	
 	if not targetRoot or not targetHum or targetHum.Health <= 0 then
@@ -98,7 +98,7 @@ function fastAttack:GroupMob(target)
 			local eRoot = enemy:FindFirstChild("HumanoidRootPart")
 			local eHum = enemy:FindFirstChild("Humanoid")
 			
-			if eRoot and eHum and eHum.Health > 0 then
+			if eRoot and eHum then
 				local distance = (eRoot.Position - targetRoot.Position).Magnitude
 				
 				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
