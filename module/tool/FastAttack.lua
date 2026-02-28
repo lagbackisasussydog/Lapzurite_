@@ -79,12 +79,10 @@ end
 function fastAttack:GroupMob(target)
 	if not target or not target.Parent then return end
 	
-	local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
+	local targetRoot = target:FindFirstChild("HumanoidRootPart")
 	local targetHum = target:FindFirstChild("Humanoid")
-
-    targetRoot.Parent = workspace
 	
-	if not target:FindFirstChild("HumanoidRootPart") or not targetHum or targetHum.Health <= 0 then
+	if not targetRoot or not targetHum or targetHum.Health <= 0 then
 		return
 	end
 	
@@ -105,7 +103,6 @@ function fastAttack:GroupMob(target)
 				
 				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
 					local t = game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed, Enum.EasingStyle.Linear), {CFrame = target:GetPivot()})
-					eHum:MoveTo(targetRoot.Position)
 					t:Play()
 				else
 					eHum:MoveTo(targetRoot.Position)
