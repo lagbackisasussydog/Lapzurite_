@@ -321,7 +321,6 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 		end
 		
 		function Tabs:AddToggle(Config)
-			local Toggleh = {}
 			local tName = Config.Title
 			local State = Config.State or false
 			
@@ -384,23 +383,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 				end
 				Config.Callback(State)
 			end
-
-			local function h(State)
-				if State then
-					ImageLabel.Image = "http://www.roblox.com/asset/?id=6031068430"
-					ImageLabel.ImageColor3 = Color3.fromRGB(0, 255, 0)
-				else
-					ImageLabel.Image = "http://www.roblox.com/asset/?id=6031068429"
-					ImageLabel.ImageColor3 = Color3.fromRGB(255, 0, 0)
-				end
-				Config.Callback(State)
-			end
-			
 			ImageLabel.MouseButton1Up:Connect(Toggle)
-
-			function Toggleh:SetToggle(State)
-				h(State)
-			end
 		end
 	
 		function Tabs:AddSlider(Config)
