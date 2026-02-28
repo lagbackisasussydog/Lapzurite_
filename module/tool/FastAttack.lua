@@ -104,6 +104,7 @@ function fastAttack:GroupMob(target)
 				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
 					local t = game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed, Enum.EasingStyle.Linear), {CFrame = target:GetPivot()})
 					t:Play()
+					eHum:MoveTo(targetRoot.Position)
 				else
 					eHum:MoveTo(targetRoot.Position)
 				end
