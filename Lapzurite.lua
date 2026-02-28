@@ -12,7 +12,9 @@ getgenv().Configuration = {
 		["AutoKatakuri"] = false,
 		["AutoBone"] = false,
 		["Travel"] = false,
-		["AutoEctoplasm"] = false
+		["AutoEctoplasm"] = false,
+		["AutoPirate"] = false,
+		["CompleteRaid"] = false
 	},
 }
 
@@ -40,23 +42,17 @@ local a = {
 	[4] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoKatakuri.lua"))(),
 	[5] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoFactory.lua"))(),
 	[6] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoEctoplasm.lua"))(),
-	[7] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/autofarm/autoFarm.lua"))()
+	[7] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/autofarm/autoFarm.lua"))(),
+	[8] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoPirate.lua"))(),
 }
 
 local Win = UI:CreateWindow(getgenv().Theme or "Amethyst", nil)
 local Tabs = {
 	AutoFarm = Win:AddTab({Name = "AutoFarm"}),
 	SubFarm = Win:AddTab({Name = "SubFarm"}),
+	Raid = Win:AddTab({Name = "Raids"}),
 	Settings = Win:AddTab({Name = "Settings"}),
 }
-
-ThreadManager:AddThread("autoChest", a[1]:Init())
-ThreadManager:AddThread("autoBone", a[3]:Init())
-ThreadManager:AddThread("autoKatakuri", a[4]:Init())
-ThreadManager:AddThread("autoFactory", a[5]:Init())
-ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
-ThreadManager:AddThread("autoFarm", a[7]:Init())
-ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
 task.spawn(function()
 	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", "Pirates")
@@ -210,6 +206,21 @@ Tabs.SubFarm:AddToggle({Title = "Auto Katakuri", Callback = function(State)
 	end
 end})
 
+Tabs.SubFarm:AddToggle({Title = "Auto Pirate Raid", Callback = function(State)
+	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
+		getgenv().Configuration.Modules.AutoPirate = State
+		Anchor(Plr.Character)
+		if State then
+			ThreadManager:StartThread("autoPirate")
+		else
+			ThreadManager:CloseThread("autoPirate")
+			Pause()
+		end
+	else
+		UI:Alarm({Content = "Requirement not sufficient!"})
+	end
+end})
+
 Tabs.SubFarm:AddToggle({Title = "Auto Factory", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Second-Seas" then
 		getgenv().Configuration.Modules.AutoFactory = State
@@ -240,6 +251,21 @@ Tabs.SubFarm:AddToggle({Title = "Auto Farm Ectoplasm", Callback = function(State
 	end
 end})
 
+Tabs.Raid:AddToggle({Title = "Auto Complete Raid", Callback = function(State)
+	if getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas" then
+		getgenv().Configuration.Modules.CompleteRaid = State
+		Anchor(Plr.Character)
+		if State then
+			ThreadManager:StartThread("autoRaid")
+		else
+			ThreadManager:CloseThread("autoRaid")
+			Pause()
+		end
+	else
+		UI:Alarm({Content = "Requirement not sufficient!"})
+	end
+end})
+
 Tabs.Settings:AddSlider({Title = "Tween speed", Min = 0, Max = 300, Callback = function(Value)
 	getgenv().Configuration.TweenSpeed = Value
 end})
@@ -254,6 +280,10 @@ end})
 
 Tabs.Settings:AddDropdown({Title = "Weapon", List = {"Melee", "Sword"}, Callback = function(Value)
 	getgenv().Configuration.Tool = Value
+end})
+
+Tabs.Settings:AddDropdown({Title = "Team", List = {"Pirates", "Marines"}, Callback = function(Value)
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", Value)
 end})
 
 Tabs.Settings:AddButton({Title = "Fast Mode", Callback = function(State)
@@ -319,7 +349,14 @@ Tabs.Settings:AddButton({Title = "Super Fast Mode (Unplayable)", Callback =funct
 end})
 
 -- Add Thread
-
+ThreadManager:AddThread("autoChest", a[1]:Init())
+ThreadManager:AddThread("autoBone", a[3]:Init())
+ThreadManager:AddThread("autoKatakuri", a[4]:Init())
+ThreadManager:AddThread("autoFactory", a[5]:Init())
+ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
+ThreadManager:AddThread("autoFarm", a[7]:Init())
+ThreadManager:AddThread("autoPirate", a[8]:Init())
+ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
 -- Execute
 ThreadManager:StartThread("killMob")
