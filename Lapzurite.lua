@@ -45,7 +45,6 @@ local a = {
 	[6] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoEctoplasm.lua"))(),
 	[7] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/autofarm/autoFarm.lua"))(),
 	[8] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoPirate.lua"))(),
-	[9] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/raid.lua"))()
 }
 
 local Win = UI:CreateWindow(getgenv().Theme or "Amethyst", nil)
@@ -253,29 +252,6 @@ Tabs.SubFarm:AddToggle({Title = "Auto Farm Ectoplasm", Callback = function(State
 	end
 end})
 
-Tabs.Raid:AddToggle({Title = "Auto Complete Raid", Callback = function(State)
-	if getgenv().Configuration.CurrentPlace == "Second-Seas" or getgenv().Configuration.CurrentPlace == "Third-Seas" then
-		getgenv().Configuration.Modules.CompleteRaid = State
-		Anchor(Plr.Character)
-		if State then
-			ThreadManager:StartThread("autoRaid")
-		else
-			ThreadManager:CloseThread("autoRaid")
-			Pause()
-		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
-	end
-end})
-
-Tabs.Raid:AddToggle({Title = "Buy Special Microchip", Callback = function()
-	a[9]:BuyChip()
-end})
-
-Tabs.Raid:AddDropdown({Title = "Raid", List = {"Flame", "Ice", "Dark", "Quake", "Light", "Buddha", "Spider", "Magma", "Sand"}, Callback = function(Value)
-	getgenv().ModuleSetting.RaidType = Value
-end})
-
 Tabs.Settings:AddSlider({Title = "Tween speed", Min = 0, Max = 300, Callback = function(Value)
 	getgenv().Configuration.TweenSpeed = Value
 end})
@@ -366,7 +342,6 @@ ThreadManager:AddThread("autoFactory", a[5]:Init())
 ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
 ThreadManager:AddThread("autoFarm", a[7]:Init())
 ThreadManager:AddThread("autoPirate", a[8]:Init())
-ThreadManager:AddThread("autoRaid", a[9]:Init())
 ThreadManager:AddThread("killMob", a[2]:PerformAttack())
 
 -- Execute
