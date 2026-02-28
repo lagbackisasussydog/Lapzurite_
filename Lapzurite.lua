@@ -151,7 +151,7 @@ Tabs.AutoFarm:AddToggle({Title = "Auto Farm", Callback = function(State)
 		ThreadManager:CloseThread("autoFarm")
 		Pause()
 	end
-end}):SetToggle(getgenv().Configuration.Modules.AutoFarmLevel)
+end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Chest", Callback = function(State)
 	getgenv().Configuration.Modules.AutoFarmChests = State
