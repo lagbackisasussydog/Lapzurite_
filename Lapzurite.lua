@@ -50,6 +50,14 @@ local Tabs = {
 	Settings = Win:AddTab({Name = "Settings"}),
 }
 
+ThreadManager:AddThread("autoChest", a[1]:Init())
+ThreadManager:AddThread("autoBone", a[3]:Init())
+ThreadManager:AddThread("autoKatakuri", a[4]:Init())
+ThreadManager:AddThread("autoFactory", a[5]:Init())
+ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
+ThreadManager:AddThread("autoFarm", a[7]:Init())
+ThreadManager:AddThread("killMob", a[2]:PerformAttack())
+
 task.spawn(function()
 	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", "Pirates")
 	repeat task.wait() until game.Players.LocalPlayer.Character
@@ -311,13 +319,7 @@ Tabs.Settings:AddButton({Title = "Super Fast Mode (Unplayable)", Callback =funct
 end})
 
 -- Add Thread
-ThreadManager:AddThread("autoChest", a[1]:Init())
-ThreadManager:AddThread("autoBone", a[3]:Init())
-ThreadManager:AddThread("autoKatakuri", a[4]:Init())
-ThreadManager:AddThread("autoFactory", a[5]:Init())
-ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
-ThreadManager:AddThread("autoFarm", a[7]:Init())
-ThreadManager:AddThread("killMob", a[2]:PerformAttack())
+
 
 -- Execute
 ThreadManager:StartThread("killMob")
