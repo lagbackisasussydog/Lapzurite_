@@ -4,7 +4,9 @@ function Lapzurite:Window()
 	local G2L = {}
 	local Window = {}
 
-	G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+	if getgenv().Lapzurite.Loaded then return end
+	getgenv().Lapzurite.Loaded = true
+	G2L["1"] = Instance.new("ScreenGui", game.CoreGui);
 	G2L["1"]["Name"] = [[Lapzurite]];
 	G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
