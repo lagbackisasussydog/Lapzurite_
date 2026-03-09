@@ -4,7 +4,7 @@ function Lapzurite:Window()
 	local G2L = {}
 	local Window = {}
 
-	G2L["1"] = Instance.new("ScreenGui", game.CoreGui);
+	G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
 	G2L["1"]["Name"] = [[Lapzurite]];
 	G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
@@ -117,7 +117,10 @@ function Lapzurite:Window()
 	G2L["29"]["Padding"] = UDim.new(0, 5);
 	G2L["29"]["VerticalAlignment"] = Enum.VerticalAlignment.Bottom;
 	G2L["29"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
-
+	
+	G2L["34"] = Instance.new("Folder", G2L["2"]);
+	G2L["34"]["Name"] = [[Dropdown]];
+	
 	task.spawn(function()
 		G2L["2"]["Active"] = true
 		G2L["2"]["Draggable"] = true
@@ -487,6 +490,123 @@ function Lapzurite:Window()
 			G2L["23"]["Text"] = SubTitle;
 			G2L["23"]["Name"] = [[SubLabel]];
 			G2L["23"]["Position"] = UDim2.new(0, 0, 0.46, 0);
+		end
+
+		function Tab:Dropdown(Config)
+			local Title = Config.Title or "Dropdown"
+			local List = Config.List or {}
+			local Index = Config.Index or 1
+
+			-- StarterGui.Lapzurite2.Main.Sections.Test.Dropdown
+			G2L["2a"] = Instance.new("CanvasGroup", G2L["12"]);
+			G2L["2a"]["BorderSizePixel"] = 0;
+			G2L["2a"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["2a"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["2a"]["Size"] = UDim2.new(0, 100, 0, 100);
+			G2L["2a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["2a"]["Name"] = [[Dropdown]];
+			G2L["2a"]["BackgroundTransparency"] = 0.6;
+
+
+			-- StarterGui.Lapzurite2.Main.Sections.Test.Dropdown.Label
+			G2L["2b"] = Instance.new("TextLabel", G2L["2a"]);
+			G2L["2b"]["BorderSizePixel"] = 0;
+			G2L["2b"]["TextSize"] = 14;
+			G2L["2b"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+			G2L["2b"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["2b"]["FontFace"] = Font.new([[rbxasset://fonts/families/SourceSansPro.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+			G2L["2b"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["2b"]["BackgroundTransparency"] = 1;
+			G2L["2b"]["Size"] = UDim2.new(0, 200, 0, 50);
+			G2L["2b"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["2b"]["Text"] = Title;
+			G2L["2b"]["Name"] = [[Label]];
+
+
+			-- StarterGui.Lapzurite2.Main.Sections.Test.Dropdown.UIPadding
+			G2L["2c"] = Instance.new("UIPadding", G2L["2a"]);
+			G2L["2c"]["PaddingLeft"] = UDim.new(0.05, 0);
+
+
+			-- StarterGui.Lapzurite2.Main.Sections.Test.Dropdown.Button
+			G2L["2h"] = Instance.new("TextButton", G2L["2a"]);
+			G2L["2h"]["TextTruncate"] = Enum.TextTruncate.AtEnd;
+			G2L["2h"]["BorderSizePixel"] = 0;
+			G2L["2h"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["2h"]["TextSize"] = 14;
+			G2L["2h"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["2h"]["FontFace"] = Font.new([[rbxasset://fonts/families/SourceSansPro.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+			G2L["2h"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["2h"]["Size"] = UDim2.new(0, 152, 0, 38);
+			G2L["2h"]["BackgroundTransparency"] = 1;
+			G2L["2h"]["Name"] = [[Button]];
+			G2L["2h"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["2h"]["Text"] = tostring(List[Index]);
+			G2L["2h"]["Position"] = UDim2.new(0.70844, 0, 0.5, 0);
+
+
+			-- StarterGui.Lapzurite2.Main.Sections.Test.Dropdown.Button.UIStroke
+			G2L["2e"] = Instance.new("UIStroke", G2L["2h"]);
+			G2L["2e"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+			G2L["2e"]["Color"] = Color3.fromRGB(255, 255, 255);
+			
+			-- StarterGui.Lapzurite2.Main.Dropdown.Menu
+			G2L["35"] = Instance.new("CanvasGroup", G2L["34"]);
+			G2L["35"]["BorderSizePixel"] = 0;
+			G2L["35"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["35"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["35"]["Size"] = UDim2.new(1, 0, 1, 0);
+			G2L["35"]["Position"] = UDim2.new(0.5, 0, 0.5, 0);
+			G2L["35"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["35"]["Name"] = Title;
+			G2L["35"]["BackgroundTransparency"] = 0.5;
+			G2L["35"]["Visible"] = false
+
+			-- StarterGui.Lapzurite2.Main.Dropdown.Menu.ScrollingFrame
+			G2L["36"] = Instance.new("ScrollingFrame", G2L["35"]);
+			G2L["36"]["BorderSizePixel"] = 0;
+			G2L["36"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["36"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["36"]["Size"] = UDim2.new(0, 215, 0, 215);
+			G2L["36"]["ScrollBarImageColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["36"]["Position"] = UDim2.new(0.5, 0, 0.5, 0);
+			G2L["36"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["36"]["ScrollBarThickness"] = 0;
+			G2L["36"]["BackgroundTransparency"] = 1;
+
+			-- StarterGui.Lapzurite2.Main.Dropdown.Menu.ScrollingFrame.UIGridLayout
+			G2L["38"] = Instance.new("UIGridLayout", G2L["36"]);
+			G2L["38"]["CellSize"] = UDim2.new(1, 0, 0, 50);
+			G2L["38"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+			
+			G2L["2g"] = Instance.new("UIGradient", G2L["2e"]);
+			G2L["2g"]["Color"] = ColorSequence.new{ColorSequenceKeypoint.new(0.000, Color3.fromRGB(86, 255, 255)),ColorSequenceKeypoint.new(1.000, Color3.fromRGB(0, 0, 0))};
+			
+			task.spawn(function()
+				for _, v in pairs(List) do
+					-- StarterGui.Lapzurite2.Main.Dropdown.Menu.ScrollingFrame.Button
+					G2L["37"] = Instance.new("TextButton", G2L["36"]);
+					G2L["37"]["BorderSizePixel"] = 0;
+					G2L["37"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+					G2L["37"]["TextSize"] = 14;
+					G2L["37"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+					G2L["37"]["FontFace"] = Font.new([[rbxasset://fonts/families/SourceSansPro.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+					G2L["37"]["Size"] = UDim2.new(0, 200, 0, 50);
+					G2L["37"]["Name"] = v;
+					G2L["37"]["Text"] = v;
+					G2L["37"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+					
+					G2L["37"]["MouseButton1Up"]:Connect(function()
+						G2L["2h"].Text = v
+						G2L["34"]:FindFirstChild(Title).Visible = false
+						Config.Callback(v)
+					end)
+				end
+			end)
+
+			G2L["2h"]["MouseButton1Up"]:Connect(function()
+				G2L["34"]:FindFirstChild(Title).Visible = true
+			end)
 		end
 
 		return Tab
