@@ -15,7 +15,7 @@ getgenv().Configuration = {
 		["AutoEctoplasm"] = false,
 		["AutoPirate"] = false,
 		["CompleteRaid"] = false,
-		["AutoBerries"]
+		["AutoBerries"] = false,
 	},
 }
 
@@ -36,6 +36,7 @@ local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisa
 local ThreadManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/ThreadManager.lua"))()
 
 local Plr = game.Players.LocalPlayer
+local TeleportService = game:GetService("TeleportService")
 
 local modules = {
 	[1] = {
@@ -81,6 +82,7 @@ local Tabs = {
 	AutoFarm = Win:AddTab({Name = "AutoFarm"}),
 	SubFarm = Win:AddTab({Name = "SubFarm"}),
 	Raid = Win:AddTab({Name = "Raids"}),
+	Teleport = Win:AddTab({Name = "Teleport"}),
 	Settings = Win:AddTab({Name = "Settings"}),
 }
 
@@ -176,17 +178,7 @@ Plr.CharacterAdded:Connect(function(newChar)
 	ThreadManager:ResetThread()
 end)
 
-Tabs.AutoFarm:AddToggle({Title = "Auto Farm", Callback = function(State)
-	getgenv().Configuration.Modules.AutoFarmLevel = State
-	Anchor(Plr.Character)
-	if State then
-		ThreadManager:StartThread("autoFarm")
-	else
-		ThreadManager:CloseThread("autoFarm")
-		Pause()
-	end
-end})
-
+-- auto chest
 Tabs.SubFarm:AddToggle({Title = "Auto Chest", Callback = function(State)
 	getgenv().Configuration.Modules.AutoFarmChests = State
 	if State then
@@ -198,14 +190,17 @@ Tabs.SubFarm:AddToggle({Title = "Auto Chest", Callback = function(State)
 	end
 end})
 
+-- collect mode
 Tabs.SubFarm:AddDropdown({Title = "Mode", List = {"Tween", "Teleport"}, Callback = function(Value)
 	getgenv().ModuleSetting.AutoFarmChests.Method = Value
 end})
 
+-- chest delay
 Tabs.SubFarm:AddSlider({Title = "Delay", Min = 0, Max = 5, Callback = function(Value)
 	getgenv().ModuleSetting.AutoFarmChests.Delay = Value
 end})
 
+-- bone
 Tabs.SubFarm:AddToggle({Title = "Auto Bone", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
 		getgenv().Configuration.Modules.AutoBone = State
@@ -220,6 +215,7 @@ Tabs.SubFarm:AddToggle({Title = "Auto Bone", Callback = function(State)
 	end
 end})
 
+-- katakuri
 Tabs.SubFarm:AddToggle({Title = "Auto Katakuri", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
 		getgenv().Configuration.Modules.AutoKatakuri = State
@@ -233,6 +229,7 @@ Tabs.SubFarm:AddToggle({Title = "Auto Katakuri", Callback = function(State)
 	end
 end})
 
+-- pirate raid
 Tabs.SubFarm:AddToggle({Title = "Auto Pirate Raid", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
 		getgenv().Configuration.Modules.AutoPirate = State
@@ -246,6 +243,7 @@ Tabs.SubFarm:AddToggle({Title = "Auto Pirate Raid", Callback = function(State)
 	end
 end})
 
+-- factory
 Tabs.SubFarm:AddToggle({Title = "Auto Factory", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Second-Seas" then
 		getgenv().Configuration.Modules.AutoFactory = State
@@ -259,6 +257,7 @@ Tabs.SubFarm:AddToggle({Title = "Auto Factory", Callback = function(State)
 	end
 end})
 
+-- ectoplasm
 Tabs.SubFarm:AddToggle({Title = "Auto Farm Ectoplasm", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Second-Seas" then
 		getgenv().Configuration.Modules.AutoEctoplasm = State
@@ -272,90 +271,110 @@ Tabs.SubFarm:AddToggle({Title = "Auto Farm Ectoplasm", Callback = function(State
 	end
 end})
 
-Tabs.Raid:AddDropdown({Title = "Raid", List = {"Flame", "Ice", "Dark", "Quake", "Light", "Buddha", "Spider", "Magma", "Sand"}, Callback = function(Value)
-	getgenv().ModuleSetting.RaidType = Value
+-- rejoin
+Tabs.Teleport:AddButton({Title = "Rejoin", Callback = function()
+	TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Plr)
 end})
 
+-- server hop
+Tabs.Teleport:AddButton({Title = "Server hop", Callback = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/MapperZ1/Server-hop/refs/heads/main/serverhop.lua"))()
+end})
+
+-- jobid teleport
+local box = Tabs.Teleport:AddBox({Title = "JobID"})
+Tabs.Teleport:AddButton({Title = "Join specific server", Callback = function()
+	local s, e = pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, box:GetString(), Plr) end)
+	
+	if e then UI:Alarm({Content = "Invalid JobID", Lifetime = 3}) end
+end})
+
+-- Tween speed
 Tabs.Settings:AddSlider({Title = "Tween speed", Min = 0, Max = 300, Callback = function(Value)
 	getgenv().Configuration.TweenSpeed = Value
 end})
 
+-- Bring range
 Tabs.Settings:AddSlider({Title = "Bring range", Min = 0, Max = 300, Callback = function(Value)
 	getgenv().Configuration.Distance = Value
 end})
 
+-- Bring speed
 Tabs.Settings:AddSlider({Title = "Bring speed", Min = 0, Max = 500, Callback = function(Value)
 	getgenv().Configuration.BringSpeed = Value
 end})
 
+-- Tool
 Tabs.Settings:AddDropdown({Title = "Weapon", List = {"Melee", "Sword"}, Callback = function(Value)
 	getgenv().Configuration.Tool = Value
 end})
 
+-- Team
 Tabs.Settings:AddDropdown({Title = "Team", List = {"Pirates", "Marines"}, Callback = function(Value)
 	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", Value)
 end})
 
-Tabs.Settings:AddButton({Title = "Fast Mode", Callback = function(State)
-	local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
-	Terrain.WaterWaveSize = 0
-	Terrain.WaterWaveSpeed = 0
-	Terrain.WaterReflectance = 0
-	Terrain.WaterTransparency = 1
-	for _, v in pairs(game:GetDescendants()) do
-		if v:IsA("BasePart") then
-			v.CastShadow = false
-			v.Material = "Plastic"
-			v.Reflectance = 0
-			v.BackSurface = "SmoothNoOutlines"
-			v.BottomSurface = "SmoothNoOutlines"
-			v.FrontSurface = "SmoothNoOutlines"
-			v.LeftSurface = "SmoothNoOutlines"
-			v.RightSurface = "SmoothNoOutlines"
-			v.TopSurface = "SmoothNoOutlines"
-		elseif v:IsA("Decal") then
-			v.Transparency = 1
-			v.Texture = ""
-		elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-			v.Lifetime = NumberRange.new(0)
-		end
-	end
-	for _, v in pairs(Lighting:GetDescendants()) do
-		if v:IsA("PostEffect") then
-			v.Enabled = false
-		end
-	end
-	workspace.DescendantAdded:Connect(function(child)
-		task.spawn(function()
-			if child:IsA("ForceField") or child:IsA("Sparkles") or child:IsA("Smoke") or child:IsA("Fire") or child:IsA("Beam") then
-				RunService.Heartbeat:Wait()
-				child:Destroy()
-			elseif child:IsA("BasePart") then
-				child.CastShadow = false
+-- Fast mode
+Tabs.Settings:AddDropdown({Title = "Fast mode (Rejoin to revert)", List = {"Normal fast mode", "Super fast mode"}, Callback = function(Value) 
+	if Value == "Normal fast mode" then
+		local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
+		Terrain.WaterWaveSize = 0
+		Terrain.WaterWaveSpeed = 0
+		Terrain.WaterReflectance = 0
+		Terrain.WaterTransparency = 1
+		for _, v in pairs(game:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.CastShadow = false
+				v.Material = "Plastic"
+				v.Reflectance = 0
+				v.BackSurface = "SmoothNoOutlines"
+				v.BottomSurface = "SmoothNoOutlines"
+				v.FrontSurface = "SmoothNoOutlines"
+				v.LeftSurface = "SmoothNoOutlines"
+				v.RightSurface = "SmoothNoOutlines"
+				v.TopSurface = "SmoothNoOutlines"
+			elseif v:IsA("Decal") then
+				v.Transparency = 1
+				v.Texture = ""
+			elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+				v.Lifetime = NumberRange.new(0)
 			end
-		end)
-	end)
-end})
-
-Tabs.Settings:AddButton({Title = "Super Fast Mode (Unplayable)", Callback =function()
-	for i,v in next, workspace:GetDescendants() do    
-		pcall(function()
-	        v.Transparency = 1
-		end)
-	end
-	for i,v in next, getnilinstances() do
-		pcall(function()
-			v.Transparency = 1
-			for i1,v1 in next, v:GetDescendants() do
-				v1.Transparency = 1
+		end
+		for _, v in pairs(Lighting:GetDescendants()) do
+			if v:IsA("PostEffect") then
+				v.Enabled = false
 			end
+		end
+		workspace.DescendantAdded:Connect(function(child)
+			task.spawn(function()
+				if child:IsA("ForceField") or child:IsA("Sparkles") or child:IsA("Smoke") or child:IsA("Fire") or child:IsA("Beam") then
+					RunService.Heartbeat:Wait()
+					child:Destroy()
+				elseif child:IsA("BasePart") then
+					child.CastShadow = false
+				end
+			end)
+		end)
+	elseif Value == "Super fast mode" then
+		for i,v in next, workspace:GetDescendants() do    
+			pcall(function()
+				v.Transparency = 1
+			end)
+		end
+		for i,v in next, getnilinstances() do
+			pcall(function()
+				v.Transparency = 1
+				for i1,v1 in next, v:GetDescendants() do
+					v1.Transparency = 1
+				end
+			end)
+		end
+		workspace.DescendantAdded:Connect(function(v)
+			pcall(function()
+				v.Transparency = 1
+			end)
 		end)
 	end
-	workspace.DescendantAdded:Connect(function(v)
-		pcall(function()
-			v.Transparency = 1
-		end)
-	end)
 end})
 
 for _, mod in pairs(modules) do
