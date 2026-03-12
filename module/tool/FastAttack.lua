@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local fastAttack = {}
 
 function fastAttack:Init()
-	local s, e = pcall(function()
+	task.spawn(function()
 		local remote, idremote
 		for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
 			for _, n in next, v:GetChildren() do
@@ -51,8 +51,6 @@ function fastAttack:Init()
 			end
 		end
 	end)
-	
-	if e then print(e) end
 end
 
 function fastAttack:GroupMob(target)
