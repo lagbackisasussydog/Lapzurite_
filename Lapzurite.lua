@@ -14,7 +14,8 @@ getgenv().Configuration = {
 		["Travel"] = false,
 		["AutoEctoplasm"] = false,
 		["AutoPirate"] = false,
-		["CompleteRaid"] = false
+		["CompleteRaid"] = false,
+		["AutoBerries"]
 	},
 }
 
@@ -36,15 +37,43 @@ local ThreadManager = loadstring(game:HttpGet("https://raw.githubusercontent.com
 
 local Plr = game.Players.LocalPlayer
 
-local a = {
-	[1] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoChest.lua"))(),
-	[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))(),
-	[3] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
-	[4] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoKatakuri.lua"))(),
-	[5] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoFactory.lua"))(),
-	[6] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoEctoplasm.lua"))(),
-	[7] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/autofarm/autoFarm.lua"))(),
-	[8] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoPirate.lua"))(),
+local modules = {
+	[1] = {
+		[1] = "autoChest",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoChest.lua"))(),
+	},
+	[2] = {
+		[1] = "fastAttack",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))(),
+	},
+	[3] = {
+		[1] = "autoBone",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoBone.lua"))(),
+	},
+	[4] = {
+		[1] = "autoKatakuri",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoKatakuri.lua"))(),
+	},
+	[5] = {
+		[1] = "autoFactory",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoFactory.lua"))(),
+	},
+	[6] = {
+		[1] = "autoEctoplasm",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoEctoplasm.lua"))(),
+	},
+	[7] = { 
+		[1] = "autoPirate",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoPirate.lua"))(),
+	},
+	[8] = {
+		[1] = "raid",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/raid.lua"))(),
+	},
+	[9] = {
+		[1] = "autoBerries",
+		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/berries.lua"))()
+	}
 }
 
 local Win = UI:CreateWindow(getgenv().Theme or "Amethyst", nil)
@@ -160,8 +189,8 @@ end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Chest", Callback = function(State)
 	getgenv().Configuration.Modules.AutoFarmChests = State
-	Anchor(Plr.Character)
 	if State then
+		Anchor(Plr.Character)
 		ThreadManager:StartThread("autoChest")
 	else
 		ThreadManager:CloseThread("autoChest")
@@ -183,73 +212,68 @@ Tabs.SubFarm:AddToggle({Title = "Auto Bone", Callback = function(State)
 		Anchor(Plr.Character)
 		if State then
 			ThreadManager:StartThread("autoBone")
+			Anchor(Plr.Character)
 		else
 			ThreadManager:CloseThread("autoBone")
 			Pause()
 		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
 	end
 end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Katakuri", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
 		getgenv().Configuration.Modules.AutoKatakuri = State
-		Anchor(Plr.Character)
 		if State then
+			Anchor(Plr.Character)
 			ThreadManager:StartThread("autoKatakuri")
 		else
 			ThreadManager:CloseThread("autoKatakuri")
 			Pause()
 		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
 	end
 end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Pirate Raid", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Third-Seas" then
 		getgenv().Configuration.Modules.AutoPirate = State
-		Anchor(Plr.Character)
 		if State then
+			Anchor(Plr.Character)
 			ThreadManager:StartThread("autoPirate")
 		else
 			ThreadManager:CloseThread("autoPirate")
 			Pause()
 		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
 	end
 end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Factory", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Second-Seas" then
 		getgenv().Configuration.Modules.AutoFactory = State
-		Anchor(Plr.Character)
 		if State then
+			Anchor(Plr.Character)
 			ThreadManager:StartThread("autoFactory")
 		else
 			ThreadManager:CloseThread("autoFactory")
 			Pause()
 		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
 	end
 end})
 
 Tabs.SubFarm:AddToggle({Title = "Auto Farm Ectoplasm", Callback = function(State)
 	if getgenv().Configuration.CurrentPlace == "Second-Seas" then
 		getgenv().Configuration.Modules.AutoEctoplasm = State
-		Anchor(Plr.Character)
 		if State then
+			Anchor(Plr.Character)
 			ThreadManager:StartThread("autoEctoplasm")
 		else
 			ThreadManager:CloseThread("autoEctoplasm")
 			Pause()
 		end
-	else
-		UI:Alarm({Content = "Requirement not sufficient!"})
 	end
+end})
+
+Tabs.Raid:AddDropdown({Title = "Raid", List = {"Flame", "Ice", "Dark", "Quake", "Light", "Buddha", "Spider", "Magma", "Sand"}, Callback = function(Value)
+	getgenv().ModuleSetting.RaidType = Value
 end})
 
 Tabs.Settings:AddSlider({Title = "Tween speed", Min = 0, Max = 300, Callback = function(Value)
@@ -334,15 +358,8 @@ Tabs.Settings:AddButton({Title = "Super Fast Mode (Unplayable)", Callback =funct
 	end)
 end})
 
--- Add Thread
-ThreadManager:AddThread("autoChest", a[1]:Init())
-ThreadManager:AddThread("autoBone", a[3]:Init())
-ThreadManager:AddThread("autoKatakuri", a[4]:Init())
-ThreadManager:AddThread("autoFactory", a[5]:Init())
-ThreadManager:AddThread("autoEctoplasm", a[6]:Init())
-ThreadManager:AddThread("autoFarm", a[7]:Init())
-ThreadManager:AddThread("autoPirate", a[8]:Init())
-ThreadManager:AddThread("killMob", a[2]:PerformAttack())
-
--- Execute
-ThreadManager:StartThread("killMob")
+for _, mod in pairs(modules) do
+	local s, e = pcall(function()
+		ThreadManager:AddThread(mod[1], mod[2]:Init())
+	end)
+end
