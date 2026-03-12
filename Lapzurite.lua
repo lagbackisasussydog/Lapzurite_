@@ -284,7 +284,9 @@ end})
 -- jobid teleport
 local box = Tabs.Teleport:AddBox({Title = "JobID"})
 Tabs.Teleport:AddButton({Title = "Join specific server", Callback = function()
-	local s, e = pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, box:GetString(), Plr) end)
+	local s, e = pcall(function()
+		TeleportService:TeleportToPlaceInstance(game.PlaceId, box:GetString(), Plr)
+	end)
 	
 	if e then UI:Alarm({Content = "Invalid JobID", Lifetime = 3}) end
 end})
@@ -377,8 +379,10 @@ Tabs.Settings:AddDropdown({Title = "Fast mode (Rejoin to revert)", List = {"Norm
 	end
 end})
 
-for _, mod in pairs(modules) do
+for _, mod in ipairs(modules) do
 	local s, e = pcall(function()
 		ThreadManager:AddThread(mod[1], mod[2]:Init())
 	end)
+	
+	if e then print(e) end
 end
