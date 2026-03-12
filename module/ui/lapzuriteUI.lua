@@ -44,27 +44,6 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			BgColor1 = Color3.fromRGB(105, 0, 158)
 			BtnColor = Color3.fromRGB(170, 0, 255)
 			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 85, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 170, 255))}
-		elseif Theme == "Pink" then
-			local astolf = Instance.new("ImageLabel")
-
-			astolf.Name = "astolf"
-			astolf.Parent = Main
-			astolf.Active = false
-			astolf.AnchorPoint = Vector2.new(0.5,0.5)
-			astolf.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			astolf.BackgroundTransparency = 1.000
-			astolf.BorderColor3 = Color3.fromRGB(0, 0, 0)
-			astolf.BorderSizePixel = 0
-			astolf.Position = UDim2.new(0.78, 0,0.56, 0)
-			astolf.Size = UDim2.new(0.449, 0,0.877, 0)
-			astolf.ZIndex = 0
-			astolf.Image = Img[math.random(1, #Img)]
-			
-			BgColor = Color3.fromRGB(255, 85, 127)
-			BgColor1 = Color3.fromRGB(120, 40, 60)
-			BtnColor = Color3.fromRGB(112, 56, 84)
-			TxtColor = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 85, 127)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 85, 127))}
-			BgColor2 = Color3.fromRGB(255, 85, 127)
 		end
 	end)
 
@@ -530,21 +509,29 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			ImageLabel.Size = UDim2.new(0, 30, 0, 30)
 			ImageLabel.Image = "http://www.roblox.com/asset/?id=6031091008"
 			
+			local Frame = Instance.new("Frame")
 			local DropdownMenu = Instance.new("ScrollingFrame")
 			local UIGridLayout = Instance.new("UIGridLayout")
 
+			Frame.Parent = Main
+			Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+			Frame.BackgroundTransparency = 0.500
+			Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(1, 0, 1, 0)
+			Frame.Visible = false
+
 			DropdownMenu.Name = "DropdownMenu"
-			DropdownMenu.Parent = Main
+			DropdownMenu.Parent = Frame
 			DropdownMenu.Active = true
 			DropdownMenu.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			DropdownMenu.BackgroundTransparency = 0.500
 			DropdownMenu.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			DropdownMenu.BorderSizePixel = 0
-			DropdownMenu.Position = UDim2.new(0,0,1,0)
-			DropdownMenu.Size = UDim2.new(1, 0, 0, 83)
+			DropdownMenu.Position = UDim2.new(0.169411764, 0, 0.199999854, 0)
+			DropdownMenu.Size = UDim2.new(0.65882355, 0, 0.596666753, 0)
 			DropdownMenu.ScrollBarThickness = 0
-			DropdownMenu.Visible = false
-			
+
 			UIGridLayout.Parent = DropdownMenu
 			UIGridLayout.FillDirection = Enum.FillDirection.Vertical
 			UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -571,7 +558,7 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 						
 						TextButton.MouseButton1Up:Connect(function()
 							Config.Callback(v)
-							DropdownMenu.Visible = false
+							Frame.Visible = false
 							Title.Text = Config.Title .. " - " .. tostring(v)
 							ImageLabel.Rotation = 90
 						end)
@@ -580,9 +567,9 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			end)
 			
 			ImageLabel.MouseButton1Up:Connect(function()
-				DropdownMenu.Visible = not DropdownMenu.Visible
+				Frame.Visible = not Frame.Visible
 				
-				if DropdownMenu.Visible then
+				if Frame.Visible then
 					ImageLabel.Rotation = -90
 				else
 					ImageLabel.Rotation = 90
@@ -590,49 +577,68 @@ function Lapzurite:CreateWindow(Theme : string, MinimizeKeybind : Enum.KeyCode)
 			end)
 		end
 		
-		function Tabs:AddLabel(Config)
-			local Dropdown = Instance.new("TextLabel")
+		function Tabs:AddBox(Config)
+			local b = {}
+			local Box = Instance.new("Frame")
 			local UICorner = Instance.new("UICorner")
 			local Title = Instance.new("TextLabel")
 			local UIPadding = Instance.new("UIPadding")
+			local box = Instance.new("TextBox")
 
-			Dropdown.Name = "Dropdown"
-			Dropdown.Parent = Section
-			Dropdown.Active = true
-			Dropdown.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-			Dropdown.BackgroundTransparency = 1.000
-			Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
-			Dropdown.BorderSizePixel = 0
-			Dropdown.Selectable = true
-			Dropdown.Size = UDim2.new(0, 200, 0, 50)
-			Dropdown.Font = Enum.Font.SourceSans
-			Dropdown.Text = ""
-			Dropdown.TextColor3 = Color3.fromRGB(0, 0, 0)
-			Dropdown.TextSize = 18.000
+			Box.Name = "Box"
+			Box.Parent = Section
+			Box.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+			Box.BackgroundTransparency = 0.800
+			Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			Box.BorderSizePixel = 0
+			Box.Selectable = true
+			Box.Size = UDim2.new(0, 200, 0, 50)
 
-			UICorner.Parent = Dropdown
+			UICorner.Parent = Box
 
 			Title.Name = "Title"
-			Title.Parent = Dropdown
+			Title.Parent = Box
 			Title.AnchorPoint = Vector2.new(0.5, 0.5)
-			Title.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
-			Title.BackgroundTransparency = 0.500
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
 			Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Title.BorderSizePixel = 0
-			Title.Position = UDim2.new(0.503663003, 0, 0.455000013, 0)
-			Title.Size = UDim2.new(0, 253, 0, 22)
+			Title.Position = UDim2.new(0.271062285, 0, 0.455000013, 0)
+			Title.Size = UDim2.new(0, 148, 0, 22)
 			Title.ZIndex = 9999999
 			Title.Font = Enum.Font.SourceSans
-			Title.Text = "Title"
+			Title.Text = Config.Title
 			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Title.TextSize = 14.000
-			Title.TextWrapped = true
+			Title.TextXAlignment = Enum.TextXAlignment.Left
 
 			UIPadding.Parent = Title
 			UIPadding.PaddingLeft = UDim.new(0, 10)
 
-			UIPadding.Parent = Title
-			UIPadding.PaddingLeft = UDim.new(0, 10)
+			box.Name = "box"
+			box.Parent = Box
+			box.BackgroundColor3 = Color3.fromRGB(89, 89, 89)
+			box.BackgroundTransparency = 0.400
+			box.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			box.BorderSizePixel = 0
+			box.Position = UDim2.new(0.542124569, 0, 0.219210207, 0)
+			box.Size = UDim2.new(0, 115, 0, 28)
+			box.Font = Enum.Font.SourceSans
+			box.Text = ""
+			box.TextColor3 = Color3.fromRGB(255, 255, 255)
+			box.TextSize = 14.000
+			
+			box.FocusLost:Connect(function(enterPressed, inputThatCausedFocusLoss)
+				if enterPressed or inputThatCausedFocusLoss == Enum.UserInputType.Touch then
+					Config.Callback(box.Text)
+				end
+			end)
+			
+			function b:GetString()
+				return box.Text
+			end
+			
+			return b
 		end
 	
 		return Tabs
