@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local fastAttack = {}
 
-function fastAttack:PerformAttack()
+function fastAttack:Init()
 	local s, e = pcall(function()
 		local remote, idremote
 		for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
@@ -55,31 +55,10 @@ function fastAttack:PerformAttack()
 	if e then print(e) end
 end
 
-function fastAttack:InstantKillSpoof(Char, Target)
-	local HitRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterHit")
-	local AttackRemote = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RE/RegisterAttack")
-	
-	if Char and Target then
-		local Head = Target.Head
-		
-		if Head then
-			local Args = {
-				[1] = Head,
-				[2] = {},
-				[3] = "89134891234"
-			}
-			
-			HitRemote:FireServer(unpack(Args))
-			AttackRemote:FireServer(0)
-			Target.Humanoid:BreakJoints()
-		end
-	end
-end
-
 function fastAttack:GroupMob(target)
 	if not target or not target.Parent then return end
 	
-	local targetRoot = target:FindFirstChild("HumanoidRootPart")
+	local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
 	local targetHum = target:FindFirstChild("Humanoid")
 	
 	if not targetRoot or not targetHum or targetHum.Health <= 0 then
@@ -94,24 +73,23 @@ function fastAttack:GroupMob(target)
 	
 	for _, enemy in pairs(enemies) do
 		if enemy ~= target then
-			
 			local eRoot = enemy:FindFirstChild("HumanoidRootPart")
 			local eHum = enemy:FindFirstChild("Humanoid")
 			
 			if eRoot and eHum then
 				local distance = (eRoot.Position - targetRoot.Position).Magnitude
 				
-				if distance < getgenv().Configuration.Distance and enemy.Name == target.Name then
-					local t = game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed, Enum.EasingStyle.Linear), {CFrame = target:GetPivot()})
-					t:Play()
-					eHum:MoveTo(targetRoot.Position)
-				else
-					eHum:MoveTo(targetRoot.Position)
+				if distance < getgenv().Configuration.Distance then
+					if enemy.Name == target.Name then
+						enemy:SetPrimaryPartCFrame(targetRoot.CFrame)
+					else
+						eHum:MoveTo(targetRoot)
+					end
 				end
 			end
 		end
+		return enemy
 	end
-	game.Debris:AddItem(targetRoot, 10)
 end
 
 return fastAttack
