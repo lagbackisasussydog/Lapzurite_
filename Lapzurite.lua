@@ -159,6 +159,11 @@ end)
 
 Plr.CharacterAdded:Connect(function(newChar)
 	task.wait(5)
+	for _, mod in pairs(getgenv().Configuration.Modules) do
+		if mod == true then
+			Anchor(newChar)
+		end
+	end
 	activate()
 	ThreadManager:ResetThread()
 end)
