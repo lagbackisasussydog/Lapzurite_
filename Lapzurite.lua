@@ -344,7 +344,7 @@ Tabs.Settings:AddDropdown({Title = "Fast mode (Rejoin to revert)", List = {"Norm
 				v.Lifetime = NumberRange.new(0)
 			end
 		end
-		for _, v in pairs(Lighting:GetDescendants()) do
+		for _, v in pairs(game.Lighting:GetDescendants()) do
 			if v:IsA("PostEffect") then
 				v.Enabled = false
 			end
