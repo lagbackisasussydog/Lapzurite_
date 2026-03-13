@@ -112,22 +112,6 @@ task.spawn(function()
 	end
 end)
 
-task.spawn(function()
-    local HttpService = game:GetService("HttpService")
-    local path = "state.txt"
-    
-    if isfile(path) then
-        local content = readfile(path)
-        local decoded = HttpService:JSONDecode(content)
-        
-        for k, v in pairs(decoded) do
-            if getgenv().Configuration.Modules[k] ~= nil then
-                getgenv().Configuration.Modules[k] = v
-            end
-        end
-    end
-end)
-
 local function Pause()
 	local Track = getgenv().Configuration.CurrentTweeningProcess
 	if Track and Track.PlaybackState == Enum.PlaybackState.Playing then
@@ -242,6 +226,18 @@ Tabs.SubFarm:AddToggle({Title = "Auto Pirate Raid", Callback = function(State)
 			ThreadManager:CloseThread("autoPirate")
 			Pause()
 		end
+	end
+end})
+
+-- berries
+Tabs.SubFarm:AddToggle({Title = "Auto Collect Berry", Callback = function(State)
+	getgenv().Configuration.Modules.AutoBerries = State
+	if State then
+		Anchor(Plr.Character)
+		ThreadManager:StartThread("autoBerries")
+	else
+		ThreadManager:CloseThread("autoBerries")
+		Pause()
 	end
 end})
 
