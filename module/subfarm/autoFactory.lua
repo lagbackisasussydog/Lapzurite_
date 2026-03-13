@@ -45,30 +45,16 @@ function autofactory:Init()
 	
 	local function Attack()
 		local success, err = pcall(function()
-			for _, enemy in pairs(Enemies:GetChildren()) do
-				if isAlive(enemy) and table.find(MobList, enemy.Name) then
-					local eRoot = enemy.HumanoidRootPart
-					local eHum = enemy.Humanoid
-					local tool = getTool()
+			for _, e in pairs(getinstances()) do
+				local Tool = getTool()
+				
+				if isAlive(e) and table.find(MobList, e.Name) then
+					Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
 					
-					if getgenv().Configuration.Modules.AutoFactory == false or Char.Humanoid.Health <= 0 then break end
-					
-					local time = TweenInfo.new(Plr:DistanceFromCharacter(eRoot.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
-					
-					Tween(Root, time, {CFrame = eRoot.CFrame * CFrame.new(0,15,0)})
-					
-					while enemy and isAlive(enemy) and getgenv().Configuration.Modules.AutoFactory == true do
-						task.wait(0.05)
-							
-						local Char = Plr.Character
-						if not Char then break end
-							
-						local Hum = Char:FindFirstChild("Humanoid")
-						if not Hum or Hum.Health <= 0 then break end
-							
+					repeat task.wait()
+						Char.Humanoid:EquipTool(Tool)
 						Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-						Char.Humanoid:EquipTool(tool)
-					end
+					until not isAlive(e)
 				end
 			end
 		end)
@@ -77,9 +63,6 @@ function autofactory:Init()
 	end
 	
 	while getgenv().Configuration.Modules.AutoFactory do
-		if checkNotification() then
-			Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
-		end
 		Attack()
 	end
 end
