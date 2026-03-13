@@ -67,13 +67,11 @@ local modules = {
 		[1] = "autoPirate",
 		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/autoPirate.lua"))(),
 	},
-	--[[
 	[8] = {
 		[1] = "raid",
 		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/raid.lua"))(),
 	},
-	--]]
-	[8] = {
+	[9] = {
 		[1] = "autoBerries",
 		[2] = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/subfarm/berries.lua"))()
 	}
