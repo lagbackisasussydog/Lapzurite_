@@ -1,7 +1,8 @@
 local autoberries = {}
 
 function autoberries:Init()
-	local Char = game.Players.LocalPlayer.Character
+	local Plr = game.Players.LocalPlayer
+	local Char = Plr.Character
 	local Root = Char.PrimaryPart
 	
 	local function Tween(Inst, Info,Properties)
@@ -15,13 +16,9 @@ function autoberries:Init()
 	
 	while getgenv().Configuration.Modules.AutoBerries do
 		for _, v in pairs(workspace:GetDescendants()) do
-			if v:IsA("Configuration") then
-				for i, _v in pairs(v:GetDescendants()) do
-					if _v:IsA("Model") then
-						local info = TweenInfo.new(game.Players.LocalPlayer:DistanceFromCharacter(_v:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear)
-						Tween(Root, info, {CFrame = _v:GetPivot()})
-					end
-				end
+			if v:IsA("Model") and v.Parent:IsA("Configuration") and v.Parent.Name == "Berries" then
+				local t = Plr:DistanceFromCharacter(v:GetPivot().Position) / getgenv().Configuration.TweenSpeed
+				Tween(Root, TweenInfo.new(t, Enum.EasingStyle.Linear), {CFrame = v:GetPivot()})
 			end
 		end
 		task.wait()
