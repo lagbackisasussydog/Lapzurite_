@@ -280,7 +280,9 @@ end})
 
 -- server hop
 Tabs.Teleport:AddButton({Title = "Server hop", Callback = function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/MapperZ1/Server-hop/refs/heads/main/serverhop.lua"))()
+	local module = loadstring(game:HttpGet"https://raw.githubusercontent.com/LeoKholYt/roblox/main/lk_serverhop.lua")()
+
+	module:Teleport(game.PlaceId)
 end})
 
 -- jobid teleport
