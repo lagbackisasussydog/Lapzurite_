@@ -46,10 +46,10 @@ function autobone:Init()
 					local Tool = getTool()
 					
 					if isAlive(e) and table.find(MobList, e.Name) then
-						local enemy = b:GroupMob(e)
 						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
 						
-						repeat task.wait(.5)
+						repeat task.wait()
+							local enemy = b:GroupMob(e)
 							Char.Humanoid:EquipTool(Tool)
 							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
 						until not isAlive(e) and not isAlive(enemy)
