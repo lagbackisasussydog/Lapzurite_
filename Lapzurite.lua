@@ -158,7 +158,6 @@ end)
 Plr.CharacterAdded:Connect(function(newChar)
 	task.wait(5)
 	activate()
-	Anchor(newChar)
 	ThreadManager:ResetThread()
 end)
 
