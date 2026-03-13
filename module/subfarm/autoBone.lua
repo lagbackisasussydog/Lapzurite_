@@ -49,7 +49,7 @@ function autobone:Init()
 						local enemy = b:GroupMob(e)
 						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
 						
-						repeat task.wait()
+						repeat task.wait(.5)
 							Char.Humanoid:EquipTool(Tool)
 							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
 						until not isAlive(e) and not isAlive(enemy)
