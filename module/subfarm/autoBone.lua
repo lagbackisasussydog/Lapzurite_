@@ -42,17 +42,20 @@ function autobone:Init()
 		
 		local function Attack()
 			local success, err = pcall(function()
-				for _, e in pairs(Enemies:GetChildren()) do
-					local Tool = getTool()
-					
-					if isAlive(e) and table.find(MobList, e.Name) then
-						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
+				for _ = 1, #Enemies:GetChildren() do
+					if _ > 1 then
+						local e = Enemies:GetChildren()[1]
+						local Tool = getTool()
 						
-						repeat task.wait()
-							local enemy = b:GroupMob(e)
-							Char.Humanoid:EquipTool(Tool)
-							Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-						until not isAlive(e) and not isAlive(enemy)
+						if isAlive(e) and table.find(MobList, e.Name) then
+							Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
+							
+							repeat task.wait()
+								local enemy = b:GroupMob(e)
+								Char.Humanoid:EquipTool(Tool)
+								Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
+							until not isAlive(e) and not isAlive(enemy)
+						end
 					end
 				end
 			end)
