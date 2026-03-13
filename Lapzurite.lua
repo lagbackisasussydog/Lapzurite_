@@ -87,7 +87,9 @@ local Tabs = {
 }
 
 task.spawn(function()
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", "Pirates")
+	if game.Players.LocalPlayer.Neutral then 
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("SetTeam", "Pirates")
+	end
 	repeat task.wait() until game.Players.LocalPlayer.Character
 	task.wait(5)
 	game.ReplicatedStorage.Remotes.CommF_:InvokeServer("Buso")
