@@ -55,7 +55,7 @@ end
 
 function fastAttack:BringMob(Mob)
 	local function checkNetworkOwnership(part)
-		if part.RecieveAge ~= 0 then
+		if part.ReceiveAge ~= 0 then
 			return true
 		else
 			return false
@@ -104,7 +104,8 @@ function fastAttack:BringMob(Mob)
 		end
 	end
 	
-	for _, v in pairs(GetMob(Mob)) do
+	
+	for _, v in GetMob(Mob) do
 		local target = v[1]
 		
 		if isAlive(target.Parent) and isAlive(v[2].Parent) then
