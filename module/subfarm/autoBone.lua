@@ -1,116 +1,68 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local autobone ={}
 
-local fastAttack = {}
-
-function fastAttack:Init()
-	task.spawn(function()
-		local remote, idremote
-		for _, v in next, ({game.ReplicatedStorage.Util, game.ReplicatedStorage.Common, game.ReplicatedStorage.Remotes, game.ReplicatedStorage.Assets, game.ReplicatedStorage.FX}) do
-			for _, n in next, v:GetChildren() do
-				if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
-					remote, idremote = n, n:GetAttribute("Id")				
+function autobone:Init()
+	return function()
+		local CommF_ = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/CommFManager.lua"))()
+		
+		local Plr = game.Players.LocalPlayer
+		local Enemies = workspace.Enemies
+		local Char = Plr.Character
+		local Root = Char.PrimaryPart or Char:FindFirstChild("HumanoidRootPart")
+		local a = CFrame.new(-9502.98145, 172.149506, 6154.40332, -0.999924958, 5.73953107e-09, -0.0122516705, 5.38207168e-09, 1, 2.92093407e-08, 0.0122516705, 2.91412086e-08, -0.999924958)
+		local MobList = {
+			"Reborn Skeleton",
+			"Living Zombie",
+			"Demonic Soul",
+			"Posessed Mummy"
+		}
+		local b = loadstring(game:HttpGet("https://raw.githubusercontent.com/lagbackisasussydog/Lapzurite_/refs/heads/main/module/tool/FastAttack.lua"))()
+		
+		local function Tween(Inst, Info,Properties)
+			if not Inst or not Inst.Parent then return end
+			local TweenSvc = game:GetService("TweenService")
+			local Track = TweenSvc:Create(Inst, Info, Properties)
+			getgenv().Configuration.CurrentTweeningProcess = Track
+			Track:Play()
+			Track.Completed:Wait()
+		end
+		
+		local function isAlive(mob)
+			if mob and mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
+				return true
+			end
+		end
+		
+		local function getTool()
+			for _, tool in pairs(Plr.Backpack:GetChildren()) do
+				if tool:GetAttribute("WeaponType") == getgenv().Configuration.Tool and Char:FindFirstChild(tool.Name) == nil then
+					return tool
 				end
 			end
-			v.ChildAdded:Connect(function(n)
-				if n:IsA("RemoteEvent") and n:GetAttribute("Id") then
-					remote, idremote = n, n:GetAttribute("Id")
+		end
+		
+		local function Attack()
+			local s, e = pcall(function() 
+				for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+					if isAlive(enemy) and table.find(MobList, enemy.Name) then
+						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+						Char.Humanoid:EquipTool(Tool)
+						b:BringMob(enemy)
+					end
 				end
 			end)
+			
+			if e then print(e) end
 		end
-
-		while task.wait(0.05) do
-			local char = game.Players.LocalPlayer.Character
-			local root = char and char:FindFirstChild("HumanoidRootPart")
-			local parts = {}
-			for _, x in ipairs({workspace.Enemies, workspace.Characters}) do
-				for _, v in ipairs(x and x:GetChildren() or {}) do
-					local hrp = v:FindFirstChild("HumanoidRootPart")
-					local hum = v:FindFirstChild("Humanoid")
-					if v ~= char and hrp and hum and hum.Health > 0 and (hrp.Position - root.Position).Magnitude <= 60 then
-						for _, _v in ipairs(v:GetChildren()) do
-							if _v:IsA("BasePart") and (hrp.Position - root.Position).Magnitude <= 60 then
-								parts[#parts+1] = {v, _v}
-							end
-						end
-					end
-				end
-			end
-			local tool = char:FindFirstChildOfClass("Tool")
-			if #parts > 0 and tool and (tool:GetAttribute("WeaponType") == "Melee" or tool:GetAttribute("WeaponType") == "Sword") then
-				pcall(function()
-					require(game.ReplicatedStorage.Modules.Net):RemoteEvent("RegisterHit", true)
-					game.ReplicatedStorage.Modules.Net["RE/RegisterAttack"]:FireServer()
-					local head = parts[1][1]:FindFirstChild("Head")
-					if not head then return end
-					game.ReplicatedStorage.Modules.Net["RE/RegisterHit"]:FireServer(head, parts, {}, tostring(game.Players.LocalPlayer.UserId):sub(2, 4) .. tostring(coroutine.running()):sub(11, 15))
-					cloneref(remote):FireServer(string.gsub("RE/RegisterHit", ".", function(c)
-						return string.char(bit32.bxor(string.byte(c), math.floor(workspace:GetServerTimeNow() / 10 % 10) + 1))
-					end),
-					bit32.bxor(idremote + 909090, game.ReplicatedStorage.Modules.Net.seed:InvokeServer() * 2), head, parts)
-				end)
-			end
+		
+		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
+		Char:PivotTo(Char:GetPivot() * CFrame.new(15,50,0))
+		Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(a.Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = a})
+		
+		while getgenv().Configuration.Modules.AutoBone do
+			task.wait(0.05)
+			Attack()
 		end
-	end)
+	end	
 end
 
-function fastAttack:BringMob(Mob)
-	local function checkNetworkOwnership(part)
-		if part.RecieveAge ~= 0 then
-			return true
-		else
-			return false
-		end
-	end
-
-	local function GetMob(target)
-		if not target or not target.Parent then return end
-		
-		local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
-		local targetHum = target:FindFirstChild("Humanoid")
-		
-		if not targetRoot or not targetHum or targetHum.Health <= 0 then
-			return
-		end
-		
-		local enemiesFolder = workspace:FindFirstChild("Enemies")
-		if not enemiesFolder then return end
-		
-		local enemies = enemiesFolder:GetChildren()
-		if #enemies == 0 then return end
-		
-		for _, enemy in ipairs(enemies) do
-			local parts = {}
-			if enemy ~= target then
-				local eRoot = enemy:FindFirstChild("HumanoidRootPart")
-				local eHum = enemy:FindFirstChild("Humanoid")
-				
-				if eRoot and eHum then
-					local distance = (eRoot.Position - targetRoot.Position).Magnitude
-					
-					if distance < getgenv().Configuration.Distance and checkNetworkOwnership(eRoot) and enemy.Name == target.Name then
-						print(enemy.Name)
-						parts[enemy.Name] = {targetRoot, eRoot}
-					end
-				end
-			end
-		end
-		
-		return parts
-	end
-	
-	local function isAlive(mob)
-		if mob and mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
-			return true
-		end
-	end
-	
-	for _, v in pairs(GetMob(Mob)) do
-		local target = v[1]
-		
-		if isAlive(target.Parent) and isAlive(v[2].Parent) then
-			v[2].CFrame = target.CFrame
-		end
-	end
-end
-
-return fastAttack
+return autobone
