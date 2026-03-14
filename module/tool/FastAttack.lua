@@ -103,14 +103,13 @@ function fastAttack:BringMob(Mob)
 		end
 	end
 	
-	repeat task.wait()
-		local a = GetMob(Mob)
-		local target = a[Mob.Name][1]
-			
-		if isAlive(target.Parent) and isAlive(a[Mob.Name][2].Parent) then
-			a[Mob.Name][2].CFrame = target.CFrame
+	for _, v in pairs(GetMob(Mob)) do
+		local target = v[1]
+		
+		if isAlive(target.Parent) and isAlive(v[2].Parent) then
+			v[2].CFrame = target.CFrame
 		end
-	until GetMob(Mob) == {}
+	end
 end
 
 return fastAttack
