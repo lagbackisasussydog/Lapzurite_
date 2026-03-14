@@ -105,7 +105,7 @@ function fastAttack:BringMob(Mob)
 	end
 	
 	
-	for _, v in GetMob(Mob) do
+	for _, v in next, GetMob(Mob) do
 		local target = v[1]
 		
 		if isAlive(target.Parent) and isAlive(v[2].Parent) then
