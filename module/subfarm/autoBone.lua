@@ -30,6 +30,7 @@ function autobone:Init()
 			if mob and mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
 				return true
 			end
+			return false
 		end
 		
 		local function getTool()
@@ -44,9 +45,12 @@ function autobone:Init()
 			local s, e = pcall(function() 
 				for _, enemy in pairs(workspace.Enemies:GetChildren()) do
 					if isAlive(enemy) and table.find(MobList, enemy.Name) then
-						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
-						Char.Humanoid:EquipTool(Tool)
-						b:BringMob(enemy)
+						local Tool = getTool()
+						repeat task.wait()
+							Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(enemy:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = enemy:GetPivot() * CFrame.new(0,15,0)})
+							Char.Humanoid:EquipTool(Tool)
+							b:BringMob(enemy)
+						until not isAlive(enemy)
 					end
 				end
 			end)
