@@ -41,26 +41,15 @@ function autobone:Init()
 		end
 		
 		local function Attack()
-			local success, err = pcall(function()
-				for _ = 1, #Enemies:GetChildren() do
-					if _ > 1 then
-						local e = Enemies:GetChildren()[1]
-						local Tool = getTool()
-						
-						if isAlive(e) and table.find(MobList, e.Name) then
-							Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
-							
-							repeat task.wait()
-								local enemy = b:GroupMob(e)
-								Char.Humanoid:EquipTool(Tool)
-								Char:PivotTo(enemy:GetPivot() * CFrame.new(0,15,0))
-							until not isAlive(e) and not isAlive(enemy)
-						end
+			local s, e = pcall(function() 
+				for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+					if isAlive(enemy) and table.find(MobList, enemy.Name) then
+						Tween(Root, TweenInfo.new(Plr:DistanceFromCharacter(e:GetPivot().Position) / getgenv().Configuration.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = e:GetPivot() * CFrame.new(0,15,0)})
+						Char.Humanoid:EquipTool(Tool)
+						b:BringMob(enemy)
 					end
 				end
 			end)
-			
-			if err then print(err) end
 		end
 		
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", vector.create(-5060.41162109375, 318.50201416015625, -3193.224853515625))
