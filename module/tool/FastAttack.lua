@@ -88,6 +88,7 @@ function fastAttack:BringMob(Mob)
 					local distance = (eRoot.Position - targetRoot.Position).Magnitude
 					
 					if distance < getgenv().Configuration.Distance and checkNetworkOwnership(eRoot) and enemy.Name == target.Name then
+						print(enemy.Name)
 						parts[enemy.Name] = {targetRoot, eRoot}
 					end
 				end
