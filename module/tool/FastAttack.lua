@@ -53,39 +53,66 @@ function fastAttack:Init()
 	end)
 end
 
-function fastAttack:GroupMob(target)
-	if not target or not target.Parent then return end
-	
-	local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
-	local targetHum = target:FindFirstChild("Humanoid")
-	
-	if not targetRoot or not targetHum or targetHum.Health <= 0 then
-		return
+function fastAttack:BringMob(Mob)
+	local function checkNetworkOwnership(part)
+		if part.RecieveAge ~= 0 then
+			return true
+		else
+			return false
+		end
 	end
-	
-	local enemiesFolder = workspace:FindFirstChild("Enemies")
-	if not enemiesFolder then return end
-	
-	local enemies = enemiesFolder:GetChildren()
-	if #enemies == 0 then return end
-	
-	for _, enemy in pairs(enemies) do
-		if enemy ~= target then
-			local eRoot = enemy:FindFirstChild("HumanoidRootPart")
-			local eHum = enemy:FindFirstChild("Humanoid")
-			
-			if eRoot and eHum then
-				local distance = (eRoot.Position - targetRoot.Position).Magnitude
+
+	local function GetMob(target)
+		if not target or not target.Parent then return end
+		
+		local targetRoot = target:FindFirstChild("HumanoidRootPart"):Clone()
+		local targetHum = target:FindFirstChild("Humanoid")
+		
+		if not targetRoot or not targetHum or targetHum.Health <= 0 then
+			return
+		end
+		
+		local enemiesFolder = workspace:FindFirstChild("Enemies")
+		if not enemiesFolder then return end
+		
+		local enemies = enemiesFolder:GetChildren()
+		if #enemies == 0 then return end
+		
+		for _, enemy in ipairs(enemies) do
+			local parts = {}
+			if enemy ~= target then
+				local eRoot = enemy:FindFirstChild("HumanoidRootPart")
+				local eHum = enemy:FindFirstChild("Humanoid")
 				
-				if distance < getgenv().Configuration.Distance then
-					if enemy.Name == target.Name then
-						game:GetService("TweenService"):Create(eRoot, TweenInfo.new(distance / getgenv().Configuration.BringSpeed), {CFrame = targetRoot.CFrame})
-						return enemy
+				if eRoot and eHum then
+					local distance = (eRoot.Position - targetRoot.Position).Magnitude
+					
+					if distance < getgenv().Configuration.Distance and checkNetworkOwnership(eRoot) and enemy.Name == target.Name then
+						parts[enemy.Name] = {targetRoot, eRoot}
 					end
 				end
 			end
 		end
+		
+		return parts
 	end
+	
+	local function isAlive(mob)
+		if mob and mob.Humanoid and mob.HumanoidRootPart and mob.Humanoid.Health > 0 then
+			return true
+		end
+	end
+	
+	repeat task.wait()
+		local a = GetMob(Mob)
+		for i, v in ipairs(a) do
+			local target = a[Mob.Name][1]
+			
+			if isAlive(v) then
+				a[Mob.Name][2].CFrame = target.CFrame
+			end
+		end
+	until GetMob(Mob) == {}
 end
 
 return fastAttack
